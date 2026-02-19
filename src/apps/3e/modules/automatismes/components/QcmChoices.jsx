@@ -13,7 +13,7 @@ export default function QcmChoices({ choices, selected, onSelect, feedback }) {
           } else if (selected === choice.text && !choice.correct) {
             style = 'bg-red-500/30 text-red-300 ring-2 ring-red-500'
           } else {
-            style = 'bg-surface-light/50 text-slate-500'
+            style = 'bg-surface-light/50 text-slate-300'
           }
         } else if (selected === choice.text) {
           style = 'bg-cyan-500/30 text-cyan-300 ring-2 ring-cyan-500'

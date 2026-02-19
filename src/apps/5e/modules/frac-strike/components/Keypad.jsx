@@ -26,7 +26,7 @@ export default function Keypad({ value, onChange, onSubmit, disabled }) {
       <div className="mb-3 flex items-center justify-center gap-2">
         <span className="text-sm text-slate-400">Diviseur :</span>
         <div className="bg-surface-light rounded-xl px-6 py-2 min-w-[80px] text-center text-2xl font-bold tabular-nums">
-          {value || <span className="text-slate-600">?</span>}
+          {value || <span className="text-slate-400">?</span>}
         </div>
       </div>
 
@@ -38,7 +38,7 @@ export default function Keypad({ value, onChange, onSubmit, disabled }) {
             type="button"
             onClick={() => handleDigit(n)}
             disabled={disabled}
-            className="py-3 rounded-xl bg-surface-light text-lg font-semibold active:bg-primary/30 transition-colors disabled:opacity-40"
+            className="py-3 rounded-xl bg-surface-light text-lg font-semibold text-white active:bg-primary/30 transition-colors disabled:opacity-40"
           >
             {n}
           </button>
@@ -55,7 +55,7 @@ export default function Keypad({ value, onChange, onSubmit, disabled }) {
           type="button"
           onClick={() => handleDigit(0)}
           disabled={disabled}
-          className="py-3 rounded-xl bg-surface-light text-lg font-semibold active:bg-primary/30 transition-colors disabled:opacity-40"
+          className="py-3 rounded-xl bg-surface-light text-lg font-semibold text-white active:bg-primary/30 transition-colors disabled:opacity-40"
         >
           0
         </button>

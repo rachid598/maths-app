@@ -12,7 +12,7 @@ export default function VraiFauxButtons({ selected, onSelect, feedback, correctA
       if (isSelected && value !== correctAnswer) {
         return 'bg-red-500/30 text-red-300 ring-2 ring-red-500'
       }
-      return 'bg-surface-light/50 text-slate-500'
+      return 'bg-surface-light/50 text-slate-300'
     }
 
     if (isSelected) {

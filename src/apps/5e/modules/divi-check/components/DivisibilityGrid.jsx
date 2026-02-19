@@ -42,7 +42,7 @@ export default function DivisibilityGrid({
                       ? rowPerfect
                         ? 'bg-emerald-900/30 text-success'
                         : 'bg-red-900/20 text-slate-300'
-                      : 'bg-surface text-white'
+                      : 'bg-surface-light text-white'
                   }`}
                 >
                   {num}

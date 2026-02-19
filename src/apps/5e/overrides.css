@@ -1,0 +1,20 @@
+/* urgent readability fixes for 5e */
+:root{
+  --primary:#0ea5a4; /* teal-ish accent, higher contrast */
+  --bg:#0b1220;
+  --card:#ffffff;
+  --muted:#94a3b8;
+}
+body{font-size:16px;line-height:1.5;color:#0f1724;background:var(--bg)}
+/* reduce top banner height and increase padding */
+.prio-banner{height:auto;padding:0.6rem 1rem;border-radius:12px;background:var(--card);color:#0f1724}
+.prio-banner .operation-btn{background:var(--primary);color:#fff;padding:0.6rem 0.8rem;border-radius:8px;box-shadow:0 6px 18px rgba(2,6,23,0.35)}
+/* ensure text contrast */
+.prio-banner .expr{color:#0f1724;font-weight:600}
+/* keypad and buttons */
+.keypad button{padding:0.7rem 1rem;border-radius:8px}
+/* responsive fixes */
+@media (max-width:640px){
+  .prio-banner{padding:0.5rem}
+  body{font-size:15px}
+}

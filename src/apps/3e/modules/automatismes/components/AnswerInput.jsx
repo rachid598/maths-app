@@ -23,7 +23,7 @@ export default function AnswerInput({ value, onChange, disabled }) {
   return (
     <div>
       {/* Display */}
-      <div className="mx-auto mb-3 flex max-w-xs items-center justify-center rounded-xl bg-surface p-3">
+      <div className="mx-auto mb-3 flex max-w-xs items-center justify-center rounded-xl bg-surface-light p-3">
         <span className="min-h-[2rem] min-w-[4rem] text-center text-2xl font-bold text-white">
           {value || <span className="text-slate-500">Ta réponse…</span>}
         </span>
@@ -49,7 +49,7 @@ export default function AnswerInput({ value, onChange, disabled }) {
           </button>
         ))}
         <button onClick={() => handleKey('/')} disabled={disabled}
-          className="flex h-11 items-center justify-center rounded-xl bg-primary-light font-bold text-blue-400 transition hover:bg-primary active:scale-95 disabled:opacity-30">
+          className="flex h-11 items-center justify-center rounded-xl bg-primary-light font-bold text-white transition hover:bg-primary active:scale-95 disabled:opacity-30">
           a/b
         </button>
 
@@ -60,7 +60,7 @@ export default function AnswerInput({ value, onChange, disabled }) {
           </button>
         ))}
         <button onClick={() => handleKey('+-')} disabled={disabled}
-          className="flex h-11 items-center justify-center rounded-xl bg-primary-light font-bold text-blue-400 transition hover:bg-primary active:scale-95 disabled:opacity-30">
+          className="flex h-11 items-center justify-center rounded-xl bg-primary-light font-bold text-white transition hover:bg-primary active:scale-95 disabled:opacity-30">
           +/−
         </button>
 
@@ -73,7 +73,7 @@ export default function AnswerInput({ value, onChange, disabled }) {
           0
         </button>
         <button onClick={() => handleKey('π')} disabled={disabled}
-          className="flex h-11 items-center justify-center rounded-xl bg-primary-light font-bold text-purple-400 transition hover:bg-primary active:scale-95 disabled:opacity-30">
+          className="flex h-11 items-center justify-center rounded-xl bg-primary-light font-bold text-white transition hover:bg-primary active:scale-95 disabled:opacity-30">
           π
         </button>
         <div />

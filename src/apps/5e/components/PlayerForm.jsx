@@ -18,17 +18,17 @@ export default function PlayerForm({ onSave }) {
     <div className="min-h-screen flex items-center justify-center p-4">
       <form
         onSubmit={handleSubmit}
-        className="bg-surface rounded-2xl p-8 w-full max-w-sm shadow-xl text-slate-900"
+        className="bg-surface rounded-2xl p-8 w-full max-w-sm shadow-xl"
       >
         <div className="flex justify-center mb-6">
           <UserCircle className="w-16 h-16 text-primary-light" />
         </div>
-        <h2 className="text-2xl font-bold text-center mb-2">Bienvenue !</h2>
-        <p className="text-sm text-slate-500 text-center mb-6">
+        <h2 className="text-2xl font-bold text-center mb-2 text-white">Bienvenue !</h2>
+        <p className="text-sm text-slate-300 text-center mb-6">
           Tes données restent sur ton appareil.
         </p>
 
-        <label className="block mb-1 text-sm font-medium text-slate-600">
+        <label className="block mb-1 text-sm font-medium text-slate-300">
           Ton prénom
         </label>
         <input
@@ -41,7 +41,7 @@ export default function PlayerForm({ onSave }) {
           className="w-full mb-4 px-4 py-3 rounded-xl bg-surface-light text-white placeholder-slate-500 outline-none focus:ring-2 focus:ring-primary"
         />
 
-        <label className="block mb-2 text-sm font-medium text-slate-600">
+        <label className="block mb-2 text-sm font-medium text-slate-300">
           Ta classe
         </label>
         <div className="grid grid-cols-4 gap-2 mb-6">
@@ -53,7 +53,7 @@ export default function PlayerForm({ onSave }) {
               className={`py-2 rounded-xl text-sm font-semibold transition-colors ${
                 classe === c
                   ? 'bg-primary text-white'
-                  : 'bg-surface-light text-white hover:bg-surface-light/80'
+                  : 'bg-surface-light text-slate-300 hover:bg-surface-light/80'
               }`}
             >
               {c}

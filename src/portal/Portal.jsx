@@ -42,7 +42,7 @@ export default function Portal() {
           <h1 className="text-4xl font-extrabold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
             Maths App
           </h1>
-          <p className="text-slate-400 mt-2 text-sm max-w-xs mx-auto">
+          <p className="text-slate-200 mt-2 text-sm max-w-xs mx-auto">
             Choisis ton niveau et entraîne-toi !
           </p>
         </div>
@@ -77,7 +77,7 @@ export default function Portal() {
       </main>
 
       {/* Footer */}
-      <footer className="text-center text-xs text-slate-600 py-4">
+      <footer className="text-center text-xs text-slate-400 py-4">
         <p>Aucune donnée ne quitte ton appareil — Conforme RGPD</p>
         <p className="mt-1">Maths App v1.0</p>
       </footer>

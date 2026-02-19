@@ -24,7 +24,7 @@ export default function Keypad({ value, onChange, onSubmit, disabled }) {
     <div className="w-full max-w-xs mx-auto">
       {/* Display */}
       <div className="mb-3 flex items-center justify-center gap-2">
-        <span className="text-sm text-slate-400">Diviseur :</span>
+        <span className="text-sm text-slate-300">Diviseur :</span>
         <div className="bg-surface-light rounded-xl px-6 py-2 min-w-[80px] text-center text-2xl font-bold tabular-nums">
           {value || <span className="text-slate-400">?</span>}
         </div>
@@ -47,7 +47,7 @@ export default function Keypad({ value, onChange, onSubmit, disabled }) {
           type="button"
           onClick={handleClear}
           disabled={disabled}
-          className="py-3 rounded-xl bg-surface text-sm font-medium text-slate-400 active:bg-red-900/30 transition-colors disabled:opacity-40"
+          className="py-3 rounded-xl bg-surface text-sm font-medium text-slate-300 active:bg-red-900/30 transition-colors disabled:opacity-40"
         >
           C
         </button>
@@ -63,7 +63,7 @@ export default function Keypad({ value, onChange, onSubmit, disabled }) {
           type="button"
           onClick={handleDelete}
           disabled={disabled}
-          className="py-3 rounded-xl bg-surface text-slate-400 flex items-center justify-center active:bg-red-900/30 transition-colors disabled:opacity-40"
+          className="py-3 rounded-xl bg-surface text-slate-300 flex items-center justify-center active:bg-red-900/30 transition-colors disabled:opacity-40"
         >
           <Delete className="w-5 h-5" />
         </button>

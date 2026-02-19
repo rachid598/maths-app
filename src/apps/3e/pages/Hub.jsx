@@ -40,11 +40,11 @@ export default function Hub({ player, onSelectGame, onLogout, onHome }) {
         <div className="flex items-center gap-3">
           <div className="text-right">
             <p className="text-sm font-medium">{player.name}</p>
-            <p className="text-xs text-slate-400">{player.classe}</p>
+            <p className="text-xs text-slate-300">{player.classe}</p>
           </div>
           <button
             onClick={onLogout}
-            className="rounded-lg p-2 text-slate-400 transition hover:bg-surface-light hover:text-white"
+            className="rounded-lg p-2 text-slate-300 transition hover:bg-surface-light hover:text-white"
             title="Déconnexion"
           >
             <LogOut className="h-4 w-4" />
@@ -68,8 +68,8 @@ export default function Hub({ player, onSelectGame, onLogout, onHome }) {
                 <Icon className="h-7 w-7 text-white" />
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className="font-bold">{game.title}</h3>
-                <p className="text-sm text-slate-400">{game.description}</p>
+                <h3 className="font-bold text-white">{game.title}</h3>
+                <p className="text-sm text-slate-300">{game.description}</p>
               </div>
               <span className="rounded-full bg-accent/20 px-2.5 py-0.5 text-xs font-bold text-accent">
                 JOUER
@@ -83,13 +83,13 @@ export default function Hub({ player, onSelectGame, onLogout, onHome }) {
       {onHome && (
         <button
           onClick={onHome}
-          className="mx-auto mt-6 flex items-center gap-2 text-sm text-slate-500 hover:text-white transition-colors"
+          className="mx-auto mt-6 flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
         >
           ← Changer de niveau
         </button>
       )}
 
-      <p className="mt-4 text-center text-xs text-slate-600">
+      <p className="mt-4 text-center text-xs text-slate-400">
         Maths-3e v1.0 — Données stockées localement
       </p>
     </div>

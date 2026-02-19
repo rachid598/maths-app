@@ -115,7 +115,7 @@ export default function Automatismes({ onBack }) {
       <div className="min-h-dvh px-4 pb-8 pt-6">
         <button
           onClick={onBack}
-          className="mb-6 flex items-center gap-2 text-sm text-slate-400 transition hover:text-white"
+          className="mb-6 flex items-center gap-2 text-sm text-slate-300 transition hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" /> Retour
         </button>
@@ -125,7 +125,7 @@ export default function Automatismes({ onBack }) {
             <span className="text-cyan-400">Automatismes</span>
           </h2>
         </div>
-        <p className="mb-8 text-center text-sm text-slate-400">
+        <p className="mb-8 text-center text-sm text-slate-300">
           Entraînement rapide multi-domaines — type Brevet partie 1
         </p>
         <div className="mx-auto flex max-w-sm flex-col gap-3">
@@ -141,10 +141,10 @@ export default function Automatismes({ onBack }) {
                   : <Timer className="h-5 w-5 text-cyan-400" />}
                 <div className="text-left">
                   <h3 className="font-bold text-cyan-300">{m.label}</h3>
-                  <p className="text-sm text-slate-400">{m.desc}</p>
+                  <p className="text-sm text-slate-300">{m.desc}</p>
                 </div>
               </div>
-              <ChevronRight className="h-5 w-5 text-slate-500" />
+              <ChevronRight className="h-5 w-5 text-slate-400" />
             </button>
           ))}
         </div>
@@ -167,12 +167,12 @@ export default function Automatismes({ onBack }) {
       <div className="min-h-dvh px-4 pb-8 pt-6">
         <div className="mx-auto max-w-lg">
           <div className="mb-6 flex flex-col items-center">
-            <Trophy className={`mb-3 h-14 w-14 ${pct >= 60 ? 'text-cyan-400' : 'text-slate-500'}`} />
+            <Trophy className={`mb-3 h-14 w-14 ${pct >= 60 ? 'text-cyan-400' : 'text-slate-400'}`} />
             <h2 className="mb-1 text-2xl font-bold">Résultat</h2>
             <p className="text-4xl font-bold text-cyan-400">
               {score}/{questions.length}
             </p>
-            <p className="mt-1 text-slate-400">
+            <p className="mt-1 text-slate-300">
               {pct >= 80
                 ? 'Excellent ! Tu es prêt(e) pour le Brevet !'
                 : pct >= 60
@@ -183,7 +183,7 @@ export default function Automatismes({ onBack }) {
 
           {/* Category breakdown */}
           <div className="mb-6 rounded-2xl bg-surface p-4">
-            <h3 className="mb-3 text-sm font-medium uppercase tracking-wider text-slate-500">
+            <h3 className="mb-3 text-sm font-medium uppercase tracking-wider text-slate-400">
               Par domaine
             </h3>
             <div className="flex flex-col gap-2">
@@ -202,7 +202,7 @@ export default function Automatismes({ onBack }) {
 
           {/* Question review */}
           <div className="mb-6 rounded-2xl bg-surface p-4">
-            <h3 className="mb-3 text-sm font-medium uppercase tracking-wider text-slate-500">
+            <h3 className="mb-3 text-sm font-medium uppercase tracking-wider text-slate-400">
               Récapitulatif
             </h3>
             <div className="flex flex-col gap-2">
@@ -213,7 +213,7 @@ export default function Automatismes({ onBack }) {
                   ) : (
                     <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-400" />
                   )}
-                  <span className={r.correct ? 'text-slate-300' : 'text-slate-400'}>
+                  <span className={r.correct ? 'text-slate-300' : 'text-slate-300'}>
                     {r.question.question.split('\n')[0]}
                   </span>
                 </div>
@@ -253,13 +253,13 @@ export default function Automatismes({ onBack }) {
       <div className="mx-auto mb-2 flex max-w-lg items-center justify-between">
         <button
           onClick={() => setMode(null)}
-          className="flex items-center gap-1 text-sm text-slate-400 transition hover:text-white"
+          className="flex items-center gap-1 text-sm text-slate-300 transition hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" /> Modes
         </button>
         <div className="flex items-center gap-3">
           <span className="text-sm font-medium text-cyan-400">{cfg.label}</span>
-          <span className="text-sm text-slate-400">
+          <span className="text-sm text-slate-300">
             {qIndex + 1}/{questions.length}
           </span>
           <div className="flex items-center gap-1">
@@ -331,7 +331,7 @@ export default function Automatismes({ onBack }) {
           {/* Correct answer reveal */}
           {feedback && !feedback.correct && currentQ.format === 'input' && (
             <div className="mb-4 rounded-xl bg-red-500/10 p-3 text-center text-sm">
-              <span className="text-slate-400">Réponse attendue : </span>
+              <span className="text-slate-300">Réponse attendue : </span>
               <span className="font-bold text-red-400">{currentQ.answer}</span>
             </div>
           )}

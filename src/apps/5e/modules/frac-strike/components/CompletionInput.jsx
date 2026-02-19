@@ -94,7 +94,7 @@ export default function CompletionInput({
       <div className="mb-4 flex items-center justify-center">
         <div className="flex flex-col items-center">
           {/* Original fraction */}
-          <div className="text-sm text-slate-500 mb-2">Décompose :</div>
+          <div className="text-sm text-slate-400 mb-2">Décompose :</div>
           <div className="flex items-center gap-3">
             {/* Original */}
             <span className="frac text-xl">
@@ -103,7 +103,7 @@ export default function CompletionInput({
               <span className="den">{denominator}</span>
             </span>
 
-            <span className="text-xl text-slate-500">=</span>
+            <span className="text-xl text-slate-400">=</span>
 
             {/* Input fraction */}
             <span className="frac text-xl">
@@ -118,7 +118,7 @@ export default function CompletionInput({
                   placeholder="?"
                   className={fieldStyle('div')}
                 />
-                <span className="text-slate-500">&times;</span>
+                <span className="text-slate-400">&times;</span>
                 <input
                   type="text"
                   inputMode="numeric"
@@ -137,11 +137,11 @@ export default function CompletionInput({
                   inputMode="numeric"
                   readOnly
                   value={divField}
-                  className="w-12 h-10 rounded-lg text-center text-lg font-bold bg-surface-light/50 text-slate-500 outline-none"
+                  className="w-12 h-10 rounded-lg text-center text-lg font-bold bg-surface-light/50 text-slate-400 outline-none"
                   disabled
                   placeholder="?"
                 />
-                <span className="text-slate-500">&times;</span>
+                <span className="text-slate-400">&times;</span>
                 <input
                   type="text"
                   inputMode="numeric"
@@ -172,7 +172,7 @@ export default function CompletionInput({
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
               activeField === key
                 ? 'bg-primary text-white'
-                : 'bg-surface text-slate-400'
+                : 'bg-surface text-slate-300'
             }`}
           >
             {label}
@@ -202,7 +202,7 @@ export default function CompletionInput({
           type="button"
           onClick={handleClear}
           disabled={disabled}
-          className="py-3 rounded-xl bg-surface text-sm font-medium text-slate-400 active:bg-red-900/30 transition-colors disabled:opacity-40"
+          className="py-3 rounded-xl bg-surface text-sm font-medium text-slate-300 active:bg-red-900/30 transition-colors disabled:opacity-40"
         >
           C
         </button>
@@ -218,7 +218,7 @@ export default function CompletionInput({
           type="button"
           onClick={handleDelete}
           disabled={disabled}
-          className="py-3 rounded-xl bg-surface text-sm font-medium text-slate-400 active:bg-red-900/30 transition-colors disabled:opacity-40"
+          className="py-3 rounded-xl bg-surface text-sm font-medium text-slate-300 active:bg-red-900/30 transition-colors disabled:opacity-40"
         >
           &larr;
         </button>

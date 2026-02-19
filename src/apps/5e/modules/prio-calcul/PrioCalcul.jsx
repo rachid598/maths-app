@@ -35,7 +35,7 @@ function LevelSelector({ onSelect }) {
             </div>
             <div>
               <p className="font-semibold">{level.name}</p>
-              <p className="text-sm text-slate-400">{level.description}</p>
+              <p className="text-sm text-slate-300">{level.description}</p>
             </div>
           </div>
         </button>
@@ -198,7 +198,7 @@ export default function PrioCalcul({ onBack }) {
           <p className="text-4xl font-bold mb-1">
             {score}/{PROBLEMS_PER_LEVEL}
           </p>
-          <p className="text-slate-400 mb-6">expressions résolues</p>
+          <p className="text-slate-300 mb-6">expressions résolues</p>
 
           <div className="space-y-3">
             <button
@@ -216,7 +216,7 @@ export default function PrioCalcul({ onBack }) {
             </button>
             <button
               onClick={onBack}
-              className="w-full py-3 rounded-xl font-bold text-slate-400 hover:text-white transition-colors"
+              className="w-full py-3 rounded-xl font-bold text-slate-300 hover:text-white transition-colors"
             >
               Retour au menu
             </button>
@@ -258,7 +258,7 @@ export default function PrioCalcul({ onBack }) {
           </button>
           <div>
             <h2 className="text-lg font-bold">Prio-Calcul</h2>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-300">
               {getLevels().find((l) => l.id === levelId)?.description}
             </p>
           </div>
@@ -268,10 +268,10 @@ export default function PrioCalcul({ onBack }) {
             onClick={() => setShowHelp(true)}
             className="p-2 rounded-xl bg-surface hover:bg-surface-light transition-colors"
           >
-            <HelpCircle className="w-5 h-5 text-slate-400" />
+            <HelpCircle className="w-5 h-5 text-slate-300" />
           </button>
           <div className="text-right">
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-slate-300">
               {problemIndex + 1}/{PROBLEMS_PER_LEVEL}
             </p>
             <p className="text-lg font-bold text-accent">
@@ -297,7 +297,7 @@ export default function PrioCalcul({ onBack }) {
       {/* Current expression to solve */}
       {!isComplete(tokens) && (
         <div className="my-4 py-4 bg-surface rounded-2xl">
-          <p className="text-xs text-slate-500 text-center mb-2">
+          <p className="text-xs text-slate-400 text-center mb-2">
             {phase === 'select' ? 'Sélectionne l\'opération prioritaire' : 'Calcule le résultat'}
           </p>
           <ExpressionDisplay
@@ -345,9 +345,9 @@ export default function PrioCalcul({ onBack }) {
         <div className="w-full max-w-xs mx-auto">
           {/* Display */}
           <div className="mb-3 flex items-center justify-center gap-2">
-            <span className="text-sm text-slate-400">Résultat :</span>
+            <span className="text-sm text-slate-300">Résultat :</span>
             <div className="bg-surface-light rounded-xl px-6 py-2 min-w-[80px] text-center text-2xl font-bold tabular-nums">
-              {keypadValue || <span className="text-slate-600">?</span>}
+              {keypadValue || <span className="text-slate-400">?</span>}
             </div>
           </div>
 
@@ -372,7 +372,7 @@ export default function PrioCalcul({ onBack }) {
               type="button"
               onClick={() => !waiting && setKeypadValue('')}
               disabled={waiting}
-              className="py-3 rounded-xl bg-surface text-sm font-medium text-slate-400 active:bg-red-900/30 transition-colors disabled:opacity-40"
+              className="py-3 rounded-xl bg-surface text-sm font-medium text-slate-300 active:bg-red-900/30 transition-colors disabled:opacity-40"
             >
               C
             </button>
@@ -392,7 +392,7 @@ export default function PrioCalcul({ onBack }) {
               type="button"
               onClick={() => !waiting && setKeypadValue(keypadValue.slice(0, -1))}
               disabled={waiting}
-              className="py-3 rounded-xl bg-surface text-slate-400 flex items-center justify-center active:bg-red-900/30 transition-colors disabled:opacity-40"
+              className="py-3 rounded-xl bg-surface text-slate-300 flex items-center justify-center active:bg-red-900/30 transition-colors disabled:opacity-40"
             >
               ⌫
             </button>

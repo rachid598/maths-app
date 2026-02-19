@@ -44,7 +44,7 @@ export default function Hub({ player, onNavigate, onLogout, onHome }) {
           <h1 className="text-2xl font-bold">
             Maths-5<span className="text-primary-light">e</span>
           </h1>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-300">
             Salut <span className="text-white font-medium">{player.name}</span> — {player.classe}
           </p>
         </div>
@@ -53,7 +53,7 @@ export default function Hub({ player, onNavigate, onLogout, onHome }) {
           className="p-2 rounded-xl bg-surface hover:bg-surface-light transition-colors"
           title="Se déconnecter"
         >
-          <LogOut className="w-5 h-5 text-slate-400" />
+          <LogOut className="w-5 h-5 text-slate-300" />
         </button>
       </header>
 
@@ -85,14 +85,14 @@ export default function Hub({ player, onNavigate, onLogout, onHome }) {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-lg font-bold">{mod.title}</h3>
+                    <h3 className="text-lg font-bold text-white">{mod.title}</h3>
                     {!mod.active && (
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-slate-700 text-slate-400">
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-slate-600 text-slate-200">
                         Bientôt disponible
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-slate-400 mt-1">
+                  <p className="text-sm text-slate-300 mt-1">
                     {mod.description}
                   </p>
                 </div>
@@ -106,14 +106,14 @@ export default function Hub({ player, onNavigate, onLogout, onHome }) {
       {onHome && (
         <button
           onClick={onHome}
-          className="mx-auto mt-6 flex items-center gap-2 text-sm text-slate-500 hover:text-white transition-colors"
+          className="mx-auto mt-6 flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
         >
           ← Changer de niveau
         </button>
       )}
 
       {/* RGPD notice */}
-      <p className="text-xs text-slate-600 text-center mt-4">
+      <p className="text-xs text-slate-400 text-center mt-4">
         Aucune donnée ne quitte ton appareil. Conforme RGPD.
       </p>
     </div>

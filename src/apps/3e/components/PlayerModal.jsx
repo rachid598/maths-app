@@ -20,7 +20,7 @@ export default function PlayerModal({ onRegister }) {
           <UserCircle className="h-8 w-8 text-accent" />
           <h2 className="text-xl font-bold">Bienvenue !</h2>
         </div>
-        <p className="mb-4 text-sm text-slate-400">
+        <p className="mb-4 text-sm text-slate-300">
           Entre ton prénom pour sauvegarder ta progression.
         </p>
         <label className="mb-1 block text-sm font-medium text-slate-300">Prénom</label>
@@ -55,7 +55,7 @@ export default function PlayerModal({ onRegister }) {
         >
           C'est parti !
         </button>
-        <p className="mt-3 text-center text-xs text-slate-500">
+        <p className="mt-3 text-center text-xs text-slate-400">
           Données stockées uniquement sur ton appareil (RGPD).
         </p>
       </form>

@@ -19,7 +19,7 @@ export default function StepChain({ steps }) {
       <div className="space-y-2 font-mono text-xl">
         {steps.map((tokens, i) => (
           <div key={i} className="flex items-center gap-3">
-            <span className="w-6 text-right text-slate-500 shrink-0">
+            <span className="w-6 text-right text-slate-400 shrink-0">
               {i > 0 ? '=' : ''}
             </span>
             <div className="flex items-center gap-1 flex-wrap">
@@ -33,7 +33,7 @@ export default function StepChain({ steps }) {
                 }
                 if (token.type === 'operator') {
                   return (
-                    <span key={j} className="text-slate-400 px-1">
+                    <span key={j} className="text-slate-300 px-1">
                       {token.value}
                     </span>
                   )

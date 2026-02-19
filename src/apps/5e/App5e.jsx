@@ -1,4 +1,3 @@
-import './overrides.css'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import usePlayer from './hooks/usePlayer'

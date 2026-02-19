@@ -31,7 +31,7 @@ function LevelSelector({ onSelect }) {
             </div>
             <div>
               <p className="font-semibold">{level.name}</p>
-              <p className="text-sm text-slate-400">{level.description}</p>
+              <p className="text-sm text-slate-300">{level.description}</p>
             </div>
           </div>
         </button>
@@ -135,7 +135,7 @@ export default function DiviCheck({ onBack }) {
           <p className="text-4xl font-bold mb-1">
             {score}/{totalPossible}
           </p>
-          <p className="text-slate-400 mb-6">lignes parfaites</p>
+          <p className="text-slate-300 mb-6">lignes parfaites</p>
 
           <div className="space-y-3">
             <button
@@ -153,7 +153,7 @@ export default function DiviCheck({ onBack }) {
             </button>
             <button
               onClick={onBack}
-              className="w-full py-3 rounded-xl font-bold text-slate-400 hover:text-white transition-colors"
+              className="w-full py-3 rounded-xl font-bold text-slate-300 hover:text-white transition-colors"
             >
               Retour au menu
             </button>
@@ -195,7 +195,7 @@ export default function DiviCheck({ onBack }) {
           </button>
           <div>
             <h2 className="text-lg font-bold">Divi-Check</h2>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-300">
               {getLevels().find((l) => l.id === levelId)?.description}
             </p>
           </div>
@@ -205,10 +205,10 @@ export default function DiviCheck({ onBack }) {
             onClick={() => setShowHelp(true)}
             className="p-2 rounded-xl bg-surface hover:bg-surface-light transition-colors"
           >
-            <HelpCircle className="w-5 h-5 text-slate-400" />
+            <HelpCircle className="w-5 h-5 text-slate-300" />
           </button>
           <div className="text-right">
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-slate-300">
               {gridIndex + 1}/{GRIDS_PER_LEVEL}
             </p>
             <p className="text-lg font-bold text-accent">
@@ -229,7 +229,7 @@ export default function DiviCheck({ onBack }) {
       </div>
 
       {/* Instruction */}
-      <p className="text-xs text-slate-500 text-center mb-3">
+      <p className="text-xs text-slate-400 text-center mb-3">
         {validated
           ? 'Correction — vert = juste, rouge = erreur'
           : 'Coche les cases quand le nombre est divisible'}

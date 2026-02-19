@@ -99,14 +99,14 @@ export default function Theoremes({ onBack }) {
       <div className="min-h-dvh px-4 pb-8 pt-6">
         <button
           onClick={onBack}
-          className="mb-6 flex items-center gap-2 text-sm text-slate-400 transition hover:text-white"
+          className="mb-6 flex items-center gap-2 text-sm text-slate-300 transition hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" /> Retour
         </button>
         <h2 className="mb-2 text-center text-2xl font-bold">
           <span className="text-purple-400">Théorèmes</span>
         </h2>
-        <p className="mb-8 text-center text-sm text-slate-400">
+        <p className="mb-8 text-center text-sm text-slate-300">
           Pythagore, Thalès et leurs réciproques
         </p>
         <div className="mx-auto flex max-w-sm flex-col gap-3">
@@ -118,9 +118,9 @@ export default function Theoremes({ onBack }) {
             >
               <div className="text-left">
                 <h3 className={`font-bold ${info.color}`}>{info.name}</h3>
-                <p className="text-sm text-slate-400">{info.desc}</p>
+                <p className="text-sm text-slate-300">{info.desc}</p>
               </div>
-              <ChevronRight className="h-5 w-5 text-slate-500" />
+              <ChevronRight className="h-5 w-5 text-slate-400" />
             </button>
           ))}
         </div>
@@ -133,12 +133,12 @@ export default function Theoremes({ onBack }) {
     const pct = Math.round((score / QUESTIONS_PER_ROUND) * 100)
     return (
       <div className="flex min-h-dvh flex-col items-center justify-center px-4">
-        <Trophy className={`mb-4 h-16 w-16 ${pct >= 60 ? 'text-purple-400' : 'text-slate-500'}`} />
+        <Trophy className={`mb-4 h-16 w-16 ${pct >= 60 ? 'text-purple-400' : 'text-slate-400'}`} />
         <h2 className="mb-2 text-2xl font-bold">Résultat</h2>
         <p className="mb-1 text-4xl font-bold text-purple-400">
           {score}/{QUESTIONS_PER_ROUND}
         </p>
-        <p className="mb-6 text-slate-400">
+        <p className="mb-6 text-slate-300">
           {pct >= 80
             ? 'Excellent ! Tu maîtrises les théorèmes !'
             : pct >= 60
@@ -172,7 +172,7 @@ export default function Theoremes({ onBack }) {
       <div className="mx-auto mb-4 flex max-w-lg items-center justify-between">
         <button
           onClick={() => setLevel(null)}
-          className="flex items-center gap-1 text-sm text-slate-400 transition hover:text-white"
+          className="flex items-center gap-1 text-sm text-slate-300 transition hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" /> Niveaux
         </button>
@@ -180,7 +180,7 @@ export default function Theoremes({ onBack }) {
           <span className={`text-sm font-medium ${LEVEL_LABELS[level].color}`}>
             {LEVEL_LABELS[level].name}
           </span>
-          <span className="text-sm text-slate-400">
+          <span className="text-sm text-slate-300">
             {questionIndex + 1}/{QUESTIONS_PER_ROUND}
           </span>
           <div className="flex items-center gap-1">
@@ -328,9 +328,9 @@ function NumericInput({ value, unit, onInput, disabled }) {
       {/* Display */}
       <div className="mx-auto mb-3 flex max-w-xs items-center justify-center gap-2 rounded-xl bg-surface p-3">
         <span className="min-w-[4rem] text-right text-2xl font-bold text-white">
-          {value || <span className="text-slate-500">…</span>}
+          {value || <span className="text-slate-400">…</span>}
         </span>
-        <span className="text-lg text-slate-400">{unit}</span>
+        <span className="text-lg text-slate-300">{unit}</span>
       </div>
 
       {/* Keypad */}
@@ -348,7 +348,7 @@ function NumericInput({ value, unit, onInput, disabled }) {
         <button
           onClick={() => onInput('backspace')}
           disabled={disabled}
-          className="flex h-12 items-center justify-center rounded-xl bg-surface-light text-slate-400 transition hover:bg-slate-600 hover:text-white active:scale-95 disabled:opacity-30"
+          className="flex h-12 items-center justify-center rounded-xl bg-surface-light text-slate-300 transition hover:bg-slate-600 hover:text-white active:scale-95 disabled:opacity-30"
         >
           <Delete className="h-5 w-5" />
         </button>

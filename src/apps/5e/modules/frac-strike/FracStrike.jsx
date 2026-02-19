@@ -36,7 +36,7 @@ function LevelSelector({ onSelect }) {
             </div>
             <div>
               <p className="font-semibold">{level.name}</p>
-              <p className="text-sm text-slate-400">{level.description}</p>
+              <p className="text-sm text-slate-300">{level.description}</p>
             </div>
           </div>
         </button>
@@ -296,7 +296,7 @@ export default function FracStrike({ onBack }) {
           <p className="text-4xl font-bold mb-1">
             {score}/{PROBLEMS_PER_LEVEL}
           </p>
-          <p className="text-slate-400 mb-6">fractions simplifiées</p>
+          <p className="text-slate-300 mb-6">fractions simplifiées</p>
 
           <div className="space-y-3">
             <button
@@ -314,7 +314,7 @@ export default function FracStrike({ onBack }) {
             </button>
             <button
               onClick={onBack}
-              className="w-full py-3 rounded-xl font-bold text-slate-400 hover:text-white transition-colors"
+              className="w-full py-3 rounded-xl font-bold text-slate-300 hover:text-white transition-colors"
             >
               Retour au menu
             </button>
@@ -356,13 +356,13 @@ export default function FracStrike({ onBack }) {
           </button>
           <div>
             <h2 className="text-lg font-bold">Frac-Strike</h2>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-300">
               {getLevels().find((l) => l.id === levelId)?.description}
             </p>
           </div>
         </div>
         <div className="text-right">
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-300">
             {problemIndex + 1}/{PROBLEMS_PER_LEVEL}
           </p>
           <p className="text-lg font-bold text-accent">
@@ -421,7 +421,7 @@ export default function FracStrike({ onBack }) {
       {!isFullySimplified(currentNum, currentDen) && !isExpert && (
         <button
           onClick={handleHint}
-          className="mb-3 mx-auto text-sm text-slate-500 hover:text-slate-300 transition-colors"
+          className="mb-3 mx-auto text-sm text-slate-400 hover:text-slate-300 transition-colors"
         >
           Besoin d'un indice ?
         </button>

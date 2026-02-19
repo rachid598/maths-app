@@ -18,7 +18,7 @@ export default function HelpModal({ open, onClose }) {
             onClick={onClose}
             className="p-1.5 rounded-lg hover:bg-surface-light transition-colors"
           >
-            <X className="w-5 h-5 text-slate-400" />
+            <X className="w-5 h-5 text-slate-300" />
           </button>
         </div>
 
@@ -29,7 +29,7 @@ export default function HelpModal({ open, onClose }) {
             </span>
             <div>
               <p className="font-semibold text-accent">Parenthèses ( )</p>
-              <p className="text-sm text-slate-400">On calcule d'abord ce qui est entre parenthèses.</p>
+              <p className="text-sm text-slate-300">On calcule d'abord ce qui est entre parenthèses.</p>
             </div>
           </li>
           <li className="flex items-start gap-3">
@@ -38,7 +38,7 @@ export default function HelpModal({ open, onClose }) {
             </span>
             <div>
               <p className="font-semibold text-primary-light">Multiplications ×</p>
-              <p className="text-sm text-slate-400">Avant les additions et soustractions.</p>
+              <p className="text-sm text-slate-300">Avant les additions et soustractions.</p>
             </div>
           </li>
           <li className="flex items-start gap-3">
@@ -47,7 +47,7 @@ export default function HelpModal({ open, onClose }) {
             </span>
             <div>
               <p className="font-semibold text-slate-300">Additions + et Soustractions -</p>
-              <p className="text-sm text-slate-400">De gauche à droite.</p>
+              <p className="text-sm text-slate-300">De gauche à droite.</p>
             </div>
           </li>
         </ol>

@@ -171,14 +171,14 @@ export default function FracStrike({ onBack }) {
       <div className="min-h-dvh px-4 pb-8 pt-6">
         <button
           onClick={onBack}
-          className="mb-6 flex items-center gap-2 text-sm text-slate-400 transition hover:text-white"
+          className="mb-6 flex items-center gap-2 text-sm text-slate-300 transition hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" /> Retour
         </button>
         <h2 className="mb-2 text-center text-2xl font-bold">
           Frac-<span className="text-accent">Strike</span>
         </h2>
-        <p className="mb-8 text-center text-sm text-slate-400">
+        <p className="mb-8 text-center text-sm text-slate-300">
           Simplifie les fractions en trouvant le diviseur commun
         </p>
         <div className="mx-auto flex max-w-sm flex-col gap-3">
@@ -194,10 +194,10 @@ export default function FracStrike({ onBack }) {
                   <Icon className={`h-5 w-5 ${info.color}`} />
                   <div className="text-left">
                     <h3 className={`font-bold ${info.color}`}>{info.name}</h3>
-                    <p className="text-sm text-slate-400">{info.desc}</p>
+                    <p className="text-sm text-slate-300">{info.desc}</p>
                   </div>
                 </div>
-                <ChevronRight className="h-5 w-5 text-slate-500" />
+                <ChevronRight className="h-5 w-5 text-slate-400" />
               </button>
             )
           })}
@@ -212,12 +212,12 @@ export default function FracStrike({ onBack }) {
     const pct = Math.round((score / QUESTIONS_PER_ROUND) * 100)
     return (
       <div className="flex min-h-dvh flex-col items-center justify-center px-4">
-        <Trophy className={`mb-4 h-16 w-16 ${pct >= 60 ? 'text-accent' : 'text-slate-500'}`} />
+        <Trophy className={`mb-4 h-16 w-16 ${pct >= 60 ? 'text-accent' : 'text-slate-400'}`} />
         <h2 className="mb-2 text-2xl font-bold">Résultat</h2>
         <p className="mb-1 text-4xl font-bold text-accent">
           {score}/{QUESTIONS_PER_ROUND}
         </p>
-        <p className="mb-6 text-slate-400">
+        <p className="mb-6 text-slate-300">
           {pct >= 80
             ? 'Excellent ! Tu maîtrises la simplification !'
             : pct >= 60
@@ -253,13 +253,13 @@ export default function FracStrike({ onBack }) {
       <div className="mx-auto mb-4 flex max-w-lg items-center justify-between">
         <button
           onClick={() => setLevel(null)}
-          className="flex items-center gap-1 text-sm text-slate-400 transition hover:text-white"
+          className="flex items-center gap-1 text-sm text-slate-300 transition hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" /> Niveaux
         </button>
         <div className="flex items-center gap-3">
           <span className={`text-sm font-medium ${cfg.color}`}>{cfg.name}</span>
-          <span className="text-sm text-slate-400">
+          <span className="text-sm text-slate-300">
             {qIndex + 1}/{QUESTIONS_PER_ROUND}
           </span>
           <div className="flex items-center gap-1">
@@ -287,7 +287,7 @@ export default function FracStrike({ onBack }) {
           <div className="mb-4 flex items-center justify-center rounded-2xl bg-surface p-6">
             {!struck ? (
               <div className="text-center">
-                <p className="mb-2 text-sm text-slate-400">Simplifie cette fraction</p>
+                <p className="mb-2 text-sm text-slate-300">Simplifie cette fraction</p>
                 <Fraction num={fraction.num} den={fraction.den} />
               </div>
             ) : (
@@ -319,7 +319,7 @@ export default function FracStrike({ onBack }) {
                 <>
                   {/* Divisor input display */}
                   <div className="mb-3 text-center">
-                    <p className="mb-1 text-sm text-slate-400">Diviseur commun :</p>
+                    <p className="mb-1 text-sm text-slate-300">Diviseur commun :</p>
                     <div className="mx-auto flex h-12 w-32 items-center justify-center rounded-xl border-2 border-accent/50 bg-surface text-2xl font-bold text-accent">
                       {input || '_'}
                     </div>
@@ -343,7 +343,7 @@ export default function FracStrike({ onBack }) {
                 <div className="mb-3 text-center">
                   <button
                     onClick={showHint}
-                    className="inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs text-slate-500 transition hover:bg-surface-light hover:text-slate-300"
+                    className="inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs text-slate-400 transition hover:bg-surface-light hover:text-slate-300"
                   >
                     <Lightbulb className="h-3.5 w-3.5" /> Besoin d'aide ?
                   </button>

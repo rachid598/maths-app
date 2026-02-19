@@ -28,7 +28,7 @@ export default function Chain({ steps }) {
       {steps.map((step, i) => (
         <div key={i} className="flex items-center gap-2 shrink-0">
           {i > 0 && (
-            <span className="text-xl text-slate-500 font-light">=</span>
+            <span className="text-xl text-slate-400 font-light">=</span>
           )}
           {step.type === 'original' && (
             <Fraction numerator={step.numerator} denominator={step.denominator} />

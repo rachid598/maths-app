@@ -34,7 +34,7 @@ export default function Keypad({ onInput, onClear, onDelete, onValidate, disable
       <button
         onClick={onDelete}
         disabled={disabled}
-        className="flex h-12 items-center justify-center rounded-xl bg-surface-light text-slate-400 transition hover:bg-slate-600 hover:text-white active:scale-95 disabled:opacity-30"
+        className="flex h-12 items-center justify-center rounded-xl bg-surface-light text-slate-300 transition hover:bg-slate-600 hover:text-white active:scale-95 disabled:opacity-30"
       >
         <Delete className="h-5 w-5" />
       </button>

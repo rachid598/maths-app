@@ -77,22 +77,22 @@ export default function CompletionInput({ num, den, onCorrect, disabled }) {
     <div className="mx-auto max-w-sm">
       {/* Decomposition preview */}
       <div className="mb-4 rounded-xl bg-surface p-4 text-center">
-        <div className="mb-1 text-sm text-slate-400">Décompose la fraction</div>
+        <div className="mb-1 text-sm text-slate-300">Décompose la fraction</div>
         <div className="flex items-center justify-center gap-2 text-lg font-bold">
           <div className="inline-flex flex-col items-center">
             <span className="border-b-2 border-slate-500 px-2 pb-0.5">{num}</span>
             <span className="px-2 pt-0.5">{den}</span>
           </div>
-          <span className="text-slate-500">=</span>
+          <span className="text-slate-400">=</span>
           <div className="inline-flex flex-col items-center">
             <span className="border-b-2 border-slate-500 px-2 pb-0.5">
               <span className="text-red-400">{divDisplay}</span>
-              <span className="text-slate-500"> {'\u00d7'} </span>
+              <span className="text-slate-400"> {'\u00d7'} </span>
               <span className="text-emerald-400">{numDisplay}</span>
             </span>
             <span className="px-2 pt-0.5">
               <span className="text-red-400">{divDisplay}</span>
-              <span className="text-slate-500"> {'\u00d7'} </span>
+              <span className="text-slate-400"> {'\u00d7'} </span>
               <span className="text-blue-400">{denDisplay}</span>
             </span>
           </div>
@@ -109,7 +109,7 @@ export default function CompletionInput({ num, den, onCorrect, disabled }) {
             className={`flex-1 rounded-lg border-b-2 px-2 py-1.5 text-xs font-bold transition ${
               activeField === tab.key
                 ? tab.color + ' bg-surface-light'
-                : 'border-transparent text-slate-500 hover:text-slate-300'
+                : 'border-transparent text-slate-400 hover:text-slate-300'
             }`}
           >
             {tab.label}: {fmtField(tab.key)}
@@ -153,7 +153,7 @@ export default function CompletionInput({ num, den, onCorrect, disabled }) {
         <button
           onClick={handleDelete}
           disabled={disabled}
-          className="flex h-11 items-center justify-center rounded-xl bg-surface-light text-slate-400 transition hover:bg-slate-600 hover:text-white active:scale-95 disabled:opacity-30"
+          className="flex h-11 items-center justify-center rounded-xl bg-surface-light text-slate-300 transition hover:bg-slate-600 hover:text-white active:scale-95 disabled:opacity-30"
         >
           <Delete className="h-5 w-5" />
         </button>

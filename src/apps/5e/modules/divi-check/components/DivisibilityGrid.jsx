@@ -14,13 +14,13 @@ export default function DivisibilityGrid({
         {/* Header */}
         <thead>
           <tr>
-            <th className="text-left text-sm text-slate-400 font-medium py-2 px-1 w-16">
+            <th className="text-left text-sm text-slate-300 font-medium py-2 px-1 w-16">
               Nombre
             </th>
             {divisors.map((d) => (
               <th
                 key={d}
-                className="text-center text-sm text-slate-400 font-medium py-2 px-1"
+                className="text-center text-sm text-slate-300 font-medium py-2 px-1"
               >
                 ÷{d}
               </th>

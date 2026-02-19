@@ -25,7 +25,7 @@ export default function AnswerInput({ value, onChange, disabled }) {
       {/* Display */}
       <div className="mx-auto mb-3 flex max-w-xs items-center justify-center rounded-xl bg-surface-light p-3">
         <span className="min-h-[2rem] min-w-[4rem] text-center text-2xl font-bold text-white">
-          {value || <span className="text-slate-500">Ta réponse…</span>}
+          {value || <span className="text-slate-400">Ta réponse…</span>}
         </span>
       </div>
 
@@ -38,7 +38,7 @@ export default function AnswerInput({ value, onChange, disabled }) {
           </button>
         ))}
         <button onClick={() => handleKey('backspace')} disabled={disabled}
-          className="flex h-11 items-center justify-center rounded-xl bg-surface-light text-slate-400 transition hover:bg-slate-600 active:scale-95 disabled:opacity-30">
+          className="flex h-11 items-center justify-center rounded-xl bg-surface-light text-slate-300 transition hover:bg-slate-600 active:scale-95 disabled:opacity-30">
           <Delete className="h-5 w-5" />
         </button>
 

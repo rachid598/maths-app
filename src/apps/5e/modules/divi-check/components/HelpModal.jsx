@@ -19,7 +19,7 @@ export default function HelpModal({ open, onClose }) {
       onClick={onClose}
     >
       <div
-        className="bg-surface rounded-2xl p-6 max-w-sm w-full max-h-[80vh] overflow-y-auto"
+        className="bg-surface rounded-2xl p-6 max-w-sm w-full max-h-[80vh] overflow-y-auto text-slate-900"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">
@@ -40,14 +40,14 @@ export default function HelpModal({ open, onClose }) {
               >
                 ÷{r.divisor}
               </span>
-              <p className="text-sm text-slate-300 pt-2">{r.rule}</p>
+              <p className="text-sm text-slate-600 pt-2">{r.rule}</p>
             </div>
           ))}
         </div>
 
         <button
           onClick={onClose}
-          className="mt-5 w-full py-2.5 rounded-xl font-bold bg-primary hover:bg-primary-dark transition-colors"
+          className="mt-5 w-full py-2.5 rounded-xl font-bold bg-primary hover:bg-primary-dark transition-colors text-white"
         >
           Compris !
         </button>

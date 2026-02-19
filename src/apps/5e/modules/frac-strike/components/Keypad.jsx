@@ -47,7 +47,7 @@ export default function Keypad({ value, onChange, onSubmit, disabled }) {
           type="button"
           onClick={handleClear}
           disabled={disabled}
-          className="py-3 rounded-xl bg-surface text-sm font-medium text-slate-400 active:bg-red-900/30 transition-colors disabled:opacity-40"
+          className="py-3 rounded-xl bg-surface-light text-sm font-medium text-slate-400 active:bg-red-900/30 transition-colors disabled:opacity-40"
         >
           C
         </button>
@@ -63,7 +63,7 @@ export default function Keypad({ value, onChange, onSubmit, disabled }) {
           type="button"
           onClick={handleDelete}
           disabled={disabled}
-          className="py-3 rounded-xl bg-surface text-slate-400 flex items-center justify-center active:bg-red-900/30 transition-colors disabled:opacity-40"
+          className="py-3 rounded-xl bg-surface-light text-slate-400 flex items-center justify-center active:bg-red-900/30 transition-colors disabled:opacity-40"
         >
           <Delete className="w-5 h-5" />
         </button>

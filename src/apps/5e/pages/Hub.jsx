@@ -66,9 +66,9 @@ export default function Hub({ player, onNavigate, onLogout, onHome }) {
               key={mod.id}
               onClick={() => mod.active && onNavigate(mod.id)}
               disabled={!mod.active}
-              className={`relative overflow-hidden rounded-2xl p-5 text-left transition-transform active:scale-[0.98] ${
+              className={`group relative overflow-hidden rounded-2xl p-5 text-left transition-transform active:scale-[0.98] text-slate-900 ${
                 mod.active
-                  ? 'bg-surface hover:bg-surface-light cursor-pointer'
+                  ? 'bg-surface hover:bg-surface-light hover:text-white cursor-pointer'
                   : 'bg-surface/50 cursor-not-allowed opacity-60'
               }`}
             >
@@ -92,7 +92,7 @@ export default function Hub({ player, onNavigate, onLogout, onHome }) {
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-slate-400 mt-1">
+                  <p className="text-sm text-slate-600 group-hover:text-slate-300 mt-1">
                     {mod.description}
                   </p>
                 </div>
@@ -113,7 +113,7 @@ export default function Hub({ player, onNavigate, onLogout, onHome }) {
       )}
 
       {/* RGPD notice */}
-      <p className="text-xs text-slate-600 text-center mt-4">
+      <p className="text-xs text-slate-500 text-center mt-4">
         Aucune donnée ne quitte ton appareil. Conforme RGPD.
       </p>
     </div>

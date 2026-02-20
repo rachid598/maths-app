@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { ArrowLeft, ArrowRight, Star, Eye } from 'lucide-react'
 import confetti from 'canvas-confetti'
@@ -236,7 +237,6 @@ export default function NombreMystere({ onBack }) {
             </div>
           </div>
           <div className="grid grid-cols-3 gap-2">
-            {[1,2,3,4,5,6,7,8,9].map((n) => (
               <button key={n} type="button" onClick={() => input.length < 4 && setInput(input + String(n))} className="py-3 rounded-xl bg-surface-light text-lg font-semibold active:bg-primary/30 transition-colors">{n}</button>
             {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
               <button
@@ -265,6 +265,14 @@ export default function NombreMystere({ onBack }) {
       )}
 
       <div className="h-4" />
+=======
+import React from 'react'
+export default function NombreMystere(){
+  return (
+    <div className="p-6">
+      <h2 className="text-white">Nombre Mystère (placeholder)</h2>
+      <p className="text-slate-400">Module ajouté pour permettre le build.</p>
+>>>>>>> origin/feature/5e/nombre-mystere
     </div>
   )
 }

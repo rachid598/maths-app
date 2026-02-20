@@ -39,8 +39,12 @@ export default function NombreMystere({ onBack }) {
     setStreak(0)
     setIndex(0)
     setDone(false)
+<<<<<<< HEAD
+    setRiddle(generateRiddle(id))
+=======
     const r = generateRiddle(id)
     setRiddle(r)
+>>>>>>> origin/main
     setInput('')
     setFeedback(null)
     setShowHint(false)
@@ -62,15 +66,27 @@ export default function NombreMystere({ onBack }) {
       setFeedback(null)
       confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#6366f1', '#fbbf24', '#10b981'] })
     } else {
+<<<<<<< HEAD
+      setStreak(0)
+      setFeedback("Ce n'est pas le bon nombre. Réessaie !")
+=======
       const { newStreak } = computeScore(false, streak, level)
       setStreak(newStreak)
       setFeedback('Ce n\'est pas le bon nombre. Réessaie !')
+>>>>>>> origin/main
       fbRef.current = setTimeout(() => setFeedback(null), 2500)
       setInput('')
     }
   }
 
   function handleNext() {
+<<<<<<< HEAD
+    if (index + 1 >= PROBLEMS) {
+      setDone(true)
+      if (score === PROBLEMS) confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 } })
+    } else {
+      setIndex((i) => i + 1)
+=======
     const next = index + 1
     if (next >= PROBLEMS) {
       setDone(true)
@@ -79,12 +95,21 @@ export default function NombreMystere({ onBack }) {
       }
     } else {
       setIndex(next)
+>>>>>>> origin/main
       newRiddle(level)
     }
   }
 
   useEffect(() => () => clearTimeout(fbRef.current), [])
 
+<<<<<<< HEAD
+  if (done) {
+    return (
+      <ScoreScreen score={score} total={PROBLEMS} onReplay={() => selectLevel(level)} onChangeLevel={() => setLevel(null)} onBack={onBack} />
+    )
+  }
+
+=======
   // Done screen
   if (done) {
     return (
@@ -101,13 +126,18 @@ export default function NombreMystere({ onBack }) {
   }
 
   // Level picker
+>>>>>>> origin/main
   if (!level) {
     return (
       <div className="min-h-screen p-4">
         <header className="flex items-center gap-3 mb-6 pt-2">
+<<<<<<< HEAD
+          <button onClick={onBack} className="p-2 rounded-xl bg-surface hover:bg-surface-light transition-colors"><ArrowLeft className="w-5 h-5" /></button>
+=======
           <button onClick={onBack} className="p-2 rounded-xl bg-surface hover:bg-surface-light transition-colors">
             <ArrowLeft className="w-5 h-5" />
           </button>
+>>>>>>> origin/main
           <h2 className="text-xl font-bold">Nombre Mystère</h2>
         </header>
         <LevelPicker onSelect={selectLevel} />
@@ -115,6 +145,13 @@ export default function NombreMystere({ onBack }) {
     )
   }
 
+<<<<<<< HEAD
+  return (
+    <div className="min-h-screen flex flex-col p-4">
+      <header className="flex items-center justify-between mb-4 pt-2">
+        <div className="flex items-center gap-3">
+          <button onClick={onBack} className="p-2 rounded-xl bg-surface hover:bg-surface-light transition-colors"><ArrowLeft className="w-5 h-5" /></button>
+=======
   // Main game
   return (
     <div className="min-h-screen flex flex-col p-4">
@@ -124,6 +161,7 @@ export default function NombreMystere({ onBack }) {
           <button onClick={onBack} className="p-2 rounded-xl bg-surface hover:bg-surface-light transition-colors">
             <ArrowLeft className="w-5 h-5" />
           </button>
+>>>>>>> origin/main
           <div>
             <h2 className="text-lg font-bold">Nombre Mystère</h2>
             <p className="text-xs text-slate-300">{index + 1}/{PROBLEMS}</p>
@@ -135,6 +173,26 @@ export default function NombreMystere({ onBack }) {
         </div>
       </header>
 
+<<<<<<< HEAD
+      <div className="h-1.5 bg-surface rounded-full mb-4 overflow-hidden">
+        <div className="h-full bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full transition-all duration-500" style={{ width: `${((index + (solved ? 1 : 0)) / PROBLEMS) * 100}%` }} />
+      </div>
+
+      {riddle && <RiddleCard riddleText={riddle.riddleText} />}
+
+      {riddle && !solved && (
+        <button onClick={() => setShowHint((h) => !h)} className="mx-auto mt-3 flex items-center gap-1.5 text-sm text-indigo-300 hover:text-indigo-200 transition-colors">
+          <Eye className="w-4 h-4" />{showHint ? "Masquer l'aide" : "Afficher l'aide"}
+        </button>
+      )}
+
+      {riddle && <div className="mt-3"><HintSteps hintSteps={riddle.hintSteps} visible={showHint && !solved} /></div>}
+
+      {riddle && solved && <div className="mt-4"><EquationReveal equation={riddle.equation} x={riddle.x} visible /></div>}
+
+      <div className="h-10 flex items-center justify-center my-2">
+        {feedback && <p className="text-sm font-semibold px-4 py-1.5 rounded-full bg-red-900/30 text-danger">{feedback}</p>}
+=======
       {/* Progress */}
       <div className="h-1.5 bg-surface rounded-full mb-4 overflow-hidden">
         <div
@@ -172,21 +230,30 @@ export default function NombreMystere({ onBack }) {
         {feedback && (
           <p className="text-sm font-semibold px-4 py-1.5 rounded-full bg-red-900/30 text-danger">{feedback}</p>
         )}
+>>>>>>> origin/main
       </div>
 
       <div className="flex-1" />
 
+<<<<<<< HEAD
+      {solved && (
+        <button onClick={handleNext} className="mx-auto mb-4 px-8 py-3 rounded-xl font-bold text-lg bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 active:scale-[0.97] transition-all text-white flex items-center gap-2">
+=======
       {/* Next button */}
       {solved && (
         <button
           onClick={handleNext}
           className="mx-auto mb-4 px-8 py-3 rounded-xl font-bold text-lg bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 active:scale-[0.97] transition-all text-white flex items-center gap-2"
         >
+>>>>>>> origin/main
           Suivant <ArrowRight className="w-5 h-5" />
         </button>
       )}
 
+<<<<<<< HEAD
+=======
       {/* Input keypad */}
+>>>>>>> origin/main
       {!solved && (
         <div className="w-full max-w-xs mx-auto">
           <div className="mb-3 flex items-center justify-center gap-2">
@@ -196,6 +263,10 @@ export default function NombreMystere({ onBack }) {
             </div>
           </div>
           <div className="grid grid-cols-3 gap-2">
+<<<<<<< HEAD
+            {[1,2,3,4,5,6,7,8,9].map((n) => (
+              <button key={n} type="button" onClick={() => input.length < 4 && setInput(input + String(n))} className="py-3 rounded-xl bg-surface-light text-lg font-semibold active:bg-primary/30 transition-colors">{n}</button>
+=======
             {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
               <button
                 key={n}
@@ -205,11 +276,15 @@ export default function NombreMystere({ onBack }) {
               >
                 {n}
               </button>
+>>>>>>> origin/main
             ))}
             <button type="button" onClick={() => setInput('')} className="py-3 rounded-xl bg-surface text-sm font-medium text-slate-300 active:bg-red-900/30 transition-colors">C</button>
             <button type="button" onClick={() => input.length < 4 && setInput(input + '0')} className="py-3 rounded-xl bg-surface-light text-lg font-semibold active:bg-primary/30 transition-colors">0</button>
             <button type="button" onClick={() => setInput(input.slice(0, -1))} className="py-3 rounded-xl bg-surface text-slate-300 flex items-center justify-center active:bg-red-900/30 transition-colors">⌫</button>
           </div>
+<<<<<<< HEAD
+          <button type="button" onClick={handleSubmit} disabled={!input} className="mt-3 w-full py-3 rounded-xl font-bold text-lg bg-primary hover:bg-primary-dark active:bg-primary-dark transition-colors text-white disabled:opacity-40 disabled:cursor-not-allowed">Valider</button>
+=======
           <button
             type="button"
             onClick={handleSubmit}
@@ -218,6 +293,7 @@ export default function NombreMystere({ onBack }) {
           >
             Valider
           </button>
+>>>>>>> origin/main
         </div>
       )}
 

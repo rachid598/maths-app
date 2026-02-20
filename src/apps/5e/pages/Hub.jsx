@@ -1,4 +1,4 @@
-import { Swords, Calculator, Grid3X3, BarChart3, Puzzle, LogOut } from 'lucide-react'
+import { Swords, Calculator, Grid3X3, BarChart3, Puzzle, LogOut, Zap } from 'lucide-react'
 
 const modules = [
   {
@@ -23,6 +23,22 @@ const modules = [
     description: 'Maîtrise les critères de divisibilité !',
     icon: Grid3X3,
     color: 'from-emerald-500 to-teal-600',
+    active: true,
+  },
+  {
+    id: 'prio-rush',
+    title: 'Prio-Rush',
+    description: '10 expressions, 60 secondes, combo × points !',
+    icon: Zap,
+    color: 'from-amber-500 to-orange-600',
+    active: true,
+  },
+  {
+    id: 'nombre-mystere',
+    title: 'Nombre Mystère',
+    description: 'Découvre le nombre caché grâce aux indices !',
+    icon: HelpCircle,
+    color: 'from-violet-500 to-fuchsia-600',
     active: true,
   },
   {

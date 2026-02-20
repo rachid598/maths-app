@@ -10,7 +10,6 @@ export default function ScoreScreen({ results, totalTime, onReplay, onBack, onSh
   for (const r of results) { if (r.correct) { streak++; maxStreak = Math.max(maxStreak, streak) } else streak = 0 }
   const mins = Math.floor(totalTime / 60)
   const secs = totalTime % 60
-
   return (
     <div className="mx-auto max-w-lg text-center">
       <Trophy className="mx-auto mb-4 h-16 w-16 text-yellow-400" />

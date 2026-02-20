@@ -44,13 +44,8 @@ export function pickQuestions(n = NUM_QUESTIONS) {
   return picked.slice(0, n)
 }
 
-function normalize(s) {
-  return String(s).replace(/\s+/g, '').toLowerCase()
-}
-
-export function checkAnswer(userAnswer, correctAnswer) {
-  return normalize(userAnswer) === normalize(correctAnswer)
-}
+function normalize(s) { return String(s).replace(/\s+/g, '').toLowerCase() }
+export function checkAnswer(userAnswer, correctAnswer) { return normalize(userAnswer) === normalize(correctAnswer) }
 
 export function computeGrade(correct, total) {
   const pct = correct / total

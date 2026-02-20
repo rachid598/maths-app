@@ -32,6 +32,9 @@ export default function App3e() {
   if (currentGame === 'frac-strike') {
     return <div className="theme-3e min-h-screen"><FracStrike onBack={goBack} /></div>
   }
+  if (currentGame === 'brevet-flash') {
+    return <div className="theme-3e min-h-screen"><BrevetFlash onBack={goBack} /></div>
+  }
 
   return (
     <div className="theme-3e min-h-screen">

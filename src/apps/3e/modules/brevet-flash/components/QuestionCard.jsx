@@ -4,13 +4,8 @@ import { THEME_COLORS } from '../engine'
 
 export default function QuestionCard({ question, index, total, onAnswer, feedback }) {
   const [input, setInput] = useState('')
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (!input.trim() || feedback) return
-    onAnswer(input.trim())
-  }
+  const handleSubmit = (e) => { e.preventDefault(); if (!input.trim() || feedback) return; onAnswer(input.trim()) }
   const themeColor = THEME_COLORS[question.theme] || '#6366f1'
-
   return (
     <div className="mx-auto w-full max-w-lg">
       <div className="mb-3 flex items-center justify-between">
@@ -21,9 +16,7 @@ export default function QuestionCard({ question, index, total, onAnswer, feedbac
         <p className="mb-6 text-lg font-medium leading-relaxed text-white">{question.text}</p>
         <form onSubmit={handleSubmit} className="flex gap-2">
           <input type="text" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ta réponse…" disabled={!!feedback} autoFocus className="flex-1 rounded-xl border border-slate-600 bg-slate-800 px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-accent focus:ring-1 focus:ring-accent disabled:opacity-50" />
-          <button type="submit" disabled={!input.trim() || !!feedback} className="flex items-center gap-2 rounded-xl bg-accent px-5 py-3 font-bold text-white transition hover:bg-accent/80 disabled:opacity-40">
-            <Send className="h-4 w-4" /> Valider
-          </button>
+          <button type="submit" disabled={!input.trim() || !!feedback} className="flex items-center gap-2 rounded-xl bg-accent px-5 py-3 font-bold text-white transition hover:bg-accent/80 disabled:opacity-40"><Send className="h-4 w-4" /> Valider</button>
         </form>
       </div>
       {feedback && (

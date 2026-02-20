@@ -34,6 +34,14 @@ const modules = [
     active: true,
   },
   {
+    id: 'nombre-mystere',
+    title: 'Nombre Mystère',
+    description: 'Découvre le nombre caché grâce aux indices !',
+    icon: HelpCircle,
+    color: 'from-violet-500 to-fuchsia-600',
+    active: true,
+  },
+  {
     id: 'calc-puzzle',
     title: 'Calc-Puzzle',
     description: 'Résous des énigmes de calcul mental.',

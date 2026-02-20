@@ -6,6 +6,7 @@ import Hub from './pages/Hub'
 import Theoremes from './modules/theoremes/Theoremes'
 import Automatismes from './modules/automatismes/Automatismes'
 import FracStrike from './modules/frac-strike/FracStrike'
+import BrevetFlash from './modules/brevet-flash/BrevetFlash'
 
 export default function App3e() {
   const navigate = useNavigate()
@@ -30,6 +31,9 @@ export default function App3e() {
   }
   if (currentGame === 'frac-strike') {
     return <div className="theme-3e min-h-screen"><FracStrike onBack={goBack} /></div>
+  }
+  if (currentGame === 'brevet-flash') {
+    return <div className="theme-3e min-h-screen"><BrevetFlash onBack={goBack} /></div>
   }
 
   return (

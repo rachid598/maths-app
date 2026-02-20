@@ -1,4 +1,4 @@
-import { Scissors, Triangle, Brain, LogOut } from 'lucide-react'
+import { Scissors, Triangle, Brain, LogOut, Zap } from 'lucide-react'
 
 const GAMES = [
   {
@@ -23,6 +23,14 @@ const GAMES = [
     description: 'Pythagore, Thalès et réciproques',
     icon: Triangle,
     color: 'from-purple-500 to-violet-600',
+    active: true,
+  },
+  {
+    id: 'brevet-flash',
+    title: 'Brevet Flash',
+    description: '5 questions type brevet en 5 minutes chrono',
+    icon: Zap,
+    color: 'from-yellow-500 to-orange-600',
     active: true,
   },
 ]

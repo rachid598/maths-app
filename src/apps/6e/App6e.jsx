@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from 'react'
-import { Routes, Route, useNavigate } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import Hub from './components/Hub'
 import Onboarding from './components/Onboarding'
 import BadgesScreen from './components/BadgesScreen'

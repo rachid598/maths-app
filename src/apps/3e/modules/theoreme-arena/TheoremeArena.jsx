@@ -68,9 +68,13 @@ function ThalesSVG({ data }) {
       <text x="178" y="175" textAnchor="start" fill="#f59e0b" fontSize="11">E</text>
       {/* Values */}
       <text x="68" y="55" textAnchor="end" fill="#94a3b8" fontSize="10">AB={data.ab}</text>
+      <text x="135" y="55" textAnchor="start" fill="#94a3b8" fontSize="10">AC={data.ac}</text>
       <text x="100" y="115" textAnchor="middle" fill="#10b981" fontSize="10">BC={data.bc}</text>
       <text x="55" y="140" textAnchor="end" fill="#94a3b8" fontSize="10">
         AD={data.hide.label === 'AD' ? '?' : data.ad}
+      </text>
+      <text x="148" y="140" textAnchor="start" fill="#94a3b8" fontSize="10">
+        AE={data.hide.label === 'AE' ? '?' : data.ae}
       </text>
       <text x="100" y="165" textAnchor="middle" fill="#f59e0b" fontSize="10">
         DE={data.hide.label === 'DE' ? '?' : data.de}

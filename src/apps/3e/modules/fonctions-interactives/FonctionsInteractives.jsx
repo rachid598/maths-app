@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback } from 'react'
 
 const FUNCTIONS = [
   { label: 'f(x) = 2x + 1', fn: x => 2 * x + 1, color: '#6366f1' },
@@ -97,6 +97,24 @@ export default function FonctionsInteractives({ onBack }) {
       expected = Math.round(func.fn(questionX) * 100) / 100
     } else {
       expected = questionX
+    }
+    // For antecedent mode: accept both x and -x for symmetric functions (e.g. x²)
+    if (mode === 'antecedent' && questionY >= 0) {
+      const posAnte = Math.round(Math.sqrt(questionY) * 100) / 100
+      const negAnte = -posAnte
+      // Check if both +x and -x map to questionY (symmetric function)
+      if (Math.abs(func.fn(posAnte) - questionY) < 0.01 && Math.abs(func.fn(negAnte) - questionY) < 0.01 && posAnte !== 0) {
+        if (Math.abs(val - posAnte) < 0.01 || Math.abs(val - negAnte) < 0.01) {
+          setFeedback('✅ Correct !')
+          setScore(s => s + 1)
+          setTotal(t => t + 1)
+          return
+        } else {
+          setFeedback(`❌ Réponses possibles : ${negAnte} ou ${posAnte}`)
+          setTotal(t => t + 1)
+          return
+        }
+      }
     }
     if (Math.abs(val - expected) < 0.01) {
       setFeedback('✅ Correct !')

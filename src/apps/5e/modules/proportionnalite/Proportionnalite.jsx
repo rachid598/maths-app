@@ -13,12 +13,15 @@ function generateProblem() {
 }
 
 function generateCrossProblem() {
-  const a = Math.floor(Math.random() * 10) + 2
-  const b = Math.floor(Math.random() * 10) + 2
-  const c = Math.floor(Math.random() * 10) + 2
-  // a/b = c/x → x = b*c/a
+  // Ensure (b*c) % a === 0 for a clean integer answer
+  let a, b, c
+  do {
+    a = Math.floor(Math.random() * 10) + 2
+    b = Math.floor(Math.random() * 10) + 2
+    c = Math.floor(Math.random() * 10) + 2
+  } while ((b * c) % a !== 0)
   const x = (b * c) / a
-  return { a, b, c, answer: Math.round(x * 100) / 100 }
+  return { a, b, c, answer: x }
 }
 
 export default function Proportionnalite({ onBack }) {
@@ -43,7 +46,7 @@ export default function Proportionnalite({ onBack }) {
 
   const checkCross = useCallback(() => {
     const val = parseFloat(input)
-    if (Math.abs(val - crossProblem.answer) < 0.01) {
+    if (Math.abs(val - crossProblem.answer) < 0.1) {
       setFeedback('✅ Exact !')
       setScore(s => s + 1)
     } else {

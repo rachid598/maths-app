@@ -3,7 +3,17 @@ import { useNavigate } from 'react-router-dom'
 
 function gcd(a, b) { return b === 0 ? a : gcd(b, a % b) }
 
-function generateFraction() {
+function generateFraction(forceReducible = false) {
+  if (forceReducible) {
+    // Generate a fraction that is always reducible (gcd > 1)
+    const k = [2, 3, 4, 5][Math.floor(Math.random() * 4)] // common factor
+    const maxB = Math.floor(12 / k)
+    const b = Math.max(2, Math.floor(Math.random() * maxB) + 1)
+    let a = Math.floor(Math.random() * (b - 1)) + 1
+    // Ensure gcd(a, b) === 1 for proper irreducible base
+    while (gcd(a, b) !== 1) a = Math.floor(Math.random() * (b - 1)) + 1
+    return { num: k * a, denom: k * b }
+  }
   const denom = [2, 3, 4, 5, 6, 8, 10, 12][Math.floor(Math.random() * 8)]
   const num = Math.floor(Math.random() * (denom - 1)) + 1
   return { num, denom }
@@ -48,7 +58,7 @@ function Bar({ num, denom, size = 200 }) {
   )
 }
 
-export default function FractionsVisuelles() {
+export default function FractionsVisuelles({ player, onBadgeCheck }) {
   const navigate = useNavigate()
   const [mode, setMode] = useState('visualiser') // visualiser | simplifier
   const [frac, setFrac] = useState(generateFraction)
@@ -65,7 +75,11 @@ export default function FractionsVisuelles() {
     const aDenom = parseInt(answer.denom)
     if (aNum === sNum && aDenom === sDenom) {
       setFeedback('✅ Bravo ! Fraction irréductible trouvée !')
-      setScore(s => s + 1)
+      setScore(s => {
+        const newScore = s + 1
+        if (onBadgeCheck) onBadgeCheck('fractions-visuelles', { score: newScore, total: total + 1 })
+        return newScore
+      })
     } else {
       setFeedback(`❌ La réponse est ${sNum}/${sDenom}`)
     }
@@ -73,7 +87,7 @@ export default function FractionsVisuelles() {
   }, [frac, answer])
 
   const next = () => {
-    setFrac(generateFraction())
+    setFrac(generateFraction(mode === 'simplifier'))
     setAnswer({ num: '', denom: '' })
     setFeedback(null)
   }
@@ -104,7 +118,7 @@ export default function FractionsVisuelles() {
             👁️ Visualiser
           </button>
           <button
-            onClick={() => { setMode('simplifier'); next() }}
+            onClick={() => { setMode('simplifier'); setFrac(generateFraction(true)); setAnswer({ num: '', denom: '' }); setFeedback(null) }}
             className={`px-4 py-2 rounded-full text-sm font-bold transition ${mode === 'simplifier' ? 'bg-indigo-500 text-white' : 'bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300'}`}
           >
             ✂️ Simplifier

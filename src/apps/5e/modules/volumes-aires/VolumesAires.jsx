@@ -30,8 +30,8 @@ const SHAPES = [
     type: 'aire',
     generate: () => {
       const r = Math.floor(Math.random() * 8) + 2
-      const ans = Math.round(Math.PI * r * r * 100) / 100
-      return { params: { r }, answer: ans, unit: 'cm²', formula: 'A = π × r²', desc: `rayon = ${r} cm` }
+      const ans = Math.round(Math.PI * r * r * 10) / 10
+      return { params: { r }, answer: ans, unit: 'cm²', formula: 'A = π × r²', desc: `rayon = ${r} cm (arrondis au dixième)` }
     },
   },
   {
@@ -54,8 +54,8 @@ const SHAPES = [
     generate: () => {
       const r = Math.floor(Math.random() * 6) + 2
       const h = Math.floor(Math.random() * 10) + 2
-      const ans = Math.round(Math.PI * r * r * h * 100) / 100
-      return { params: { r, h }, answer: ans, unit: 'cm³', formula: 'V = π × r² × h', desc: `rayon=${r} cm, hauteur=${h} cm` }
+      const ans = Math.round(Math.PI * r * r * h * 10) / 10
+      return { params: { r, h }, answer: ans, unit: 'cm³', formula: 'V = π × r² × h', desc: `rayon=${r} cm, hauteur=${h} cm (arrondis au dixième)` }
     },
   },
 ]
@@ -112,7 +112,7 @@ export default function VolumesAires({ onBack }) {
 
   const check = useCallback(() => {
     const val = parseFloat(input)
-    if (Math.abs(val - problem.answer) < 0.1) {
+    if (Math.abs(val - problem.answer) < 0.5) {
       setFeedback('✅ Bravo !')
       setScore(s => s + 1)
     } else {

@@ -15,7 +15,7 @@ function dist(a, b) {
   return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2)
 }
 
-export default function GeoBuilder() {
+export default function GeoBuilder({ player, onBadgeCheck }) {
   const navigate = useNavigate()
   const svgRef = useRef(null)
   const [tool, setTool] = useState('point')
@@ -30,8 +30,9 @@ export default function GeoBuilder() {
   const getSVGPoint = useCallback((e) => {
     const svg = svgRef.current
     const rect = svg.getBoundingClientRect()
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY
+    const touch = e.changedTouches ? e.changedTouches[0] : e.touches ? e.touches[0] : null
+    const clientX = touch ? touch.clientX : e.clientX
+    const clientY = touch ? touch.clientY : e.clientY
     // Snap to grid (20px)
     let x = Math.round((clientX - rect.left) / 20) * 20
     let y = Math.round((clientY - rect.top) / 20) * 20
@@ -79,22 +80,21 @@ export default function GeoBuilder() {
 
     if (tool === 'symmetry') {
       // Reflect all points
-      const w = svgRef.current.getBoundingClientRect().width
-      const h = svgRef.current.getBoundingClientRect().height
       const reflected = points.map(p => ({
-        x: symAxis === 'vertical' ? w - p.x : p.x,
-        y: symAxis === 'horizontal' ? h - p.y : p.y,
+        x: symAxis === 'vertical' ? 400 - p.x : p.x,
+        y: symAxis === 'horizontal' ? 400 - p.y : p.y,
         color: '#ec4899',
       }))
       setPoints(ps => [...ps, ...reflected])
       const refLines = lines.map(l => ({
-        a: { x: symAxis === 'vertical' ? w - l.a.x : l.a.x, y: symAxis === 'horizontal' ? h - l.a.y : l.a.y },
-        b: { x: symAxis === 'vertical' ? w - l.b.x : l.b.x, y: symAxis === 'horizontal' ? h - l.b.y : l.b.y },
+        a: { x: symAxis === 'vertical' ? 400 - l.a.x : l.a.x, y: symAxis === 'horizontal' ? 400 - l.a.y : l.a.y },
+        b: { x: symAxis === 'vertical' ? 400 - l.b.x : l.b.x, y: symAxis === 'horizontal' ? 400 - l.b.y : l.b.y },
         color: '#ec4899',
       }))
       setLines(ls => [...ls, ...refLines])
+      if (onBadgeCheck) onBadgeCheck('geo-builder', { action: 'symmetry', pointCount: points.length })
     }
-  }, [tool, color, pending, points, lines, symAxis, getSVGPoint])
+  }, [tool, color, pending, points, lines, symAxis, getSVGPoint, onBadgeCheck])
 
   const clear = () => {
     setPoints([])

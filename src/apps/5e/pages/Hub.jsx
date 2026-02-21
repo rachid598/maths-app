@@ -1,4 +1,4 @@
-import { Swords, Calculator, Grid3X3, BarChart3, Puzzle, LogOut, Zap, Scale, Box } from 'lucide-react'
+import { Swords, Calculator, Grid3X3, LogOut, Zap, Scale, Box } from 'lucide-react'
 
 const modules = [
   {
@@ -47,22 +47,6 @@ const modules = [
     description: 'Calcule aires et volumes de figures 2D et 3D !',
     icon: Box,
     color: 'from-pink-500 to-rose-600',
-    active: true,
-  },
-  {
-    id: 'proportionnalite',
-    title: 'Proportionnalité',
-    description: 'Recettes, tableaux et 4ème proportionnelle',
-    icon: BarChart3,
-    color: 'from-violet-500 to-fuchsia-600',
-    active: true,
-  },
-  {
-    id: 'volumes-aires',
-    title: 'Volumes & Aires',
-    description: 'Calcule aires et volumes avec des formes 3D !',
-    icon: Grid3X3,
-    color: 'from-orange-500 to-amber-600',
     active: true,
   },
 ]

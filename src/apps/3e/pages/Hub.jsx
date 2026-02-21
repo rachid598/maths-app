@@ -1,4 +1,4 @@
-import { Scissors, Triangle, Brain, LogOut, Zap } from 'lucide-react'
+import { Scissors, Triangle, Brain, LogOut, Zap, TrendingUp, Swords } from 'lucide-react'
 
 const GAMES = [
   {
@@ -31,6 +31,22 @@ const GAMES = [
     description: '5 questions type brevet en 5 minutes chrono',
     icon: Zap,
     color: 'from-yellow-500 to-orange-600',
+    active: true,
+  },
+  {
+    id: 'fonctions-interactives',
+    title: 'Fonctions Interactives',
+    description: 'Images, antécédents, graphiques de fonctions linéaires et affines !',
+    icon: TrendingUp,
+    color: 'from-indigo-500 to-purple-600',
+    active: true,
+  },
+  {
+    id: 'theoreme-arena',
+    title: 'Théorème Arena',
+    description: 'Pythagore vs Thalès — enchaîne les calculs !',
+    icon: Swords,
+    color: 'from-red-500 to-orange-600',
     active: true,
   },
 ]

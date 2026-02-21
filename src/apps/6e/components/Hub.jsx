@@ -1,3 +1,4 @@
+import { Shapes, Ruler } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { exportResults } from '../hooks/useHistory'
 import DateIcon from './DateIcon'
@@ -9,6 +10,24 @@ const GAMES = [
   { id: 'opera', title: 'Opera-Mix', description: '+, -, x melanges !', emoji: '\uD83C\uDFB0', color: 'from-pink-500 to-rose-500', path: '/6e/opera-mix' },
   { id: 'daily', title: 'Defi du jour', description: 'Les memes questions pour toute la classe', emoji: '\uD83D\uDCC5', color: 'from-amber-500 to-yellow-500', path: '/6e/daily' },
   { id: 'duel', title: 'Duel Local', description: '2 joueurs, 1 telephone !', emoji: '\uD83E\uDD4A', color: 'from-cyan-500 to-blue-500', path: '/6e/duel' },
+  { id: 'fractions-visuelles', title: 'Fractions Visuelles', description: 'Pizza interactive et conversions', emoji: '🍕', color: 'from-orange-500 to-amber-500', path: '/6e/fractions-visuelles' },
+  { id: 'geo-builder', title: 'Géo-Builder', description: 'Grille, points et périmètres', emoji: '📐', color: 'from-teal-500 to-green-500', path: '/6e/geo-builder' },
+  {
+    id: 'fractions-visuelles',
+    title: 'Fractions Visuelles',
+    description: 'Identifie et manipule les fractions avec des pizzas !',
+    icon: Shapes,
+    color: 'from-amber-500 to-orange-600',
+    active: true,
+  },
+  {
+    id: 'geo-builder',
+    title: 'Géo-Builder',
+    description: 'Calcule périmètres et aires de figures géométriques !',
+    icon: Ruler,
+    color: 'from-emerald-500 to-teal-600',
+    active: true,
+  },
 ]
 
 export default function Hub({ player, onReset, darkMode, onToggleDark, badgeCount }) {

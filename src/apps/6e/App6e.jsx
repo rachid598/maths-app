@@ -11,6 +11,8 @@ import ChronoTables from './modules/ChronoTables/ChronoTables'
 import OperaMix from './modules/OperaMix/OperaMix'
 import DailyChallenge from './modules/DailyChallenge/DailyChallenge'
 import Duel from './modules/Duel/Duel'
+import FractionsVisuelles from './modules/FractionsVisuelles/FractionsVisuelles'
+import GeoBuilder from './modules/GeoBuilder/GeoBuilder'
 import { usePlayer } from './hooks/usePlayer'
 import { useBadges } from './hooks/useBadges'
 import { loadHistory } from './hooks/useHistory'
@@ -77,8 +79,12 @@ export default function App6e() {
         <Route path="/opera-mix" element={<OperaMix player={player} onBadgeCheck={makeBadgeCheck('OM')} />} />
         <Route path="/daily" element={<DailyChallenge player={player} onBadgeCheck={makeBadgeCheck('DC')} />} />
         <Route path="/duel" element={<Duel onBadgeCheck={makeBadgeCheck('duel')} />} />
+        <Route path="/fractions-visuelles" element={<FractionsVisuelles onBack={() => navigate('/6e')} />} />
+        <Route path="/geo-builder" element={<GeoBuilder onBack={() => navigate('/6e')} />} />
         <Route path="/badges" element={<BadgesScreen earned={earned} />} />
         <Route path="/history" element={<HistoryChart />} />
+        <Route path="/fractions-visuelles" element={<FractionsVisuelles player={player} onBadgeCheck={makeBadgeCheck("FV")} />} />
+        <Route path="/geo-builder" element={<GeoBuilder player={player} onBadgeCheck={makeBadgeCheck("GB")} />} />
       </Routes>
     </div>
   )

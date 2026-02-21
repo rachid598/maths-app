@@ -7,6 +7,8 @@ import FracStrike from './modules/frac-strike/FracStrike'
 import PrioCalcul from './modules/prio-calcul/PrioCalcul'
 import DiviCheck from './modules/divi-check/DiviCheck'
 import PrioRush from './modules/prio-rush/PrioRush'
+import Proportionnalite from './modules/proportionnalite/Proportionnalite'
+import VolumesAires from './modules/volumes-aires/VolumesAires'
 
 export default function App5e() {
   const navigate = useNavigate()
@@ -35,8 +37,17 @@ export default function App5e() {
   if (currentModule === 'prio-rush') {
     return <div className="theme-5e min-h-screen"><PrioRush onBack={goBack} /></div>
   }
-  if (currentModule === 'nombre-mystere') {
-    return <div className="theme-5e min-h-screen"><NombreMystere onBack={goBack} /></div>
+  if (currentModule === 'proportionnalite') {
+    return <div className="theme-5e min-h-screen"><Proportionnalite onBack={goBack} /></div>
+  }
+  if (currentModule === 'volumes-aires') {
+    return <div className="theme-5e min-h-screen"><VolumesAires onBack={goBack} /></div>
+  }
+  if (currentModule === 'proportionnalite') {
+    return <div className="theme-5e min-h-screen"><Proportionnalite onBack={goBack} /></div>
+  }
+  if (currentModule === 'volumes-aires') {
+    return <div className="theme-5e min-h-screen"><VolumesAires onBack={goBack} /></div>
   }
 
   return (

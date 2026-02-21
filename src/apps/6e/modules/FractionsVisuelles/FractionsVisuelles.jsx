@@ -85,7 +85,7 @@ export default function FractionsVisuelles({ player, onBadgeCheck }) {
         <p className="text-slate-400 mb-6">Identifie la fraction coloriée !</p>
         <div className="grid gap-3">
           {LEVELS.map(l => (
-            <button key={l.id} onClick={() => startLevel(l.id)} className="p-4 rounded-2xl bg-surface hover:bg-surface-light text-left transition-all active:scale-[0.98]">
+            <button key={l.id} onClick={() => startLevel(l.id)} className="p-4 rounded-2xl bg-surface hover:bg-surface-light text-white text-left transition-all active:scale-[0.98]">
               <p className="font-bold text-lg">{l.label}</p>
               <p className="text-sm text-slate-300">{l.desc}</p>
             </button>
@@ -133,7 +133,7 @@ export default function FractionsVisuelles({ player, onBadgeCheck }) {
         {problem.choices.map(c => (
           <button key={c} onClick={() => handleAnswer(c)}
             className={`py-4 rounded-xl text-xl font-bold transition-all active:scale-95 ${
-              feedback ? (c === problem.answer ? 'bg-green-600 text-white' : feedback.correct ? 'bg-surface' : 'bg-surface') : 'bg-surface-light hover:bg-primary/30'
+              feedback ? (c === problem.answer ? 'bg-green-600 text-white' : feedback.correct ? 'bg-surface' : 'bg-surface') : 'bg-surface-light hover:bg-primary/30 text-white'
             }`}>{c}</button>
         ))}
       </div>

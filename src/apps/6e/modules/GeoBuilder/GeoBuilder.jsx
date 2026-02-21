@@ -57,7 +57,7 @@ export default function GeoBuilder({ player, onBadgeCheck }) {
         <p className="text-slate-400 mb-6">Calcule périmètres et aires !</p>
         <div className="grid gap-3">
           {LEVELS.map(l => (
-            <button key={l.id} onClick={() => start(l.id)} className="p-4 rounded-2xl bg-surface hover:bg-surface-light text-left transition-all active:scale-[0.98]">
+            <button key={l.id} onClick={() => start(l.id)} className="p-4 rounded-2xl bg-surface hover:bg-surface-light text-white text-left transition-all active:scale-[0.98]">
               <p className="font-bold text-lg">{l.label}</p>
               <p className="text-sm text-slate-300">{l.desc}</p>
             </button>
@@ -91,7 +91,7 @@ export default function GeoBuilder({ player, onBadgeCheck }) {
       <div className="h-1.5 bg-surface rounded-full mb-6 overflow-hidden">
         <div className="h-full bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full transition-all" style={{ width: `${(index / TOTAL) * 100}%` }} />
       </div>
-      <div className="bg-surface rounded-2xl p-5 mb-4">
+      <div className="bg-surface rounded-2xl p-5 mb-4 text-white">
         <p className="text-sm text-slate-400 mb-1">{problem.shapeName}</p>
         <p className="text-lg font-bold mb-3">{problem.prompt}</p>
         <p className="text-accent font-bold">{problem.question}</p>

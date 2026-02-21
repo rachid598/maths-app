@@ -7,10 +7,6 @@ import Theoremes from './modules/theoremes/Theoremes'
 import Automatismes from './modules/automatismes/Automatismes'
 import FracStrike from './modules/frac-strike/FracStrike'
 import BrevetFlash from './modules/brevet-flash/BrevetFlash'
-import FonctionsInteractives from './modules/fonctions-interactives/index'
-import TheoremeArena from './modules/theoreme-arena/index'
-import FonctionsInteractives from './modules/fonctions-interactives/FonctionsInteractives'
-import TheoremArena from './modules/theoreme-arena/TheoremArena'
 
 export default function App3e() {
   const navigate = useNavigate()
@@ -43,7 +39,7 @@ export default function App3e() {
     return <div className="theme-3e min-h-screen"><FonctionsInteractives onBack={goBack} /></div>
   }
   if (currentGame === 'theoreme-arena') {
-    return <div className="theme-3e min-h-screen"><TheoremArena onBack={goBack} /></div>
+    return <div className="theme-3e min-h-screen"><TheoremeArena onBack={goBack} /></div>
   }
 
   return (

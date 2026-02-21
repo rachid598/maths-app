@@ -98,7 +98,7 @@ export default function DailyChallenge({ player, onBadgeCheck }) {
           <p className="text-gray-500 mb-2">Ton score : <strong>{savedScore}/10</strong></p>
           <Stars count={getStars(savedScore || 0)} size="text-2xl" />
           <p className="text-sm text-gray-400 mt-4 mb-6">Reviens demain pour un nouveau defi !</p>
-          <button onClick={() => navigate('/6e')} className="w-full py-3 rounded-xl bg-primary text-white font-bold active:scale-95 transition-transform">{'\u2190'} Retour au Hub</button>
+          <button onClick={() => navigate('/')} className="w-full py-3 rounded-xl bg-primary text-white font-bold active:scale-95 transition-transform">{'\u2190'} Retour au Hub</button>
         </div>
       </div></PageTransition>
     )
@@ -112,8 +112,8 @@ export default function DailyChallenge({ player, onBadgeCheck }) {
           <h1 className="text-3xl font-extrabold text-primary-dark dark:text-primary-light mb-2">Defi du jour</h1>
           <p className="text-gray-500 dark:text-gray-400 mb-2">10 questions — les memes pour toute la classe !</p>
           <p className="text-xs text-gray-400 mb-6">Un seul essai par jour.</p>
-          <button onClick={start} className="w-full py-4 rounded-xl bg-accent text-white font-bold text-xl active:scale-95 transition-transform">Relever le defi !</button>
-          <button onClick={() => navigate('/6e')} className="mt-4 text-sm text-gray-400">{'\u2190'} Retour au Hub</button>
+          <button onClick={start} className="w-full py-4 rounded-xl bg-accent text-gray-900 dark:text-gray-900 font-bold text-xl active:scale-95 transition-transform">Relever le defi !</button>
+          <button onClick={() => navigate('/')} className="mt-4 text-sm text-gray-500 dark:text-gray-400">{'\u2190'} Retour au Hub</button>
         </div>
       </div></PageTransition>
     )
@@ -128,7 +128,7 @@ export default function DailyChallenge({ player, onBadgeCheck }) {
           <h2 className="text-3xl font-extrabold text-primary-dark dark:text-primary-light mb-2">{score} / {TOTAL}</h2>
           <Stars count={stars} size="text-2xl" />
           <p className="text-sm text-gray-400 mb-8 mt-2">Reviens demain !</p>
-          <button onClick={() => navigate('/6e')} className="w-full py-3 rounded-xl bg-primary text-white font-bold active:scale-95 transition-transform">{'\u2190'} Retour au Hub</button>
+          <button onClick={() => navigate('/')} className="w-full py-3 rounded-xl bg-primary text-white font-bold active:scale-95 transition-transform">{'\u2190'} Retour au Hub</button>
         </div>
       </div></PageTransition>
     )

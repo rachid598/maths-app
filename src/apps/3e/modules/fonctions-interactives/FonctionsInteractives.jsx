@@ -1,119 +1,232 @@
-import { useState, useCallback } from 'react'
-import { ArrowLeft, Star, Eye } from 'lucide-react'
-import { generateProblem } from './engine'
+import { useState, useCallback, useMemo } from 'react'
 
-const TOTAL = 10
+const FUNCTIONS = [
+  { label: 'f(x) = 2x + 1', fn: x => 2 * x + 1, color: '#6366f1' },
+  { label: 'f(x) = -x + 3', fn: x => -x + 3, color: '#ef4444' },
+  { label: 'f(x) = x²', fn: x => x * x, color: '#10b981' },
+  { label: 'f(x) = -x² + 4', fn: x => -x * x + 4, color: '#f59e0b' },
+  { label: 'f(x) = 0.5x - 2', fn: x => 0.5 * x - 2, color: '#ec4899' },
+  { label: 'f(x) = 3', fn: () => 3, color: '#8b5cf6' },
+]
 
-function MiniGraph({ a, b }) {
+function Graph({ func, highlight, width = 340, height = 300 }) {
+  const ox = width / 2, oy = height / 2
+  const scale = 25
+
+  // Build path
   const points = []
-  for (let x = -5; x <= 5; x++) { points.push({ x, y: a * x + b }) }
-  const toSvgX = (x) => 50 + x * 8
-  const toSvgY = (y) => 50 - y * 8
-  const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${toSvgX(p.x)},${toSvgY(p.y)}`).join(' ')
+  for (let px = 0; px < width; px += 2) {
+    const x = (px - ox) / scale
+    const y = func.fn(x)
+    const py = oy - y * scale
+    if (py > -50 && py < height + 50) {
+      points.push(`${px},${py}`)
+    }
+  }
+  const pathD = points.length > 0 ? 'M' + points.join(' L') : ''
 
   return (
-    <svg viewBox="0 0 100 100" className="w-40 h-40 mx-auto mb-4">
-      <line x1="10" y1="50" x2="90" y2="50" stroke="#475569" strokeWidth="0.5" />
-      <line x1="50" y1="10" x2="50" y2="90" stroke="#475569" strokeWidth="0.5" />
-      {[-4,-2,2,4].map(t => <text key={`x${t}`} x={toSvgX(t)} y="55" fill="#64748b" fontSize="4" textAnchor="middle">{t}</text>)}
-      {[-4,-2,2,4].map(t => <text key={`y${t}`} x="45" y={toSvgY(t)+1} fill="#64748b" fontSize="4" textAnchor="end">{t}</text>)}
-      <path d={pathD} fill="none" stroke="#6366f1" strokeWidth="1.5" />
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="mx-auto">
+      {/* Grid */}
+      {Array.from({ length: Math.floor(width / scale) + 1 }, (_, i) => {
+        const x = i * scale
+        return <line key={`v${i}`} x1={x} y1={0} x2={x} y2={height} stroke="#334155" strokeWidth="0.5" />
+      })}
+      {Array.from({ length: Math.floor(height / scale) + 1 }, (_, i) => {
+        const y = i * scale
+        return <line key={`h${i}`} x1={0} y1={y} x2={width} y2={y} stroke="#334155" strokeWidth="0.5" />
+      })}
+
+      {/* Axes */}
+      <line x1={0} y1={oy} x2={width} y2={oy} stroke="#94a3b8" strokeWidth="1.5" />
+      <line x1={ox} y1={0} x2={ox} y2={height} stroke="#94a3b8" strokeWidth="1.5" />
+
+      {/* Graduations */}
+      {[-5, -4, -3, -2, -1, 1, 2, 3, 4, 5].map(n => (
+        <g key={n}>
+          <text x={ox + n * scale} y={oy + 14} textAnchor="middle" fill="#64748b" fontSize="9">{n}</text>
+          <text x={ox - 12} y={oy - n * scale + 3} textAnchor="end" fill="#64748b" fontSize="9">{n}</text>
+        </g>
+      ))}
+      <text x={ox + 4} y={oy + 14} fill="#64748b" fontSize="9">0</text>
+
+      {/* Function curve */}
+      <path d={pathD} fill="none" stroke={func.color} strokeWidth="2.5" />
+
+      {/* Highlight point */}
+      {highlight && (
+        <>
+          <line x1={ox + highlight.x * scale} y1={oy} x2={ox + highlight.x * scale} y2={oy - highlight.y * scale}
+            stroke={func.color} strokeWidth="1" strokeDasharray="4 2" />
+          <line x1={ox} y1={oy - highlight.y * scale} x2={ox + highlight.x * scale} y2={oy - highlight.y * scale}
+            stroke={func.color} strokeWidth="1" strokeDasharray="4 2" />
+          <circle cx={ox + highlight.x * scale} cy={oy - highlight.y * scale} r="5"
+            fill={func.color} stroke="#fff" strokeWidth="2" />
+        </>
+      )}
     </svg>
   )
 }
 
 export default function FonctionsInteractives({ onBack }) {
-  const [problem, setProblem] = useState(null)
-  const [index, setIndex] = useState(0)
-  const [score, setScore] = useState(0)
+  const [funcIdx, setFuncIdx] = useState(0)
+  const [mode, setMode] = useState('lecture') // lecture | image | antecedent
   const [input, setInput] = useState('')
   const [feedback, setFeedback] = useState(null)
-  const [showExpl, setShowExpl] = useState(false)
-  const [done, setDone] = useState(false)
-  const [started, setStarted] = useState(false)
+  const [score, setScore] = useState(0)
+  const [total, setTotal] = useState(0)
 
-  const start = useCallback(() => {
-    setStarted(true); setProblem(generateProblem()); setIndex(0); setScore(0); setInput(''); setFeedback(null); setShowExpl(false); setDone(false)
-  }, [])
+  const func = FUNCTIONS[funcIdx]
 
-  const submit = () => {
-    if (!input) return
-    const val = parseInt(input, 10)
-    const correct = val === problem.answer
-    if (correct) { setScore(s => s + 1); setFeedback({ ok: true, msg: `✅ f(x) = ${problem.answer}` }) }
-    else { setFeedback({ ok: false, msg: `❌ Réponse : ${problem.answer}` }) }
-  }
+  const [questionX, setQuestionX] = useState(2)
+  const [questionY, setQuestionY] = useState(() => func.fn(2))
 
-  const next = () => {
-    setFeedback(null); setShowExpl(false); setInput('')
-    if (index + 1 >= TOTAL) setDone(true)
-    else { setIndex(i => i + 1); setProblem(generateProblem()) }
-  }
+  const generateQuestion = useCallback((f = func, m = mode) => {
+    const x = Math.floor(Math.random() * 9) - 4
+    const y = f.fn(x)
+    setQuestionX(x)
+    setQuestionY(Math.round(y * 100) / 100)
+    setInput('')
+    setFeedback(null)
+  }, [func, mode])
 
-  if (!started) {
-    return (
-      <div className="min-h-screen p-4">
-        <header className="flex items-center gap-3 mb-6 pt-2">
-          {onBack && <button onClick={onBack} className="p-2 rounded-xl bg-surface hover:bg-surface-light"><ArrowLeft className="w-5 h-5" /></button>}
-          <h2 className="text-xl font-bold">📈 Fonctions Interactives</h2>
-        </header>
-        <p className="text-slate-300 mb-6">Calcule images et antécédents de fonctions linéaires et affines.</p>
-        <button onClick={start} className="w-full py-4 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 font-bold text-lg text-white active:scale-[0.98]">Commencer ({TOTAL} questions)</button>
-      </div>
-    )
-  }
+  const check = useCallback(() => {
+    const val = parseFloat(input)
+    let expected
+    if (mode === 'image') {
+      expected = Math.round(func.fn(questionX) * 100) / 100
+    } else {
+      expected = questionX
+    }
+    if (Math.abs(val - expected) < 0.01) {
+      setFeedback('✅ Correct !')
+      setScore(s => s + 1)
+    } else {
+      setFeedback(`❌ Réponse : ${expected}`)
+    }
+    setTotal(t => t + 1)
+  }, [input, mode, func, questionX, questionY])
 
-  if (done) {
-    const stars = score >= TOTAL ? 3 : score >= TOTAL * 0.7 ? 2 : score >= TOTAL * 0.4 ? 1 : 0
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center">
-        <h2 className="text-2xl font-bold mb-4">Résultat</h2>
-        <p className="text-5xl mb-2">{'⭐'.repeat(stars)}{'☆'.repeat(3 - stars)}</p>
-        <p className="text-xl font-bold mb-4">{score}/{TOTAL}</p>
-        <div className="flex gap-3">
-          <button onClick={start} className="px-6 py-3 rounded-xl bg-primary font-bold text-white">Rejouer</button>
-          {onBack && <button onClick={onBack} className="px-6 py-3 rounded-xl bg-surface font-bold">Retour</button>}
-        </div>
-      </div>
-    )
-  }
+  const highlight = mode === 'lecture'
+    ? { x: questionX, y: func.fn(questionX) }
+    : mode === 'image'
+    ? (feedback ? { x: questionX, y: func.fn(questionX) } : null)
+    : (feedback ? { x: questionX, y: questionY } : null)
 
   return (
-    <div className="min-h-screen p-4">
-      <header className="flex items-center justify-between mb-4 pt-2">
-        <div className="flex items-center gap-3">
-          {onBack && <button onClick={onBack} className="p-2 rounded-xl bg-surface hover:bg-surface-light"><ArrowLeft className="w-5 h-5" /></button>}
-          <div><h2 className="text-lg font-bold">Fonctions</h2><p className="text-xs text-slate-300">{index + 1}/{TOTAL}</p></div>
+    <div className="min-h-screen p-4 pb-8">
+      <div className="max-w-lg mx-auto">
+        <div className="flex items-center justify-between mb-4">
+          <button onClick={onBack} className="text-accent font-medium">← Retour</button>
+          <span className="text-sm font-bold text-accent">{score}/{total}</span>
         </div>
-        <p className="text-lg font-bold text-accent">{score} <Star className="w-4 h-4 inline" /></p>
-      </header>
-      <div className="h-1.5 bg-surface rounded-full mb-4 overflow-hidden">
-        <div className="h-full bg-gradient-to-r from-indigo-400 to-purple-500 rounded-full transition-all" style={{ width: `${(index / TOTAL) * 100}%` }} />
+
+        <h1 className="text-2xl font-extrabold text-center mb-2">📈 Fonctions</h1>
+
+        {/* Function selector */}
+        <div className="flex gap-1 mb-3 overflow-x-auto pb-1">
+          {FUNCTIONS.map((f, i) => (
+            <button
+              key={i}
+              onClick={() => { setFuncIdx(i); generateQuestion(f, mode) }}
+              className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap ${
+                funcIdx === i ? 'text-white' : 'bg-surface text-slate-400'
+              }`}
+              style={funcIdx === i ? { backgroundColor: f.color } : {}}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Mode */}
+        <div className="flex gap-2 justify-center mb-4">
+          {[
+            { id: 'lecture', label: '👁️ Lecture' },
+            { id: 'image', label: '→ Image' },
+            { id: 'antecedent', label: '← Antécédent' },
+          ].map(m => (
+            <button
+              key={m.id}
+              onClick={() => { setMode(m.id); generateQuestion(func, m.id) }}
+              className={`px-3 py-2 rounded-full text-xs font-bold ${
+                mode === m.id ? 'bg-accent text-white' : 'bg-surface text-slate-400'
+              }`}
+            >
+              {m.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Graph */}
+        <div className="bg-surface rounded-2xl p-4 mb-4 overflow-hidden">
+          <Graph func={func} highlight={highlight} />
+        </div>
+
+        {/* Question */}
+        <div className="bg-surface rounded-2xl p-5 mb-4">
+          {mode === 'lecture' && (
+            <div className="text-center">
+              <p className="text-slate-400 mb-2">Lis sur le graphique :</p>
+              <p className="text-lg font-bold">
+                f({questionX}) = <span className="text-amber-400">{Math.round(func.fn(questionX) * 100) / 100}</span>
+              </p>
+              <button
+                onClick={() => generateQuestion()}
+                className="mt-3 px-5 py-2 bg-accent text-white font-bold rounded-xl"
+              >
+                Autre point →
+              </button>
+            </div>
+          )}
+
+          {mode === 'image' && (
+            <div>
+              <p className="text-center text-slate-400 mb-2">Quelle est l'image de {questionX} par f ?</p>
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  step="0.01"
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  className="flex-1 text-center text-xl font-bold bg-slate-800 border-2 border-accent/30 rounded-xl p-3 text-white"
+                  placeholder="f(x) = ?"
+                />
+                {!feedback ? (
+                  <button onClick={check} disabled={!input}
+                    className="px-6 py-3 bg-accent text-white font-bold rounded-xl disabled:opacity-40">OK</button>
+                ) : (
+                  <button onClick={() => generateQuestion()} className="px-6 py-3 bg-accent text-white font-bold rounded-xl">→</button>
+                )}
+              </div>
+              {feedback && <p className="text-center font-bold mt-3">{feedback}</p>}
+            </div>
+          )}
+
+          {mode === 'antecedent' && (
+            <div>
+              <p className="text-center text-slate-400 mb-2">Quel est l'antécédent de {questionY} par f ?</p>
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  step="0.01"
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  className="flex-1 text-center text-xl font-bold bg-slate-800 border-2 border-accent/30 rounded-xl p-3 text-white"
+                  placeholder="x = ?"
+                />
+                {!feedback ? (
+                  <button onClick={check} disabled={!input}
+                    className="px-6 py-3 bg-accent text-white font-bold rounded-xl disabled:opacity-40">OK</button>
+                ) : (
+                  <button onClick={() => generateQuestion()} className="px-6 py-3 bg-accent text-white font-bold rounded-xl">→</button>
+                )}
+              </div>
+              {feedback && <p className="text-center font-bold mt-3">{feedback}</p>}
+            </div>
+          )}
+        </div>
       </div>
-
-      <MiniGraph a={problem.func.a} b={problem.func.b} />
-
-      <div className="bg-surface rounded-2xl p-5 mb-4 text-center">
-        <p className="text-sm text-slate-400 mb-1">{problem.func.label}</p>
-        <p className="text-lg font-bold">{problem.question}</p>
-      </div>
-
-      {!feedback && (
-        <div className="flex gap-2 max-w-xs mx-auto">
-          <input type="number" value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && submit()}
-            className="flex-1 bg-surface-light rounded-xl px-4 py-3 text-xl font-bold text-center focus:outline-none focus:ring-2 focus:ring-primary" placeholder="?" />
-          <button onClick={submit} disabled={!input} className="px-6 py-3 rounded-xl bg-primary font-bold text-white disabled:opacity-40">OK</button>
-        </div>
-      )}
-
-      {feedback && (
-        <div className="text-center mt-4">
-          <p className={`text-lg font-bold mb-3 ${feedback.ok ? 'text-green-400' : 'text-red-400'}`}>{feedback.msg}</p>
-          <button onClick={() => setShowExpl(!showExpl)} className="text-sm text-indigo-300 flex items-center gap-1 mx-auto mb-3"><Eye className="w-4 h-4" />{showExpl ? 'Masquer' : 'Explication'}</button>
-          {showExpl && <p className="text-sm text-slate-300 bg-surface rounded-xl p-3 max-w-sm mx-auto mb-3">{problem.explanation}</p>}
-          <button onClick={next} className="px-8 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 font-bold text-white">Suivant →</button>
-        </div>
-      )}
     </div>
   )
 }

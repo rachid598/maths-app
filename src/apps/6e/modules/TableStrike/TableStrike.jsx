@@ -124,7 +124,7 @@ export default function TableStrike({ player, onBadgeCheck }) {
       <PageTransition>
         <div className="flex flex-col min-h-screen bg-surface dark:bg-gray-900">
           <header className="flex items-center gap-3 px-4 py-3 bg-white/80 dark:bg-gray-800/80 border-b border-primary/10">
-            <button onClick={() => navigate('/6e')} className="text-2xl">{'\u2190'}</button>
+            <button onClick={() => navigate('/')} className="text-2xl">{'\u2190'}</button>
             <div>
               <h1 className="font-extrabold text-primary-dark dark:text-primary-light text-lg">{'\u26A1'} Table-Strike</h1>
               <p className="text-xs text-gray-400">Choisis ton niveau</p>
@@ -158,7 +158,7 @@ export default function TableStrike({ player, onBadgeCheck }) {
               <button onClick={() => startLevel(level)} className="flex-1 py-3 rounded-xl bg-primary text-white font-bold active:scale-95 transition-transform">Rejouer</button>
               <button onClick={() => setPhase('pick')} className="flex-1 py-3 rounded-xl bg-white dark:bg-gray-800 text-primary font-bold border-2 border-primary active:scale-95 transition-transform">Niveaux</button>
             </div>
-            <button onClick={() => navigate('/6e')} className="mt-4 text-sm text-gray-400">{'\u2190'} Retour au Hub</button>
+            <button onClick={() => navigate('/')} className="mt-4 text-sm text-gray-500 dark:text-gray-400">{'\u2190'} Retour au Hub</button>
           </div>
         </div>
       </PageTransition>
@@ -180,7 +180,7 @@ export default function TableStrike({ player, onBadgeCheck }) {
   return (
     <div className="flex flex-col min-h-screen bg-surface dark:bg-gray-900">
       <header className="flex items-center justify-between px-4 py-3 bg-white/80 dark:bg-gray-800/80 border-b border-primary/10">
-        <button onClick={() => setPhase('pick')} className="text-xl text-gray-400">{'\u2190'}</button>
+        <button onClick={() => setPhase('pick')} className="text-xl text-gray-500 dark:text-gray-400">{'\u2190'}</button>
         <span className="text-sm font-bold text-primary-dark dark:text-primary-light">{'\u26A1'} {level.label} — {level.title}</span>
         <span className="text-2xl">{player.avatar?.emoji || '\uD83C\uDFB2'}</span>
       </header>

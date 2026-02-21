@@ -79,12 +79,10 @@ export default function App6e() {
         <Route path="/opera-mix" element={<OperaMix player={player} onBadgeCheck={makeBadgeCheck('OM')} />} />
         <Route path="/daily" element={<DailyChallenge player={player} onBadgeCheck={makeBadgeCheck('DC')} />} />
         <Route path="/duel" element={<Duel onBadgeCheck={makeBadgeCheck('duel')} />} />
-        <Route path="/fractions-visuelles" element={<FractionsVisuelles onBack={() => navigate('/6e')} />} />
-        <Route path="/geo-builder" element={<GeoBuilder onBack={() => navigate('/6e')} />} />
-        <Route path="/badges" element={<BadgesScreen earned={earned} />} />
-        <Route path="/history" element={<HistoryChart />} />
         <Route path="/fractions-visuelles" element={<FractionsVisuelles player={player} onBadgeCheck={makeBadgeCheck("FV")} />} />
         <Route path="/geo-builder" element={<GeoBuilder player={player} onBadgeCheck={makeBadgeCheck("GB")} />} />
+        <Route path="/badges" element={<BadgesScreen earned={earned} />} />
+        <Route path="/history" element={<HistoryChart />} />
       </Routes>
     </div>
   )

@@ -7,6 +7,8 @@ import Theoremes from './modules/theoremes/Theoremes'
 import Automatismes from './modules/automatismes/Automatismes'
 import FracStrike from './modules/frac-strike/FracStrike'
 import BrevetFlash from './modules/brevet-flash/BrevetFlash'
+import FonctionsInteractives from './modules/fonctions-interactives/FonctionsInteractives'
+import TheoremeArena from './modules/theoreme-arena/TheoremeArena'
 
 export default function App3e() {
   const navigate = useNavigate()

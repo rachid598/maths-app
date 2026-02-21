@@ -22,7 +22,7 @@ export default function LevelPicker({ onSelect, bestScores }) {
               </div>
               <div className="flex flex-col items-end gap-1">
                 {score !== undefined && (
-                  <span className="bg-white/25 px-3 py-0.5 rounded-full text-sm font-bold">
+                  <span className="bg-white/30 px-3 py-0.5 rounded-full text-sm font-bold">
                     {score}/10
                   </span>
                 )}

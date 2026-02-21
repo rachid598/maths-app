@@ -1,107 +1,229 @@
-import { useState, useCallback } from 'react'
-import { ArrowLeft, Star } from 'lucide-react'
-import { generateProblem } from './engine'
+import { useState, useRef, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const LEVELS = [
-  { id: 1, label: '🟢 Carrés', desc: 'Périmètre et aire de carrés' },
-  { id: 2, label: '🟡 Rectangles', desc: '+ rectangles' },
-  { id: 3, label: '🔴 Triangles', desc: '+ triangles rectangles' },
+const TOOLS = [
+  { id: 'point', label: '● Point', icon: '📍' },
+  { id: 'line', label: '— Droite', icon: '📏' },
+  { id: 'circle', label: '◯ Cercle', icon: '⭕' },
+  { id: 'symmetry', label: '↔ Symétrie', icon: '🪞' },
+  { id: 'eraser', label: 'Gomme', icon: '🧹' },
 ]
-const TOTAL = 8
 
-export default function GeoBuilder({ player, onBadgeCheck }) {
-  const [level, setLevel] = useState(null)
-  const [problem, setProblem] = useState(null)
-  const [index, setIndex] = useState(0)
-  const [score, setScore] = useState(0)
-  const [input, setInput] = useState('')
-  const [feedback, setFeedback] = useState(null)
-  const [done, setDone] = useState(false)
+const COLORS = ['#6366f1', '#ef4444', '#10b981', '#f59e0b', '#ec4899']
 
-  const start = useCallback((lvl) => {
-    setLevel(lvl)
-    setProblem(generateProblem(lvl))
-    setIndex(0)
-    setScore(0)
-    setInput('')
-    setFeedback(null)
-    setDone(false)
+function dist(a, b) {
+  return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2)
+}
+
+export default function GeoBuilder() {
+  const navigate = useNavigate()
+  const svgRef = useRef(null)
+  const [tool, setTool] = useState('point')
+  const [color, setColor] = useState(COLORS[0])
+  const [points, setPoints] = useState([])
+  const [lines, setLines] = useState([])
+  const [circles, setCircles] = useState([])
+  const [pending, setPending] = useState(null) // for 2-click tools
+  const [showGrid, setShowGrid] = useState(true)
+  const [symAxis, setSymAxis] = useState('vertical') // vertical | horizontal
+
+  const getSVGPoint = useCallback((e) => {
+    const svg = svgRef.current
+    const rect = svg.getBoundingClientRect()
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY
+    // Snap to grid (20px)
+    let x = Math.round((clientX - rect.left) / 20) * 20
+    let y = Math.round((clientY - rect.top) / 20) * 20
+    return { x, y }
   }, [])
 
-  const submit = () => {
-    if (!input) return
-    const val = parseFloat(input)
-    const correct = Math.abs(val - problem.answer) < 0.1
-    if (correct) {
-      setScore(s => s + 1)
-      setFeedback({ ok: true, msg: `✅ Bravo ! ${problem.type} = ${problem.answer}` })
-    } else {
-      setFeedback({ ok: false, msg: `❌ Réponse : ${problem.answer}` })
+  const handleClick = useCallback((e) => {
+    const pt = getSVGPoint(e)
+
+    if (tool === 'eraser') {
+      setPoints(ps => ps.filter(p => dist(p, pt) > 15))
+      setLines(ls => ls.filter(l => {
+        const mid = { x: (l.a.x + l.b.x) / 2, y: (l.a.y + l.b.y) / 2 }
+        return dist(mid, pt) > 20
+      }))
+      setCircles(cs => cs.filter(c => Math.abs(dist(c.center, pt) - c.radius) > 15))
+      return
     }
-    setTimeout(() => {
-      setFeedback(null)
-      setInput('')
-      if (index + 1 >= TOTAL) {
-        setDone(true)
+
+    if (tool === 'point') {
+      setPoints(ps => [...ps, { ...pt, color }])
+      return
+    }
+
+    if (tool === 'line') {
+      if (!pending) {
+        setPending(pt)
       } else {
-        setIndex(i => i + 1)
-        setProblem(generateProblem(level))
+        setLines(ls => [...ls, { a: pending, b: pt, color }])
+        setPending(null)
       }
-    }, 1500)
-  }
+      return
+    }
 
-  if (!level) {
-    return (
-      <div className="min-h-screen p-4">
-        <h2 className="text-2xl font-bold mb-2 pt-4">🧱 Géo-Builder</h2>
-        <p className="text-slate-400 mb-6">Calcule périmètres et aires !</p>
-        <div className="grid gap-3">
-          {LEVELS.map(l => (
-            <button key={l.id} onClick={() => start(l.id)} className="p-4 rounded-2xl bg-surface hover:bg-surface-light text-white text-left transition-all active:scale-[0.98]">
-              <p className="font-bold text-lg">{l.label}</p>
-              <p className="text-sm text-slate-300">{l.desc}</p>
-            </button>
-          ))}
-        </div>
-      </div>
-    )
-  }
+    if (tool === 'circle') {
+      if (!pending) {
+        setPending(pt)
+      } else {
+        const r = dist(pending, pt)
+        setCircles(cs => [...cs, { center: pending, radius: r, color }])
+        setPending(null)
+      }
+      return
+    }
 
-  if (done) {
-    const stars = score >= TOTAL ? 3 : score >= TOTAL * 0.7 ? 2 : score >= TOTAL * 0.4 ? 1 : 0
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center">
-        <h2 className="text-2xl font-bold mb-4">Résultat</h2>
-        <p className="text-5xl mb-2">{'⭐'.repeat(stars)}{'☆'.repeat(3 - stars)}</p>
-        <p className="text-xl font-bold mb-4">{score}/{TOTAL}</p>
-        <div className="flex gap-3">
-          <button onClick={() => start(level)} className="px-6 py-3 rounded-xl bg-primary font-bold text-white">Rejouer</button>
-          <button onClick={() => setLevel(null)} className="px-6 py-3 rounded-xl bg-surface font-bold">Niveaux</button>
-        </div>
-      </div>
-    )
+    if (tool === 'symmetry') {
+      // Reflect all points
+      const w = svgRef.current.getBoundingClientRect().width
+      const h = svgRef.current.getBoundingClientRect().height
+      const reflected = points.map(p => ({
+        x: symAxis === 'vertical' ? w - p.x : p.x,
+        y: symAxis === 'horizontal' ? h - p.y : p.y,
+        color: '#ec4899',
+      }))
+      setPoints(ps => [...ps, ...reflected])
+      const refLines = lines.map(l => ({
+        a: { x: symAxis === 'vertical' ? w - l.a.x : l.a.x, y: symAxis === 'horizontal' ? h - l.a.y : l.a.y },
+        b: { x: symAxis === 'vertical' ? w - l.b.x : l.b.x, y: symAxis === 'horizontal' ? h - l.b.y : l.b.y },
+        color: '#ec4899',
+      }))
+      setLines(ls => [...ls, ...refLines])
+    }
+  }, [tool, color, pending, points, lines, symAxis, getSVGPoint])
+
+  const clear = () => {
+    setPoints([])
+    setLines([])
+    setCircles([])
+    setPending(null)
   }
 
   return (
-    <div className="min-h-screen p-4">
-      <header className="flex items-center justify-between mb-4 pt-2">
-        <h2 className="text-lg font-bold">Géo-Builder</h2>
-        <p className="text-sm text-slate-300">{index + 1}/{TOTAL} • Score: {score}</p>
-      </header>
-      <div className="h-1.5 bg-surface rounded-full mb-6 overflow-hidden">
-        <div className="h-full bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full transition-all" style={{ width: `${(index / TOTAL) * 100}%` }} />
+    <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white dark:from-gray-900 dark:to-gray-800 p-4">
+      <div className="max-w-lg mx-auto">
+        <div className="flex items-center justify-between mb-4">
+          <button onClick={() => navigate('/')} className="text-emerald-600 dark:text-emerald-400 font-medium">
+            ← Retour
+          </button>
+          <h1 className="text-lg font-extrabold dark:text-white">📐 GeoBuilder</h1>
+          <button onClick={clear} className="text-red-400 text-sm font-bold">Effacer</button>
+        </div>
+
+        {/* Toolbar */}
+        <div className="flex gap-1 mb-3 overflow-x-auto pb-1">
+          {TOOLS.map(t => (
+            <button
+              key={t.id}
+              onClick={() => { setTool(t.id); setPending(null) }}
+              className={`flex-shrink-0 px-3 py-2 rounded-xl text-xs font-bold transition ${
+                tool === t.id
+                  ? 'bg-emerald-500 text-white shadow-md'
+                  : 'bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+              }`}
+            >
+              {t.icon} {t.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Color picker */}
+        <div className="flex gap-2 mb-3 items-center">
+          <span className="text-xs text-gray-400">Couleur :</span>
+          {COLORS.map(c => (
+            <button
+              key={c}
+              onClick={() => setColor(c)}
+              className={`w-6 h-6 rounded-full border-2 transition ${color === c ? 'border-gray-800 dark:border-white scale-125' : 'border-transparent'}`}
+              style={{ backgroundColor: c }}
+            />
+          ))}
+          <label className="ml-auto flex items-center gap-1 text-xs text-gray-400">
+            <input type="checkbox" checked={showGrid} onChange={e => setShowGrid(e.target.checked)} />
+            Grille
+          </label>
+        </div>
+
+        {tool === 'symmetry' && (
+          <div className="flex gap-2 mb-3">
+            <button
+              onClick={() => setSymAxis('vertical')}
+              className={`px-3 py-1 rounded-lg text-xs font-bold ${symAxis === 'vertical' ? 'bg-pink-500 text-white' : 'bg-white dark:bg-gray-700 text-gray-600'}`}
+            >
+              Axe vertical
+            </button>
+            <button
+              onClick={() => setSymAxis('horizontal')}
+              className={`px-3 py-1 rounded-lg text-xs font-bold ${symAxis === 'horizontal' ? 'bg-pink-500 text-white' : 'bg-white dark:bg-gray-700 text-gray-600'}`}
+            >
+              Axe horizontal
+            </button>
+          </div>
+        )}
+
+        {pending && (
+          <p className="text-xs text-amber-500 mb-2 text-center">
+            📍 Premier point placé — clique pour le second point
+          </p>
+        )}
+
+        {/* Canvas */}
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border-2 border-emerald-200 dark:border-gray-600">
+          <svg
+            ref={svgRef}
+            width="100%"
+            viewBox="0 0 400 400"
+            className="touch-none"
+            onClick={handleClick}
+            onTouchEnd={(e) => { e.preventDefault(); handleClick(e) }}
+          >
+            {/* Grid */}
+            {showGrid && Array.from({ length: 21 }, (_, i) => (
+              <g key={i}>
+                <line x1={i * 20} y1={0} x2={i * 20} y2={400} stroke="#e2e8f0" strokeWidth="0.5" />
+                <line x1={0} y1={i * 20} x2={400} y2={i * 20} stroke="#e2e8f0" strokeWidth="0.5" />
+              </g>
+            ))}
+
+            {/* Symmetry axis */}
+            {tool === 'symmetry' && (
+              symAxis === 'vertical'
+                ? <line x1={200} y1={0} x2={200} y2={400} stroke="#ec4899" strokeWidth="2" strokeDasharray="8 4" />
+                : <line x1={0} y1={200} x2={400} y2={200} stroke="#ec4899" strokeWidth="2" strokeDasharray="8 4" />
+            )}
+
+            {/* Lines */}
+            {lines.map((l, i) => (
+              <line key={`l${i}`} x1={l.a.x} y1={l.a.y} x2={l.b.x} y2={l.b.y}
+                stroke={l.color} strokeWidth="2.5" strokeLinecap="round" />
+            ))}
+
+            {/* Circles */}
+            {circles.map((c, i) => (
+              <circle key={`c${i}`} cx={c.center.x} cy={c.center.y} r={c.radius}
+                fill="none" stroke={c.color} strokeWidth="2.5" />
+            ))}
+
+            {/* Points */}
+            {points.map((p, i) => (
+              <circle key={`p${i}`} cx={p.x} cy={p.y} r="5" fill={p.color} stroke="#fff" strokeWidth="2" />
+            ))}
+
+            {/* Pending point */}
+            {pending && (
+              <circle cx={pending.x} cy={pending.y} r="6" fill="none" stroke={color} strokeWidth="2" strokeDasharray="4 2" />
+            )}
+          </svg>
+        </div>
+
+        <p className="text-xs text-gray-400 text-center mt-3">
+          Utilise les outils pour construire des figures géométriques
+        </p>
       </div>
-      <div className="bg-surface rounded-2xl p-5 mb-4 text-white">
-        <p className="text-sm text-slate-400 mb-1">{problem.shapeName}</p>
-        <p className="text-lg font-bold mb-3">{problem.prompt}</p>
-        <p className="text-accent font-bold">{problem.question}</p>
-      </div>
-      <div className="flex gap-2 max-w-xs mx-auto">
-        <input type="number" value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && submit()}
-          className="flex-1 bg-surface-light rounded-xl px-4 py-3 text-xl font-bold text-center focus:outline-none focus:ring-2 focus:ring-primary" placeholder="?" />
-        <button onClick={submit} disabled={!input} className="px-6 py-3 rounded-xl bg-primary font-bold text-white disabled:opacity-40">OK</button>
-      </div>
-      {feedback && <p className={`text-center mt-4 font-bold ${feedback.ok ? 'text-green-400' : 'text-red-400'}`}>{feedback.msg}</p>}
     </div>
   )
 }

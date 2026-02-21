@@ -88,7 +88,7 @@ export default function OperaMix({ player, onBadgeCheck }) {
           <p className="text-gray-500 dark:text-gray-400 mb-2">Additions, soustractions et multiplications melangees !</p>
           <p className="text-sm text-gray-400 mb-4">10 questions — quelle operation va tomber ?</p>
           <button onClick={start} className="w-full py-4 rounded-xl bg-primary text-white font-bold text-xl active:scale-95 transition-transform">C'est parti !</button>
-          <button onClick={() => navigate('/6e')} className="mt-4 text-sm text-gray-400">{'\u2190'} Retour au Hub</button>
+          <button onClick={() => navigate('/')} className="mt-4 text-sm text-gray-500 dark:text-gray-400">{'\u2190'} Retour au Hub</button>
         </div>
       </div></PageTransition>
     )
@@ -104,7 +104,7 @@ export default function OperaMix({ player, onBadgeCheck }) {
           <Stars count={stars} size="text-2xl" />
           <p className="text-sm text-gray-400 mb-8 mt-2">{perfect ? 'Parfait !' : score >= 7 ? 'Bravo !' : 'Continue !'}</p>
           <button onClick={start} className="w-full py-3 rounded-xl bg-primary text-white font-bold active:scale-95 transition-transform mb-3">Rejouer</button>
-          <button onClick={() => navigate('/6e')} className="text-sm text-gray-400">{'\u2190'} Retour au Hub</button>
+          <button onClick={() => navigate('/')} className="text-sm text-gray-500 dark:text-gray-400">{'\u2190'} Retour au Hub</button>
         </div>
       </div></PageTransition>
     )
@@ -115,7 +115,7 @@ export default function OperaMix({ player, onBadgeCheck }) {
   return (
     <div className="flex flex-col min-h-screen bg-surface dark:bg-gray-900">
       <header className="flex items-center justify-between px-4 py-3 bg-white/80 dark:bg-gray-800/80 border-b border-primary/10">
-        <button onClick={() => setPhase('ready')} className="text-xl text-gray-400">{'\u2190'}</button>
+        <button onClick={() => setPhase('ready')} className="text-xl text-gray-500 dark:text-gray-400">{'\u2190'}</button>
         <span className="text-sm font-bold text-primary-dark dark:text-primary-light">{'\uD83C\uDFB0'} Opera-Mix</span>
         <span className="text-2xl">{player.avatar?.emoji || '\uD83C\uDFB2'}</span>
       </header>

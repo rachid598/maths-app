@@ -43,12 +43,6 @@ export default function App5e() {
   if (currentModule === 'volumes-aires') {
     return <div className="theme-5e min-h-screen"><VolumesAires onBack={goBack} /></div>
   }
-  if (currentModule === 'proportionnalite') {
-    return <div className="theme-5e min-h-screen"><Proportionnalite onBack={goBack} /></div>
-  }
-  if (currentModule === 'volumes-aires') {
-    return <div className="theme-5e min-h-screen"><VolumesAires onBack={goBack} /></div>
-  }
 
   return (
     <div className="theme-5e min-h-screen">

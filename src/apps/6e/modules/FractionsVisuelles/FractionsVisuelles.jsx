@@ -1,143 +1,191 @@
 import { useState, useCallback } from 'react'
-import { ArrowLeft, RotateCcw, Star } from 'lucide-react'
-import { generateProblem, fractionToDecimal } from './engine'
+import { useNavigate } from 'react-router-dom'
 
-const LEVELS = [
-  { id: 1, label: '🟢 Facile', desc: 'Dénominateurs 2, 3, 4' },
-  { id: 2, label: '🟡 Moyen', desc: 'Dénominateurs 2 à 6' },
-  { id: 3, label: '🔴 Expert', desc: 'Dénominateurs 2 à 10' },
-]
-const TOTAL = 10
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b) }
 
-function PizzaVisual({ numer, denom, colored }) {
+function generateFraction() {
+  const denom = [2, 3, 4, 5, 6, 8, 10, 12][Math.floor(Math.random() * 8)]
+  const num = Math.floor(Math.random() * (denom - 1)) + 1
+  return { num, denom }
+}
+
+function PieChart({ num, denom, interactive, onToggle, size = 120 }) {
   const slices = []
+  const cx = size / 2, cy = size / 2, r = size / 2 - 4
   for (let i = 0; i < denom; i++) {
-    const startAngle = (i * 2 * Math.PI) / denom - Math.PI / 2
-    const endAngle = ((i + 1) * 2 * Math.PI) / denom - Math.PI / 2
-    const x1 = 50 + 40 * Math.cos(startAngle)
-    const y1 = 50 + 40 * Math.sin(startAngle)
-    const x2 = 50 + 40 * Math.cos(endAngle)
-    const y2 = 50 + 40 * Math.sin(endAngle)
-    const largeArc = (endAngle - startAngle > Math.PI) ? 1 : 0
-    const d = `M50,50 L${x1},${y1} A40,40 0 ${largeArc},1 ${x2},${y2} Z`
+    const a1 = (2 * Math.PI * i) / denom - Math.PI / 2
+    const a2 = (2 * Math.PI * (i + 1)) / denom - Math.PI / 2
+    const large = a2 - a1 > Math.PI ? 1 : 0
+    const d = `M${cx},${cy} L${cx + r * Math.cos(a1)},${cy + r * Math.sin(a1)} A${r},${r} 0 ${large} 1 ${cx + r * Math.cos(a2)},${cy + r * Math.sin(a2)} Z`
+    const filled = i < num
     slices.push(
-      <path key={i} d={d} fill={i < colored ? '#fbbf24' : '#334155'} stroke="#0f172a" strokeWidth="1.5" />
+      <path
+        key={i}
+        d={d}
+        fill={filled ? '#6366f1' : '#e2e8f0'}
+        stroke="#fff"
+        strokeWidth="2"
+        onClick={interactive ? () => onToggle?.(i) : undefined}
+        className={interactive ? 'cursor-pointer hover:opacity-80' : ''}
+      />
     )
   }
+  return <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>{slices}</svg>
+}
+
+function Bar({ num, denom, size = 200 }) {
+  const w = size / denom
   return (
-    <svg viewBox="0 0 100 100" className="w-48 h-48 mx-auto">
-      {slices}
-      <circle cx="50" cy="50" r="40" fill="none" stroke="#64748b" strokeWidth="2" />
-    </svg>
+    <div className="flex border-2 border-indigo-300 rounded-lg overflow-hidden" style={{ width: size }}>
+      {Array.from({ length: denom }, (_, i) => (
+        <div
+          key={i}
+          className={`h-8 ${i < num ? 'bg-indigo-500' : 'bg-slate-200'} ${i > 0 ? 'border-l border-white' : ''}`}
+          style={{ width: w }}
+        />
+      ))}
+    </div>
   )
 }
 
-export default function FractionsVisuelles({ player, onBadgeCheck }) {
-  const [level, setLevel] = useState(null)
-  const [problem, setProblem] = useState(null)
-  const [index, setIndex] = useState(0)
-  const [score, setScore] = useState(0)
-  const [streak, setStreak] = useState(0)
-  const [maxStreak, setMaxStreak] = useState(0)
+export default function FractionsVisuelles() {
+  const navigate = useNavigate()
+  const [mode, setMode] = useState('visualiser') // visualiser | simplifier
+  const [frac, setFrac] = useState(generateFraction)
+  const [answer, setAnswer] = useState({ num: '', denom: '' })
   const [feedback, setFeedback] = useState(null)
-  const [done, setDone] = useState(false)
+  const [score, setScore] = useState(0)
+  const [total, setTotal] = useState(0)
 
-  const startLevel = useCallback((lvl) => {
-    setLevel(lvl)
-    setProblem(generateProblem(lvl))
-    setIndex(0)
-    setScore(0)
-    setStreak(0)
-    setMaxStreak(0)
-    setFeedback(null)
-    setDone(false)
-  }, [])
-
-  const handleAnswer = (choice) => {
-    if (feedback) return
-    const correct = choice === problem.answer
-    if (correct) {
-      const ns = streak + 1
+  const checkSimplification = useCallback(() => {
+    const g = gcd(frac.num, frac.denom)
+    const sNum = frac.num / g
+    const sDenom = frac.denom / g
+    const aNum = parseInt(answer.num)
+    const aDenom = parseInt(answer.denom)
+    if (aNum === sNum && aDenom === sDenom) {
+      setFeedback('✅ Bravo ! Fraction irréductible trouvée !')
       setScore(s => s + 1)
-      setStreak(ns)
-      if (ns > maxStreak) setMaxStreak(ns)
-      setFeedback({ correct: true, msg: '✅ Bravo !' })
     } else {
-      setStreak(0)
-      setFeedback({ correct: false, msg: `❌ C'était ${problem.answer}` })
+      setFeedback(`❌ La réponse est ${sNum}/${sDenom}`)
     }
-    setTimeout(() => {
-      setFeedback(null)
-      if (index + 1 >= TOTAL) {
-        setDone(true)
-        if (onBadgeCheck) onBadgeCheck(score + (correct ? 1 : 0), null, maxStreak)
-      } else {
-        setIndex(i => i + 1)
-        setProblem(generateProblem(level))
-      }
-    }, 1200)
+    setTotal(t => t + 1)
+  }, [frac, answer])
+
+  const next = () => {
+    setFrac(generateFraction())
+    setAnswer({ num: '', denom: '' })
+    setFeedback(null)
   }
 
-  if (!level) {
-    return (
-      <div className="min-h-screen p-4">
-        <h2 className="text-2xl font-bold mb-2 pt-4">🍕 Fractions Visuelles</h2>
-        <p className="text-slate-400 mb-6">Identifie la fraction coloriée !</p>
-        <div className="grid gap-3">
-          {LEVELS.map(l => (
-            <button key={l.id} onClick={() => startLevel(l.id)} className="p-4 rounded-2xl bg-surface hover:bg-surface-light text-white text-left transition-all active:scale-[0.98]">
-              <p className="font-bold text-lg">{l.label}</p>
-              <p className="text-sm text-slate-300">{l.desc}</p>
-            </button>
-          ))}
-        </div>
-      </div>
-    )
-  }
-
-  if (done) {
-    const stars = score >= TOTAL ? 3 : score >= TOTAL * 0.7 ? 2 : score >= TOTAL * 0.4 ? 1 : 0
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center">
-        <h2 className="text-2xl font-bold mb-4">Résultat</h2>
-        <p className="text-5xl mb-2">{'⭐'.repeat(stars)}{'☆'.repeat(3 - stars)}</p>
-        <p className="text-xl font-bold mb-1">{score}/{TOTAL}</p>
-        <p className="text-slate-300 mb-1">Série max : 🔥 {maxStreak}</p>
-        <p className="text-slate-400 text-sm mb-6">Décimal ≈ {fractionToDecimal(score, TOTAL)}</p>
-        <div className="flex gap-3">
-          <button onClick={() => startLevel(level)} className="px-6 py-3 rounded-xl bg-primary font-bold text-white">Rejouer</button>
-          <button onClick={() => setLevel(null)} className="px-6 py-3 rounded-xl bg-surface font-bold">Niveaux</button>
-        </div>
-      </div>
-    )
-  }
+  const g = gcd(frac.num, frac.denom)
 
   return (
-    <div className="min-h-screen p-4">
-      <header className="flex items-center justify-between mb-4 pt-2">
-        <div>
-          <h2 className="text-lg font-bold">Fractions Visuelles</h2>
-          <p className="text-xs text-slate-300">{index + 1}/{TOTAL}</p>
+    <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white dark:from-gray-900 dark:to-gray-800 p-4">
+      <div className="max-w-lg mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <button onClick={() => navigate('/')} className="text-indigo-600 dark:text-indigo-400 font-medium">
+            ← Retour
+          </button>
+          <span className="text-sm font-bold text-indigo-600 dark:text-indigo-400">
+            {score}/{total}
+          </span>
         </div>
-        <div className="text-right">
-          <p className="text-lg font-bold text-accent">{score} <Star className="w-4 h-4 inline" /></p>
-          {streak > 1 && <p className="text-xs text-amber-400">🔥 {streak}</p>}
+
+        <h1 className="text-2xl font-extrabold text-center mb-2 dark:text-white">🥧 Fractions Visuelles</h1>
+
+        {/* Mode toggle */}
+        <div className="flex gap-2 justify-center mb-6">
+          <button
+            onClick={() => { setMode('visualiser'); next() }}
+            className={`px-4 py-2 rounded-full text-sm font-bold transition ${mode === 'visualiser' ? 'bg-indigo-500 text-white' : 'bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300'}`}
+          >
+            👁️ Visualiser
+          </button>
+          <button
+            onClick={() => { setMode('simplifier'); next() }}
+            className={`px-4 py-2 rounded-full text-sm font-bold transition ${mode === 'simplifier' ? 'bg-indigo-500 text-white' : 'bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300'}`}
+          >
+            ✂️ Simplifier
+          </button>
         </div>
-      </header>
-      <div className="h-1.5 bg-surface rounded-full mb-6 overflow-hidden">
-        <div className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all" style={{ width: `${((index) / TOTAL) * 100}%` }} />
+
+        {/* Fraction display */}
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-4">
+          <div className="text-center mb-4">
+            <span className="text-4xl font-bold text-indigo-600 dark:text-indigo-400">
+              {frac.num}<span className="text-gray-400 mx-1">/</span>{frac.denom}
+            </span>
+          </div>
+
+          <div className="flex justify-center gap-8 items-center">
+            <div className="text-center">
+              <PieChart num={frac.num} denom={frac.denom} size={120} />
+              <p className="text-xs text-gray-400 mt-2">Camembert</p>
+            </div>
+            <div className="text-center">
+              <Bar num={frac.num} denom={frac.denom} size={180} />
+              <p className="text-xs text-gray-400 mt-2">Barre</p>
+            </div>
+          </div>
+        </div>
+
+        {mode === 'simplifier' && (
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-4">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-3 text-center">
+              Simplifie cette fraction (forme irréductible) :
+            </p>
+            {g > 1 && (
+              <p className="text-xs text-amber-500 text-center mb-3">
+                💡 Indice : le numérateur et le dénominateur sont divisibles par {g}
+              </p>
+            )}
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <input
+                type="number"
+                value={answer.num}
+                onChange={e => setAnswer(a => ({ ...a, num: e.target.value }))}
+                className="w-16 text-center text-2xl font-bold border-2 border-indigo-200 rounded-lg p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                placeholder="?"
+              />
+              <span className="text-2xl text-gray-400 font-bold">/</span>
+              <input
+                type="number"
+                value={answer.denom}
+                onChange={e => setAnswer(a => ({ ...a, denom: e.target.value }))}
+                className="w-16 text-center text-2xl font-bold border-2 border-indigo-200 rounded-lg p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                placeholder="?"
+              />
+            </div>
+
+            {!feedback ? (
+              <button
+                onClick={checkSimplification}
+                disabled={!answer.num || !answer.denom}
+                className="w-full py-3 bg-indigo-500 text-white font-bold rounded-xl disabled:opacity-40"
+              >
+                Vérifier
+              </button>
+            ) : (
+              <>
+                <p className="text-center font-bold mb-3">{feedback}</p>
+                <button onClick={next} className="w-full py-3 bg-indigo-500 text-white font-bold rounded-xl">
+                  Suivant →
+                </button>
+              </>
+            )}
+          </div>
+        )}
+
+        {mode === 'visualiser' && (
+          <div className="text-center">
+            <button onClick={next} className="px-6 py-3 bg-indigo-500 text-white font-bold rounded-xl">
+              Autre fraction →
+            </button>
+          </div>
+        )}
       </div>
-      <p className="text-center text-slate-300 mb-2">Quelle fraction est coloriée ?</p>
-      <PizzaVisual numer={problem.numer} denom={problem.denom} colored={problem.numer} />
-      <div className="grid grid-cols-2 gap-3 mt-6 max-w-xs mx-auto">
-        {problem.choices.map(c => (
-          <button key={c} onClick={() => handleAnswer(c)}
-            className={`py-4 rounded-xl text-xl font-bold transition-all active:scale-95 ${
-              feedback ? (c === problem.answer ? 'bg-green-600 text-white' : feedback.correct ? 'bg-surface' : 'bg-surface') : 'bg-surface-light hover:bg-primary/30 text-white'
-            }`}>{c}</button>
-        ))}
-      </div>
-      {feedback && <p className={`text-center mt-4 text-lg font-bold ${feedback.correct ? 'text-green-400' : 'text-red-400'}`}>{feedback.msg}</p>}
     </div>
   )
 }

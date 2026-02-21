@@ -94,7 +94,7 @@ export default function Duel({ onBadgeCheck }) {
           </div>
           <button onClick={startGame} disabled={player1.trim().length < 1 || player2.trim().length < 1}
             className="w-full py-4 rounded-xl bg-primary text-white font-bold text-xl active:scale-95 transition-transform disabled:opacity-40">Commencer le duel !</button>
-          <button onClick={() => navigate('/6e')} className="mt-4 text-sm text-gray-400">{'\u2190'} Retour au Hub</button>
+          <button onClick={() => navigate('/')} className="mt-4 text-sm text-gray-500 dark:text-gray-400">{'\u2190'} Retour au Hub</button>
         </div>
       </div></PageTransition>
     )
@@ -121,7 +121,7 @@ export default function Duel({ onBadgeCheck }) {
             </div>
           </div>
           <button onClick={startGame} className="w-full py-3 rounded-xl bg-primary text-white font-bold active:scale-95 transition-transform mb-3">Revanche !</button>
-          <button onClick={() => navigate('/6e')} className="text-sm text-gray-400">{'\u2190'} Retour au Hub</button>
+          <button onClick={() => navigate('/')} className="text-sm text-gray-500 dark:text-gray-400">{'\u2190'} Retour au Hub</button>
         </div>
       </div></PageTransition>
     )

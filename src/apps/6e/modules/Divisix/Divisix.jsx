@@ -61,7 +61,7 @@ export default function Divisix({ player, onBadgeCheck }) {
     return (
       <PageTransition><div className="flex flex-col min-h-screen bg-surface dark:bg-gray-900">
         <header className="flex items-center gap-3 px-4 py-3 bg-white/80 dark:bg-gray-800/80 border-b border-primary/10">
-          <button onClick={() => navigate('/6e')} className="text-2xl">{'\u2190'}</button>
+          <button onClick={() => navigate('/')} className="text-2xl">{'\u2190'}</button>
           <div><h1 className="font-extrabold text-primary-dark dark:text-primary-light text-lg">{'\u2797'} Divisix</h1><p className="text-xs text-gray-400">Choisis ton niveau</p></div>
         </header>
         <main className="flex-1 overflow-y-auto px-4 py-6 max-w-lg mx-auto w-full">
@@ -70,7 +70,7 @@ export default function Divisix({ player, onBadgeCheck }) {
               const sc = bestScores[lv.id]; const stars = sc !== undefined ? getStars(sc) : 0
               return (<button key={lv.id} onClick={() => startLevel(lv)} className={`animate-slide-up w-full text-left p-4 rounded-2xl shadow-md bg-gradient-to-r ${lv.color} text-white active:scale-[0.97] transition-transform`}>
                 <div className="flex items-center justify-between"><div><span className="text-xs font-mono opacity-80">{lv.label}</span><h3 className="font-bold text-lg leading-tight">{lv.title}</h3></div>
-                <div className="flex flex-col items-end gap-1">{sc !== undefined && <span className="bg-white/25 px-3 py-0.5 rounded-full text-sm font-bold">{sc}/10</span>}{stars > 0 && <Stars count={stars} size="text-sm" />}</div></div>
+                <div className="flex flex-col items-end gap-1">{sc !== undefined && <span className="bg-white/30 px-3 py-0.5 rounded-full text-sm font-bold">{sc}/10</span>}{stars > 0 && <Stars count={stars} size="text-sm" />}</div></div>
               </button>)
             })}
           </div>
@@ -93,7 +93,7 @@ export default function Divisix({ player, onBadgeCheck }) {
             <button onClick={() => startLevel(level)} className="flex-1 py-3 rounded-xl bg-primary text-white font-bold active:scale-95 transition-transform">Rejouer</button>
             <button onClick={() => setPhase('pick')} className="flex-1 py-3 rounded-xl bg-white dark:bg-gray-800 text-primary font-bold border-2 border-primary active:scale-95 transition-transform">Niveaux</button>
           </div>
-          <button onClick={() => navigate('/6e')} className="mt-4 text-sm text-gray-400">{'\u2190'} Retour au Hub</button>
+          <button onClick={() => navigate('/')} className="mt-4 text-sm text-gray-500 dark:text-gray-400">{'\u2190'} Retour au Hub</button>
         </div>
       </div></PageTransition>
     )
@@ -104,7 +104,7 @@ export default function Divisix({ player, onBadgeCheck }) {
   return (
     <div className="flex flex-col min-h-screen bg-surface dark:bg-gray-900">
       <header className="flex items-center justify-between px-4 py-3 bg-white/80 dark:bg-gray-800/80 border-b border-primary/10">
-        <button onClick={() => setPhase('pick')} className="text-xl text-gray-400">{'\u2190'}</button>
+        <button onClick={() => setPhase('pick')} className="text-xl text-gray-500 dark:text-gray-400">{'\u2190'}</button>
         <span className="text-sm font-bold text-primary-dark dark:text-primary-light">{'\u2797'} {level.label} — {level.title}</span>
         <span className="text-2xl">{player.avatar?.emoji || '\uD83C\uDFB2'}</span>
       </header>

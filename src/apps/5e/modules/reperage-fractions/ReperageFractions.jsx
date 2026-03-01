@@ -130,12 +130,8 @@ function NumberLine({ maxVal, denom, highlightValue, interactive, onDragUpdate, 
           <>
             {/* Ligne pointillée verticale */}
             <line x1={xFor(dragValue)} y1={lineY - 18} x2={xFor(dragValue)} y2={lineY} stroke="#22d3ee" strokeWidth="1" strokeDasharray="3 2" />
-            {/* Point cyan */}
+            {/* Point cyan — pas de fraction affichée pour ne pas donner la réponse */}
             <circle cx={xFor(dragValue)} cy={lineY} r="10" fill="#06b6d4" stroke="#fff" strokeWidth="2.5" className="drop-shadow-lg" />
-            {/* Fraction affichée au-dessus */}
-            <text x={xFor(dragValue)} y={lineY - 22} textAnchor="middle" fill="#22d3ee" fontSize="11" fontWeight="bold">
-              {Math.round(dragValue * denom)}/{denom}
-            </text>
           </>
         )}
 
@@ -383,14 +379,14 @@ export default function ReperageFractions({ onBack }) {
           <div className="bg-surface rounded-2xl p-5 mb-4">
             {!feedback ? (
               <>
-                {dragValue != null && (
-                  <p className="text-center text-lg font-bold text-cyan-300 mb-3">
-                    📍 {Math.round(dragValue * question.denom)}/{question.denom}
-                  </p>
-                )}
                 {dragValue == null && (
                   <p className="text-center text-sm text-slate-500 mb-3">
                     Touche ou glisse sur la droite pour placer le point
+                  </p>
+                )}
+                {dragValue != null && (
+                  <p className="text-center text-sm text-slate-500 mb-3">
+                    📍 Point placé — valide quand tu es prêt
                   </p>
                 )}
                 <button

@@ -1,4 +1,4 @@
-import { Swords, Calculator, Grid3X3, LogOut, Zap, Scale, Box } from 'lucide-react'
+import { Swords, Calculator, Grid3X3, LogOut, Zap, Scale, Box, Ruler } from 'lucide-react'
 
 const modules = [
   {
@@ -47,6 +47,14 @@ const modules = [
     description: 'Calcule aires et volumes de figures 2D et 3D !',
     icon: Box,
     color: 'from-pink-500 to-rose-600',
+    active: true,
+  },
+  {
+    id: 'reperage-fractions',
+    title: 'Repérage Fractions',
+    description: 'Lis et place des fractions sur une demi-droite graduée !',
+    icon: Ruler,
+    color: 'from-violet-500 to-indigo-600',
     active: true,
   },
 ]

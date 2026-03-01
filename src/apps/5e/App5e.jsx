@@ -9,6 +9,7 @@ import DiviCheck from './modules/divi-check/DiviCheck'
 import PrioRush from './modules/prio-rush/PrioRush'
 import Proportionnalite from './modules/proportionnalite/Proportionnalite'
 import VolumesAires from './modules/volumes-aires/VolumesAires'
+import ReperageFractions from './modules/reperage-fractions/ReperageFractions'
 
 export default function App5e() {
   const navigate = useNavigate()
@@ -42,6 +43,9 @@ export default function App5e() {
   }
   if (currentModule === 'volumes-aires') {
     return <div className="theme-5e min-h-screen"><VolumesAires onBack={goBack} /></div>
+  }
+  if (currentModule === 'reperage-fractions') {
+    return <div className="theme-5e min-h-screen"><ReperageFractions onBack={goBack} /></div>
   }
 
   return (

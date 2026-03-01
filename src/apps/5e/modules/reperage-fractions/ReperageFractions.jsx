@@ -1,10 +1,11 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { generateQuestion, checkAnswer, checkPlacement, simplify, getLevelConfig } from './engine'
 
-/* ─── Demi-droite graduée SVG (responsive) ─── */
-function NumberLine({ maxVal, denom, highlightValue, interactive, onClickLine, showPoint, placedValue, placedOk }) {
+/* ─── Demi-droite graduée SVG avec drag ─── */
+function NumberLine({ maxVal, denom, highlightValue, interactive, onDragUpdate, onDragEnd, showPoint, placedValue, placedOk, dragValue, showCorrection, correctionValue }) {
   const containerRef = useRef(null)
   const [width, setWidth] = useState(340)
+  const dragging = useRef(false)
 
   useEffect(() => {
     function measure() {
@@ -23,28 +24,45 @@ function NumberLine({ maxVal, denom, highlightValue, interactive, onClickLine, s
   const padR = 25
   const lineY = 50
   const usable = width - padL - padR
-  const totalTicks = maxVal * denom
 
   const xFor = (val) => padL + (val / maxVal) * usable
 
-  const handleInteraction = (e) => {
-    if (!interactive) return
-    e.preventDefault()
+  const valFromX = (clientX) => {
     const svg = containerRef.current?.querySelector('svg')
-    if (!svg) return
+    if (!svg) return 0
     const rect = svg.getBoundingClientRect()
-    const touch = e.changedTouches ? e.changedTouches[0] : null
-    const clientX = touch ? touch.clientX : e.clientX
     const x = clientX - rect.left
-    // Snap vers la graduation la plus proche
     const rawVal = ((x - padL) / usable) * maxVal
     const snapped = Math.round(rawVal * denom) / denom
-    const clamped = Math.max(0, Math.min(maxVal, snapped))
-    onClickLine?.(clamped)
+    return Math.max(0, Math.min(maxVal, snapped))
   }
 
-  // Décider quelles graduations labelliser pour éviter le chevauchement
-  const showSubLabels = denom <= 6 && maxVal <= 2
+  const handlePointerDown = (e) => {
+    if (!interactive) return
+    e.preventDefault()
+    dragging.current = true
+    const clientX = e.clientX
+    const val = valFromX(clientX)
+    onDragUpdate?.(val)
+    // Capture pointer for smooth drag
+    e.currentTarget.setPointerCapture(e.pointerId)
+  }
+
+  const handlePointerMove = (e) => {
+    if (!interactive || !dragging.current) return
+    e.preventDefault()
+    const val = valFromX(e.clientX)
+    onDragUpdate?.(val)
+  }
+
+  const handlePointerUp = (e) => {
+    if (!dragging.current) return
+    dragging.current = false
+    e.currentTarget.releasePointerCapture(e.pointerId)
+    // Ne pas appeler onDragEnd ici — l'élève valide avec le bouton
+  }
+
+  const totalTicks = maxVal * denom
 
   return (
     <div ref={containerRef} className="w-full">
@@ -53,8 +71,10 @@ function NumberLine({ maxVal, denom, highlightValue, interactive, onClickLine, s
         height={height}
         viewBox={`0 0 ${width} ${height}`}
         className="mx-auto select-none touch-none"
-        onPointerDown={interactive ? handleInteraction : undefined}
-        style={{ cursor: interactive ? 'crosshair' : 'default' }}
+        onPointerDown={interactive ? handlePointerDown : undefined}
+        onPointerMove={interactive ? handlePointerMove : undefined}
+        onPointerUp={interactive ? handlePointerUp : undefined}
+        style={{ cursor: interactive ? 'grab' : 'default' }}
       >
         {/* Axe principal */}
         <line x1={padL} y1={lineY} x2={width - padR} y2={lineY} stroke="#94a3b8" strokeWidth="2" />
@@ -75,7 +95,6 @@ function NumberLine({ maxVal, denom, highlightValue, interactive, onClickLine, s
                 stroke={isMajor ? '#e2e8f0' : '#475569'}
                 strokeWidth={isMajor ? 2 : 1}
               />
-              {/* Labels entiers */}
               {isMajor && (
                 <text x={x} y={lineY + 32} textAnchor="middle" fill="#e2e8f0" fontSize="13" fontWeight="bold">
                   {Math.round(val)}
@@ -85,7 +104,7 @@ function NumberLine({ maxVal, denom, highlightValue, interactive, onClickLine, s
           )
         })}
 
-        {/* Accolade sous 0-1 pour montrer le dénominateur */}
+        {/* Indicateur "X parts" sous 0-1 */}
         {maxVal >= 1 && (
           <>
             <line x1={xFor(0)} y1={lineY + 38} x2={xFor(1)} y2={lineY + 38} stroke="#6366f1" strokeWidth="1" strokeDasharray="3 2" />
@@ -95,14 +114,10 @@ function NumberLine({ maxVal, denom, highlightValue, interactive, onClickLine, s
           </>
         )}
 
-        {/* Point à deviner (mode lire) ou correction (mode placer) */}
+        {/* Point à deviner (mode lire) */}
         {showPoint && highlightValue != null && (
           <>
-            {/* Ligne verticale pointillée */}
-            <line
-              x1={xFor(highlightValue)} y1={lineY - 20} x2={xFor(highlightValue)} y2={lineY}
-              stroke="#6366f1" strokeWidth="1" strokeDasharray="3 2"
-            />
+            <line x1={xFor(highlightValue)} y1={lineY - 20} x2={xFor(highlightValue)} y2={lineY} stroke="#6366f1" strokeWidth="1" strokeDasharray="3 2" />
             <circle cx={xFor(highlightValue)} cy={lineY} r="8" fill="#6366f1" stroke="#fff" strokeWidth="2.5" />
             <text x={xFor(highlightValue)} y={lineY - 24} textAnchor="middle" fill="#a5b4fc" fontSize="12" fontWeight="bold">
               ?
@@ -110,16 +125,38 @@ function NumberLine({ maxVal, denom, highlightValue, interactive, onClickLine, s
           </>
         )}
 
-        {/* Point placé par l'élève (mode placer) */}
-        {placedValue != null && (
+        {/* Point draggable (mode placer — en cours de drag) */}
+        {dragValue != null && !placedOk && (
+          <>
+            {/* Ligne pointillée verticale */}
+            <line x1={xFor(dragValue)} y1={lineY - 18} x2={xFor(dragValue)} y2={lineY} stroke="#22d3ee" strokeWidth="1" strokeDasharray="3 2" />
+            {/* Point cyan */}
+            <circle cx={xFor(dragValue)} cy={lineY} r="10" fill="#06b6d4" stroke="#fff" strokeWidth="2.5" className="drop-shadow-lg" />
+            {/* Fraction affichée au-dessus */}
+            <text x={xFor(dragValue)} y={lineY - 22} textAnchor="middle" fill="#22d3ee" fontSize="11" fontWeight="bold">
+              {Math.round(dragValue * denom)}/{denom}
+            </text>
+          </>
+        )}
+
+        {/* Point final après validation */}
+        {placedValue != null && placedOk != null && (
           <circle
             cx={xFor(placedValue)}
             cy={lineY}
-            r="7"
+            r="8"
             fill={placedOk ? '#10b981' : '#ef4444'}
             stroke="#fff"
-            strokeWidth="2"
+            strokeWidth="2.5"
           />
+        )}
+
+        {/* Point correction (bonne réponse) si faux */}
+        {showCorrection && correctionValue != null && (
+          <>
+            <line x1={xFor(correctionValue)} y1={lineY - 18} x2={xFor(correctionValue)} y2={lineY} stroke="#6366f1" strokeWidth="1" strokeDasharray="3 2" />
+            <circle cx={xFor(correctionValue)} cy={lineY} r="7" fill="#6366f1" stroke="#fff" strokeWidth="2" />
+          </>
         )}
       </svg>
     </div>
@@ -148,20 +185,22 @@ function LevelPicker({ level, onPick }) {
 /* ─── Composant principal ─── */
 export default function ReperageFractions({ onBack }) {
   const [level, setLevel] = useState(1)
-  const [mode, setMode] = useState('lire') // lire | placer
+  const [mode, setMode] = useState('lire')
   const [question, setQuestion] = useState(() => generateQuestion(1))
   const [answer, setAnswer] = useState({ num: '', denom: '' })
   const [feedback, setFeedback] = useState(null)
   const [score, setScore] = useState(0)
   const [total, setTotal] = useState(0)
   const [placedValue, setPlacedValue] = useState(null)
+  const [dragValue, setDragValue] = useState(null)
 
-  const next = useCallback((lvl, md) => {
+  const next = useCallback((lvl) => {
     const l = lvl ?? level
     setQuestion(generateQuestion(l))
     setAnswer({ num: '', denom: '' })
     setFeedback(null)
     setPlacedValue(null)
+    setDragValue(null)
   }, [level])
 
   const changeLevel = (l) => {
@@ -174,7 +213,7 @@ export default function ReperageFractions({ onBack }) {
     next()
   }
 
-  /* Mode LIRE : l'élève donne la fraction */
+  /* Mode LIRE */
   const checkLire = useCallback(() => {
     const aNum = parseInt(answer.num)
     const aDenom = parseInt(answer.denom)
@@ -197,18 +236,24 @@ export default function ReperageFractions({ onBack }) {
     setTotal(t => t + 1)
   }, [answer, question])
 
-  /* Mode PLACER : l'élève clique sur la droite */
-  const handlePlace = useCallback((val) => {
+  /* Mode PLACER — drag update (preview) */
+  const handleDragUpdate = useCallback((val) => {
     if (feedback) return
-    setPlacedValue(val)
-    if (checkPlacement(question.value, val)) {
+    setDragValue(val)
+  }, [feedback])
+
+  /* Mode PLACER — validation par bouton */
+  const validatePlacement = useCallback(() => {
+    if (dragValue == null || feedback) return
+    setPlacedValue(dragValue)
+    if (checkPlacement(question.value, dragValue)) {
       setFeedback({ ok: true, msg: '✅ Bien placé !' })
       setScore(s => s + 1)
     } else {
-      setFeedback({ ok: false, msg: `❌ Pas tout à fait… la bonne position était ${question.num}/${question.denom}` })
+      setFeedback({ ok: false, msg: `❌ Pas tout à fait…` })
     }
     setTotal(t => t + 1)
-  }, [feedback, question])
+  }, [dragValue, feedback, question])
 
   return (
     <div className="min-h-screen p-4 pb-8">
@@ -266,17 +311,19 @@ export default function ReperageFractions({ onBack }) {
                 Place <span className="text-cyan-400 font-bold text-lg">{question.num}/{question.denom}</span> sur la demi-droite
               </p>
               <p className="text-xs text-slate-500 text-center mb-3">
-                Graduée en <span className="font-bold text-cyan-400">1/{question.denom}</span> — Touche la droite pour placer
+                {!feedback ? '👆 Glisse le point sur la droite puis valide' : `Graduée en 1/${question.denom}`}
               </p>
               <NumberLine
                 maxVal={question.maxVal}
                 denom={question.denom}
-                highlightValue={feedback && !feedback.ok ? question.value : null}
-                showPoint={feedback != null && !feedback.ok}
                 interactive={!feedback}
-                onClickLine={handlePlace}
-                placedValue={placedValue}
-                placedOk={feedback?.ok}
+                onDragUpdate={handleDragUpdate}
+                dragValue={dragValue}
+                placedValue={feedback ? (placedValue ?? dragValue) : null}
+                placedOk={feedback?.ok ?? null}
+                showCorrection={feedback != null && !feedback.ok}
+                correctionValue={question.value}
+                showPoint={false}
               />
             </>
           )}
@@ -331,18 +378,44 @@ export default function ReperageFractions({ onBack }) {
           </div>
         )}
 
-        {/* Feedback (mode placer) */}
-        {mode === 'placer' && feedback && (
+        {/* Bouton valider + feedback (mode placer) */}
+        {mode === 'placer' && (
           <div className="bg-surface rounded-2xl p-5 mb-4">
-            <p className={`text-center font-bold mb-3 text-lg ${feedback.ok ? 'text-emerald-400' : 'text-red-400'}`}>{feedback.msg}</p>
-            {!feedback.ok && (
-              <p className="text-sm text-slate-400 text-center mb-3 leading-relaxed">
-                💡 <strong className="text-white">{question.num}/{question.denom}</strong> = {question.num} × (1/{question.denom}) depuis l'origine
-              </p>
+            {!feedback ? (
+              <>
+                {dragValue != null && (
+                  <p className="text-center text-lg font-bold text-cyan-300 mb-3">
+                    📍 {Math.round(dragValue * question.denom)}/{question.denom}
+                  </p>
+                )}
+                {dragValue == null && (
+                  <p className="text-center text-sm text-slate-500 mb-3">
+                    Touche ou glisse sur la droite pour placer le point
+                  </p>
+                )}
+                <button
+                  onClick={validatePlacement}
+                  disabled={dragValue == null}
+                  className="w-full py-3.5 bg-cyan-500 text-white font-bold rounded-xl disabled:opacity-40 active:scale-[0.98] transition-transform min-h-[48px]"
+                >
+                  Valider ✓
+                </button>
+              </>
+            ) : (
+              <>
+                <p className={`text-center font-bold mb-3 text-lg ${feedback.ok ? 'text-emerald-400' : 'text-red-400'}`}>{feedback.msg}</p>
+                {!feedback.ok && (
+                  <p className="text-sm text-slate-400 text-center mb-3 leading-relaxed">
+                    💡 <strong className="text-white">{question.num}/{question.denom}</strong> = {question.num} graduation{question.num > 1 ? 's' : ''} de 1/{question.denom} depuis 0
+                    <br />
+                    <span className="text-indigo-400">● point violet</span> = bonne position
+                  </p>
+                )}
+                <button onClick={() => next()} className="w-full py-3.5 bg-cyan-500 text-white font-bold rounded-xl active:scale-[0.98] transition-transform min-h-[48px]">
+                  Suivant →
+                </button>
+              </>
             )}
-            <button onClick={() => next()} className="w-full py-3.5 bg-cyan-500 text-white font-bold rounded-xl active:scale-[0.98] transition-transform min-h-[48px]">
-              Suivant →
-            </button>
           </div>
         )}
 

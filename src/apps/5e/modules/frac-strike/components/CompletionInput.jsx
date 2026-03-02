@@ -85,7 +85,7 @@ export default function CompletionInput({
     `w-12 h-10 rounded-lg text-center text-lg font-bold outline-none transition-all ${
       activeField === name
         ? 'bg-primary/30 ring-2 ring-primary text-white'
-        : 'bg-surface-light text-slate-300'
+        : 'bg-surface-light text-slate-200'
     }`
 
   return (
@@ -172,7 +172,7 @@ export default function CompletionInput({
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
               activeField === key
                 ? 'bg-primary text-white'
-                : 'bg-surface-light text-slate-400'
+                : 'bg-surface-light text-slate-300'
             }`}
           >
             {label}

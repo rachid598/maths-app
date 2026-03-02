@@ -19,7 +19,7 @@ export default function Fraction({
           <span className={struck ? 'strike-anim text-danger' : 'text-primary-light'}>
             {divisor}
           </span>
-          <span className="text-slate-500 mx-0.5">&times;</span>
+          <span className="text-slate-400 mx-0.5">&times;</span>
           <span>{factorNum}</span>
         </span>
         <span className="bar" />
@@ -27,7 +27,7 @@ export default function Fraction({
           <span className={struck ? 'strike-anim text-danger' : 'text-primary-light'}>
             {divisor}
           </span>
-          <span className="text-slate-500 mx-0.5">&times;</span>
+          <span className="text-slate-400 mx-0.5">&times;</span>
           <span>{factorDen}</span>
         </span>
       </span>

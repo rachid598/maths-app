@@ -28,7 +28,7 @@ export default function HelpModal({ open, onClose }) {
             onClick={onClose}
             className="p-1.5 rounded-lg hover:bg-surface-light transition-colors"
           >
-            <X className="w-5 h-5 text-slate-400" />
+            <X className="w-5 h-5 text-slate-500" />
           </button>
         </div>
 

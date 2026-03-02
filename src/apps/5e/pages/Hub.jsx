@@ -1,4 +1,4 @@
-import { Swords, Calculator, Grid3X3, BarChart3, Puzzle, LogOut } from 'lucide-react'
+import { Swords, Calculator, Grid3X3, Puzzle, LogOut } from 'lucide-react'
 
 const modules = [
   {
@@ -50,7 +50,7 @@ export default function Hub({ player, onNavigate, onLogout, onHome }) {
         </div>
         <button
           onClick={onLogout}
-          className="p-2 rounded-xl bg-surface hover:bg-surface-light transition-colors"
+          className="p-2 rounded-xl bg-surface-light hover:bg-surface-light/80 transition-colors"
           title="Se déconnecter"
         >
           <LogOut className="w-5 h-5 text-slate-400" />
@@ -87,12 +87,12 @@ export default function Hub({ player, onNavigate, onLogout, onHome }) {
                   <div className="flex items-center gap-2">
                     <h3 className="text-lg font-bold">{mod.title}</h3>
                     {!mod.active && (
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-slate-700 text-slate-400">
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-slate-700 text-slate-300">
                         Bientôt disponible
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-slate-600 group-hover:text-slate-300 mt-1">
+                  <p className="text-sm text-slate-600 group-hover:text-slate-200 mt-1">
                     {mod.description}
                   </p>
                 </div>

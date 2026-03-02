@@ -24,7 +24,7 @@ export default function PlayerForm({ onSave }) {
           <UserCircle className="w-16 h-16 text-primary-light" />
         </div>
         <h2 className="text-2xl font-bold text-center mb-2">Bienvenue !</h2>
-        <p className="text-sm text-slate-500 text-center mb-6">
+        <p className="text-sm text-slate-600 text-center mb-6">
           Tes données restent sur ton appareil.
         </p>
 

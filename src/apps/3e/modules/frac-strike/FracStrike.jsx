@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   ArrowLeft, Star, RotateCcw, Trophy, ChevronRight,
   Smile, Brain, Flame, PenLine, Lightbulb,
@@ -13,7 +14,9 @@ import { fireSuccess, fireBigWin } from '../../utils/confetti'
 const QUESTIONS_PER_ROUND = 5
 const LEVEL_ICONS = { 1: Smile, 2: Brain, 3: Flame, 4: PenLine }
 
-export default function FracStrike({ onBack }) {
+export default function FracStrike() {
+  const navigate = useNavigate()
+  const onBack = () => navigate('/3e')
   const [level, setLevel] = useState(null)
   const [qIndex, setQIndex] = useState(0)
   const [score, setScore] = useState(0)

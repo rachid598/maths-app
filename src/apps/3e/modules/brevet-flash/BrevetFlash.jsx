@@ -1,11 +1,14 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, Zap } from 'lucide-react'
 import { pickQuestions, checkAnswer, TOTAL_TIME, NUM_QUESTIONS } from './engine'
 import QuestionCard from './components/QuestionCard'
 import ScoreScreen from './components/ScoreScreen'
 import CorrectionModal from './components/CorrectionModal'
 
-export default function BrevetFlash({ onBack }) {
+export default function BrevetFlash() {
+  const navigate = useNavigate()
+  const onBack = () => navigate('/3e')
   const [phase, setPhase] = useState('intro')
   const [questions, setQuestions] = useState([])
   const [qIndex, setQIndex] = useState(0)

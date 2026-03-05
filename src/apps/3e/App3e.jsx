@@ -1,6 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { usePlayer } from './hooks/usePlayer'
+import { Routes, Route } from 'react-router-dom'
+import GradeLayout from '../../shared/components/GradeLayout'
 import PlayerModal from './components/PlayerModal'
 import Hub from './pages/Hub'
 import Theoremes from './modules/theoremes/Theoremes'
@@ -10,48 +9,24 @@ import BrevetFlash from './modules/brevet-flash/BrevetFlash'
 import FonctionsInteractives from './modules/fonctions-interactives/FonctionsInteractives'
 import TheoremeArena from './modules/theoreme-arena/TheoremeArena'
 
-export default function App3e() {
-  const navigate = useNavigate()
-  const { player, register, logout } = usePlayer()
-  const [currentGame, setCurrentGame] = useState(null)
-
-  const goBack = () => setCurrentGame(null)
-
-  if (!player) {
-    return (
-      <div className="theme-3e min-h-screen">
-        <PlayerModal onRegister={register} />
-      </div>
-    )
-  }
-
-  if (currentGame === 'theoremes') {
-    return <div className="theme-3e min-h-screen"><Theoremes onBack={goBack} /></div>
-  }
-  if (currentGame === 'automatismes') {
-    return <div className="theme-3e min-h-screen"><Automatismes onBack={goBack} /></div>
-  }
-  if (currentGame === 'frac-strike') {
-    return <div className="theme-3e min-h-screen"><FracStrike onBack={goBack} /></div>
-  }
-  if (currentGame === 'brevet-flash') {
-    return <div className="theme-3e min-h-screen"><BrevetFlash onBack={goBack} /></div>
-  }
-  if (currentGame === 'fonctions-interactives') {
-    return <div className="theme-3e min-h-screen"><FonctionsInteractives onBack={goBack} /></div>
-  }
-  if (currentGame === 'theoreme-arena') {
-    return <div className="theme-3e min-h-screen"><TheoremeArena onBack={goBack} /></div>
-  }
-
+function App3eContent() {
   return (
-    <div className="theme-3e min-h-screen">
-      <Hub
-        player={player}
-        onSelectGame={setCurrentGame}
-        onLogout={logout}
-        onHome={() => navigate('/')}
-      />
-    </div>
+    <Routes>
+      <Route path="/" element={<Hub />} />
+      <Route path="/theoremes" element={<Theoremes />} />
+      <Route path="/automatismes" element={<Automatismes />} />
+      <Route path="/frac-strike" element={<FracStrike />} />
+      <Route path="/brevet-flash" element={<BrevetFlash />} />
+      <Route path="/fonctions-interactives" element={<FonctionsInteractives />} />
+      <Route path="/theoreme-arena" element={<TheoremeArena />} />
+    </Routes>
+  )
+}
+
+export default function App3e() {
+  return (
+    <GradeLayout grade="3e" theme="theme-3e" OnboardingComponent={PlayerModal}>
+      <App3eContent />
+    </GradeLayout>
   )
 }

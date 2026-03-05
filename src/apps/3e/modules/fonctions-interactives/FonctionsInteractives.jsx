@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const FUNCTIONS = [
   { label: 'f(x) = 2x + 1', fn: x => 2 * x + 1, color: '#6366f1' },
@@ -68,7 +69,9 @@ function Graph({ func, highlight, width = 340, height = 300 }) {
   )
 }
 
-export default function FonctionsInteractives({ onBack }) {
+export default function FonctionsInteractives() {
+  const navigate = useNavigate()
+  const onBack = () => navigate('/3e')
   const [funcIdx, setFuncIdx] = useState(0)
   const [mode, setMode] = useState('lecture') // lecture | image | antecedent
   const [input, setInput] = useState('')

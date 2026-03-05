@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function generatePythagore() {
   const triples = [[3, 4, 5], [5, 12, 13], [6, 8, 10], [8, 15, 17], [7, 24, 25], [9, 12, 15]]
@@ -83,7 +84,9 @@ function ThalesSVG({ data }) {
   )
 }
 
-export default function TheoremeArena({ onBack }) {
+export default function TheoremeArena() {
+  const navigate = useNavigate()
+  const onBack = () => navigate('/3e')
   const [mode, setMode] = useState('pythagore')
   const [pyth, setPyth] = useState(generatePythagore)
   const [thales, setThales] = useState(generateThales)

@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   ArrowLeft, Star, RotateCcw, Trophy, Timer, ChevronRight,
   CheckCircle, XCircle, Brain, Zap, Ruler,
@@ -21,7 +22,9 @@ const MODES = {
   },
 }
 
-export default function Automatismes({ onBack }) {
+export default function Automatismes() {
+  const navigate = useNavigate()
+  const onBack = () => navigate('/3e')
   const [mode, setMode] = useState(null)
   const [questions, setQuestions] = useState([])
   const [qIndex, setQIndex] = useState(0)

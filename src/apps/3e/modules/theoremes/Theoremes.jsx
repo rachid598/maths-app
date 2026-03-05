@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, Star, RotateCcw, Trophy, ChevronRight, Delete } from 'lucide-react'
 import { generateQuestion, LEVEL_LABELS } from './engine'
 import TriangleFigure from './components/TriangleFigure'
@@ -7,7 +8,9 @@ import { fireSuccess, fireBigWin } from '../../utils/confetti'
 
 const QUESTIONS_PER_ROUND = 5
 
-export default function Theoremes({ onBack }) {
+export default function Theoremes() {
+  const navigate = useNavigate()
+  const onBack = () => navigate('/3e')
   const [level, setLevel] = useState(null)
   const [question, setQuestion] = useState(null)
   const [questionIndex, setQuestionIndex] = useState(0)

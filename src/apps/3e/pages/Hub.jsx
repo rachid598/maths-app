@@ -1,4 +1,6 @@
+import { useNavigate } from 'react-router-dom'
 import { Scissors, Triangle, Brain, LogOut, Zap, TrendingUp, Swords } from 'lucide-react'
+import { useGrade } from '../../../shared/components/GradeLayout'
 
 const GAMES = [
   {
@@ -51,7 +53,9 @@ const GAMES = [
   },
 ]
 
-export default function Hub({ player, onSelectGame, onLogout, onHome }) {
+export default function Hub() {
+  const navigate = useNavigate()
+  const { player, logout } = useGrade()
   return (
     <div className="min-h-dvh px-4 pb-8 pt-6">
       {/* Header */}
@@ -67,7 +71,7 @@ export default function Hub({ player, onSelectGame, onLogout, onHome }) {
             <p className="text-xs text-slate-300">{player.classe}</p>
           </div>
           <button
-            onClick={onLogout}
+            onClick={logout}
             className="rounded-lg p-2 text-slate-300 transition hover:bg-surface-light hover:text-white"
             title="Déconnexion"
           >
@@ -83,7 +87,7 @@ export default function Hub({ player, onSelectGame, onLogout, onHome }) {
           return (
             <button
               key={game.id}
-              onClick={() => onSelectGame(game.id)}
+              onClick={() => navigate(`/3e/${game.id}`)}
               className="group relative flex items-center gap-4 rounded-2xl border border-slate-700 bg-surface p-4 text-left transition hover:border-accent hover:shadow-lg hover:shadow-accent/10"
             >
               <div
@@ -104,14 +108,12 @@ export default function Hub({ player, onSelectGame, onLogout, onHome }) {
       </div>
 
       {/* Back to portal */}
-      {onHome && (
-        <button
-          onClick={onHome}
+      <button
+          onClick={() => navigate('/')}
           className="mx-auto mt-6 flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
         >
           ← Changer de niveau
         </button>
-      )}
 
       <p className="mt-4 text-center text-xs text-slate-400">
         Maths-3e v1.0 — Données stockées localement

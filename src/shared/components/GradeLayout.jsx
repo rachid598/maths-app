@@ -74,10 +74,11 @@ export default function GradeLayout({ grade, theme, OnboardingComponent, childre
   }, [unlock, checkStarBadges, loadHistoryFn, grade])
 
   // Si pas de player, afficher l'onboarding
+  // onSave pour 6e/5e, onRegister pour 3e — on passe les deux
   if (!player) {
     return (
       <div className={`${theme} min-h-screen`}>
-        <OnboardingComponent onSave={savePlayer} />
+        <OnboardingComponent onSave={savePlayer} onRegister={savePlayer} />
       </div>
     )
   }

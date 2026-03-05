@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useCallback } from 'react'
 import { usePlayer } from '../hooks/usePlayer'
 import { useBadges } from '../hooks/useBadges'
 import { useHistory } from '../hooks/useHistory'
+import { getStorageKeys } from '../utils/storageKeys'
 
 const GradeContext = createContext(null)
 
@@ -47,12 +48,13 @@ export default function GradeLayout({ grade, theme, OnboardingComponent, childre
   // Fonction de vérification des badges (compatible 6e)
   const makeBadgeCheckFn = useCallback((module) => {
     return (finalScore, extra, maxStreak) => {
+      const keys = getStorageKeys(grade)
       const history = loadHistoryFn()
       const totalGames = history.length
       const perfectCount = history.filter(e => e.score === (e.total || 10)).length
       const modulesPlayed = new Set(history.map(e => e.module)).size
-      const chronoBest = parseInt(localStorage.getItem(`maths${grade}_chrono_best`) || '0')
-      const dailyData = JSON.parse(localStorage.getItem(`maths${grade}_daily`) || '{}')
+      const chronoBest = parseInt(localStorage.getItem(keys.chrono.best) || '0')
+      const dailyData = JSON.parse(localStorage.getItem(keys.daily) || '{}')
       const dailyCount = dailyData.totalCompleted || 0
 
       if (totalGames >= 1) unlock('first_game')

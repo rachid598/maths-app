@@ -9,9 +9,10 @@ import Stars, { getStars } from '../../components/Stars'
 import PageTransition from '../../components/PageTransition'
 import { useSound } from '../../hooks/useSound'
 import { useHistory } from '../../../../shared/hooks/useHistory'
+import { KEYS_6E } from '../../../../shared/utils/storageKeys'
 
-const SCORES_KEY = 'maths6e_ts_scores'
-const WEAK_KEY = 'maths6e_ts_weak'
+const SCORES_KEY = KEYS_6E.tableStrike.scores
+const WEAK_KEY = KEYS_6E.tableStrike.weak
 
 function loadScores() {
   try { return JSON.parse(localStorage.getItem(SCORES_KEY)) || {} } catch { return {} }

@@ -7,10 +7,11 @@ import Stars, { getStars } from '../../components/Stars'
 import PageTransition from '../../components/PageTransition'
 import { useSound } from '../../hooks/useSound'
 import { useHistory } from '../../../../shared/hooks/useHistory'
+import { KEYS_6E } from '../../../../shared/utils/storageKeys'
 import DateIcon from '../../components/DateIcon'
 
 const TOTAL = 10
-const DAILY_KEY = 'maths6e_daily'
+const DAILY_KEY = KEYS_6E.daily
 
 function seededRandom(seed) {
   let s = seed

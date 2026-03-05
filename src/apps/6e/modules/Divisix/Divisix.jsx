@@ -8,8 +8,9 @@ import Stars, { getStars } from '../../components/Stars'
 import PageTransition from '../../components/PageTransition'
 import { useSound } from '../../hooks/useSound'
 import { useHistory } from '../../../../shared/hooks/useHistory'
+import { KEYS_6E } from '../../../../shared/utils/storageKeys'
 
-const SCORES_KEY = 'maths6e_dv_scores'
+const SCORES_KEY = KEYS_6E.divisix.scores
 
 function loadScores() { try { return JSON.parse(localStorage.getItem(SCORES_KEY)) || {} } catch { return {} } }
 function saveScores(s) { localStorage.setItem(SCORES_KEY, JSON.stringify(s)) }

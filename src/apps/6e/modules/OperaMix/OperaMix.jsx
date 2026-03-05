@@ -7,9 +7,10 @@ import Stars, { getStars } from '../../components/Stars'
 import PageTransition from '../../components/PageTransition'
 import { useSound } from '../../hooks/useSound'
 import { useHistory } from '../../../../shared/hooks/useHistory'
+import { KEYS_6E } from '../../../../shared/utils/storageKeys'
 
 const TOTAL = 10
-const BEST_KEY = 'maths6e_om_best'
+const BEST_KEY = KEYS_6E.operaMix.best
 
 function genQuestion() {
   const ops = ['+', '-', '\u00D7']

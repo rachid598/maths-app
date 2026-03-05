@@ -5,10 +5,11 @@ import Keypad from '../../components/Keypad'
 import PageTransition from '../../components/PageTransition'
 import { useSound } from '../../hooks/useSound'
 import { useHistory } from '../../../../shared/hooks/useHistory'
+import { KEYS_6E } from '../../../../shared/utils/storageKeys'
 
 const DURATION = 60
 const ALL_TABLES = [2, 3, 4, 5, 6, 7, 8, 9, 10]
-const BEST_KEY = 'maths6e_chrono_best'
+const BEST_KEY = KEYS_6E.chrono.best
 
 function genQuestion() {
   const a = ALL_TABLES[Math.floor(Math.random() * ALL_TABLES.length)]

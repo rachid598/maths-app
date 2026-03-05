@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, Zap } from 'lucide-react'
 import confetti from 'canvas-confetti'
 import {
@@ -12,7 +13,9 @@ import RushTimer from './components/RushTimer'
 import ComboCounter from './components/ComboCounter'
 import ScoreScreen from './components/ScoreScreen'
 
-export default function PrioRush({ onBack }) {
+export default function PrioRush() {
+  const navigate = useNavigate()
+  const onBack = () => navigate('/5e')
   const [phase, setPhase] = useState('ready')
   const [expressions, setExpressions] = useState([])
   const [index, setIndex] = useState(0)

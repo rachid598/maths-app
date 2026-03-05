@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function generateProblem() {
   const coeff = [2, 3, 4, 5, 6, 7, 8][Math.floor(Math.random() * 7)]
@@ -24,7 +25,9 @@ function generateCrossProblem() {
   return { a, b, c, answer: x }
 }
 
-export default function Proportionnalite({ onBack }) {
+export default function Proportionnalite() {
+  const navigate = useNavigate()
+  const onBack = () => navigate('/5e')
   const [mode, setMode] = useState('tableau') // tableau | produit
   const [problem, setProblem] = useState(generateProblem)
   const [crossProblem, setCrossProblem] = useState(generateCrossProblem)

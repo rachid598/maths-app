@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, ArrowRight, Trophy, RotateCcw, Star, Zap, HelpCircle } from 'lucide-react'
 import confetti from 'canvas-confetti'
 import {
@@ -44,7 +45,9 @@ function LevelSelector({ onSelect }) {
   )
 }
 
-export default function PrioCalcul({ onBack }) {
+export default function PrioCalcul() {
+  const navigate = useNavigate()
+  const onBack = () => navigate('/5e')
   const [levelId, setLevelId] = useState(null)
   const [tokens, setTokens] = useState([])
   const [stepChain, setStepChain] = useState([])

@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { generateQuestion, checkAnswer, checkPlacement, simplify, getLevelConfig } from './engine'
 
 /* ─── Demi-droite graduée SVG avec drag ─── */
@@ -179,7 +180,9 @@ function LevelPicker({ level, onPick }) {
 }
 
 /* ─── Composant principal ─── */
-export default function ReperageFractions({ onBack }) {
+export default function ReperageFractions() {
+  const navigate = useNavigate()
+  const onBack = () => navigate('/5e')
   const [level, setLevel] = useState(1)
   const [mode, setMode] = useState('lire')
   const [question, setQuestion] = useState(() => generateQuestion(1))

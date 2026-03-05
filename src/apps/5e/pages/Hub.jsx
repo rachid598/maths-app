@@ -1,4 +1,6 @@
+import { useNavigate } from 'react-router-dom'
 import { Swords, Calculator, Grid3X3, LogOut, Zap, Scale, Box, Ruler } from 'lucide-react'
+import { useGrade } from '../../../shared/components/GradeLayout'
 
 const modules = [
   {
@@ -59,7 +61,10 @@ const modules = [
   },
 ]
 
-export default function Hub({ player, onNavigate, onLogout, onHome }) {
+export default function Hub() {
+  const navigate = useNavigate()
+  const { player, clearPlayer } = useGrade()
+
   return (
     <div className="min-h-screen p-4 pb-8">
       {/* Header */}
@@ -73,7 +78,7 @@ export default function Hub({ player, onNavigate, onLogout, onHome }) {
           </p>
         </div>
         <button
-          onClick={onLogout}
+          onClick={clearPlayer}
           className="p-2 rounded-xl bg-surface hover:bg-surface-light transition-colors"
           title="Se déconnecter"
         >
@@ -88,7 +93,7 @@ export default function Hub({ player, onNavigate, onLogout, onHome }) {
           return (
             <button
               key={mod.id}
-              onClick={() => mod.active && onNavigate(mod.id)}
+              onClick={() => mod.active && navigate(`/5e/${mod.id}`)}
               disabled={!mod.active}
               className={`relative overflow-hidden rounded-2xl p-5 text-left transition-transform active:scale-[0.98] ${
                 mod.active
@@ -127,14 +132,12 @@ export default function Hub({ player, onNavigate, onLogout, onHome }) {
       </div>
 
       {/* Back to portal */}
-      {onHome && (
-        <button
-          onClick={onHome}
-          className="mx-auto mt-6 flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
-        >
-          ← Changer de niveau
-        </button>
-      )}
+      <button
+        onClick={() => navigate('/')}
+        className="mx-auto mt-6 flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
+      >
+        ← Changer de niveau
+      </button>
 
       {/* RGPD notice */}
       <p className="text-xs text-slate-400 text-center mt-4">

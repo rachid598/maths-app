@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, ArrowRight, Trophy, RotateCcw, Star, Zap, PenLine } from 'lucide-react'
 import confetti from 'canvas-confetti'
 import {
@@ -45,7 +46,9 @@ function LevelSelector({ onSelect }) {
   )
 }
 
-export default function FracStrike({ onBack }) {
+export default function FracStrike() {
+  const navigate = useNavigate()
+  const onBack = () => navigate('/5e')
   const [levelId, setLevelId] = useState(null)
   const [problem, setProblem] = useState(null)
   const [currentNum, setCurrentNum] = useState(0)

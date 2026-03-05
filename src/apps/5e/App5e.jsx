@@ -1,6 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import usePlayer from './hooks/usePlayer'
+import { Routes, Route } from 'react-router-dom'
+import GradeLayout from '../../shared/components/GradeLayout'
 import PlayerForm from './components/PlayerForm'
 import Hub from './pages/Hub'
 import FracStrike from './modules/frac-strike/FracStrike'
@@ -11,51 +10,25 @@ import Proportionnalite from './modules/proportionnalite/Proportionnalite'
 import VolumesAires from './modules/volumes-aires/VolumesAires'
 import ReperageFractions from './modules/reperage-fractions/ReperageFractions'
 
-export default function App5e() {
-  const navigate = useNavigate()
-  const { player, savePlayer, clearPlayer } = usePlayer()
-  const [currentModule, setCurrentModule] = useState(null)
-
-  const goBack = () => setCurrentModule(null)
-
-  if (!player) {
-    return (
-      <div className="theme-5e min-h-screen">
-        <PlayerForm onSave={savePlayer} />
-      </div>
-    )
-  }
-
-  if (currentModule === 'frac-strike') {
-    return <div className="theme-5e min-h-screen"><FracStrike onBack={goBack} /></div>
-  }
-  if (currentModule === 'prio-calcul') {
-    return <div className="theme-5e min-h-screen"><PrioCalcul onBack={goBack} /></div>
-  }
-  if (currentModule === 'divi-check') {
-    return <div className="theme-5e min-h-screen"><DiviCheck onBack={goBack} /></div>
-  }
-  if (currentModule === 'prio-rush') {
-    return <div className="theme-5e min-h-screen"><PrioRush onBack={goBack} /></div>
-  }
-  if (currentModule === 'proportionnalite') {
-    return <div className="theme-5e min-h-screen"><Proportionnalite onBack={goBack} /></div>
-  }
-  if (currentModule === 'volumes-aires') {
-    return <div className="theme-5e min-h-screen"><VolumesAires onBack={goBack} /></div>
-  }
-  if (currentModule === 'reperage-fractions') {
-    return <div className="theme-5e min-h-screen"><ReperageFractions onBack={goBack} /></div>
-  }
-
+function App5eContent() {
   return (
-    <div className="theme-5e min-h-screen">
-      <Hub
-        player={player}
-        onNavigate={setCurrentModule}
-        onLogout={clearPlayer}
-        onHome={() => navigate('/')}
-      />
-    </div>
+    <Routes>
+      <Route path="/" element={<Hub />} />
+      <Route path="/frac-strike" element={<FracStrike />} />
+      <Route path="/prio-calcul" element={<PrioCalcul />} />
+      <Route path="/divi-check" element={<DiviCheck />} />
+      <Route path="/prio-rush" element={<PrioRush />} />
+      <Route path="/proportionnalite" element={<Proportionnalite />} />
+      <Route path="/volumes-aires" element={<VolumesAires />} />
+      <Route path="/reperage-fractions" element={<ReperageFractions />} />
+    </Routes>
+  )
+}
+
+export default function App5e() {
+  return (
+    <GradeLayout grade="5e" theme="theme-5e" OnboardingComponent={PlayerForm}>
+      <App5eContent />
+    </GradeLayout>
   )
 }

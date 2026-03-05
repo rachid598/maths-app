@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const SHAPES = [
   {
@@ -99,7 +100,9 @@ function Shape3D({ shape }) {
   return null
 }
 
-export default function VolumesAires({ onBack }) {
+export default function VolumesAires() {
+  const navigate = useNavigate()
+  const onBack = () => navigate('/5e')
   const [shapeIdx, setShapeIdx] = useState(0)
   const [problem, setProblem] = useState(() => SHAPES[0].generate())
   const [input, setInput] = useState('')

@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, ArrowRight, Trophy, RotateCcw, Star, Zap, HelpCircle } from 'lucide-react'
 import confetti from 'canvas-confetti'
 import { DIVISORS, getLevels, generateGrid, checkGrid } from './engine'
@@ -40,7 +41,9 @@ function LevelSelector({ onSelect }) {
   )
 }
 
-export default function DiviCheck({ onBack }) {
+export default function DiviCheck() {
+  const navigate = useNavigate()
+  const onBack = () => navigate('/5e')
   const [levelId, setLevelId] = useState(null)
   const [grid, setGrid] = useState(null)
   const [checked, setChecked] = useState(emptyChecked)

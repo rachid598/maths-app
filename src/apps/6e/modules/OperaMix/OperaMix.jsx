@@ -6,7 +6,7 @@ import ProgressBar from '../../components/ProgressBar'
 import Stars, { getStars } from '../../components/Stars'
 import PageTransition from '../../components/PageTransition'
 import { useSound } from '../../hooks/useSound'
-import { addHistory } from '../../hooks/useHistory'
+import { addHistory } from '../../../../shared/hooks/useHistory'
 
 const TOTAL = 10
 const BEST_KEY = 'maths6e_om_best'
@@ -68,7 +68,7 @@ export default function OperaMix({ player, onBadgeCheck }) {
       setFeedback(null); setInput('')
       if (qi + 1 >= TOTAL) {
         const finalScore = correct ? score + 1 : score
-        addHistory({ module: 'OM', score: finalScore, total: TOTAL })
+        addHistory('6e', { module: 'OM', score: finalScore, total: TOTAL })
         if (finalScore > best) { setBest(finalScore); localStorage.setItem(BEST_KEY, finalScore.toString()) }
         if (onBadgeCheck) onBadgeCheck(finalScore)
         if (finalScore === TOTAL) { playConfetti(); confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }) }

@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom'
-import { loadHistory } from '../hooks/useHistory'
+import { loadHistory } from '../../../shared/hooks/useHistory'
 
 export default function HistoryChart() {
   const navigate = useNavigate()
-  const history = loadHistory().slice(-20)
+  const history = loadHistory('6e').slice(-20)
 
   const maxScore = Math.max(10, ...history.map((h) => h.total || 10))
 

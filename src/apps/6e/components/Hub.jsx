@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { exportResults } from '../hooks/useHistory'
+import { exportResults } from '../../../shared/hooks/useHistory'
 import DateIcon from './DateIcon'
 
 const GAMES = [
@@ -75,7 +75,7 @@ export default function Hub({ player, onReset, darkMode, onToggleDark, badgeCoun
               <span className="text-2xl">{'\uD83D\uDCC8'}</span>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Historique</p>
             </button>
-            <button onClick={exportResults}
+            <button onClick={() => exportResults('6e')}
               className="bg-white dark:bg-gray-800 rounded-xl p-3 shadow text-center active:scale-95 transition-transform">
               <span className="text-2xl">{'\uD83D\uDCE4'}</span>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Exporter</p>

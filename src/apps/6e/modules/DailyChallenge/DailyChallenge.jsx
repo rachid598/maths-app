@@ -6,7 +6,7 @@ import ProgressBar from '../../components/ProgressBar'
 import Stars, { getStars } from '../../components/Stars'
 import PageTransition from '../../components/PageTransition'
 import { useSound } from '../../hooks/useSound'
-import { addHistory } from '../../hooks/useHistory'
+import { addHistory } from '../../../../shared/hooks/useHistory'
 import DateIcon from '../../components/DateIcon'
 
 const TOTAL = 10
@@ -79,7 +79,7 @@ export default function DailyChallenge({ player, onBadgeCheck }) {
       if (qi + 1 >= TOTAL) {
         const finalScore = correct ? score + 1 : score
         const dailyCount = saveDaily(finalScore)
-        addHistory({ module: 'DC', score: finalScore, total: TOTAL })
+        addHistory('6e', { module: 'DC', score: finalScore, total: TOTAL })
         if (onBadgeCheck) onBadgeCheck(finalScore, dailyCount)
         if (finalScore === TOTAL) { playConfetti(); confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }) }
         setPhase('result')

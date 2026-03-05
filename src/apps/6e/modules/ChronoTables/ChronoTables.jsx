@@ -4,7 +4,7 @@ import confetti from 'canvas-confetti'
 import Keypad from '../../components/Keypad'
 import PageTransition from '../../components/PageTransition'
 import { useSound } from '../../hooks/useSound'
-import { addHistory } from '../../hooks/useHistory'
+import { addHistory } from '../../../../shared/hooks/useHistory'
 
 const DURATION = 60
 const ALL_TABLES = [2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -58,7 +58,7 @@ export default function ChronoTables({ player, onBadgeCheck }) {
 
   useEffect(() => {
     if (phase === 'result') {
-      addHistory({ module: 'CT', score, total: score })
+      addHistory('6e', { module: 'CT', score, total: score })
       if (score > best) {
         setBest(score)
         localStorage.setItem(BEST_KEY, score.toString())

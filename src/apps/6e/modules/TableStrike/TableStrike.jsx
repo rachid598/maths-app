@@ -8,7 +8,7 @@ import ProgressBar from '../../components/ProgressBar'
 import Stars, { getStars } from '../../components/Stars'
 import PageTransition from '../../components/PageTransition'
 import { useSound } from '../../hooks/useSound'
-import { addHistory } from '../../../../shared/hooks/useHistory'
+import { addHistory } from '../../hooks/useHistory'
 
 const SCORES_KEY = 'maths6e_ts_scores'
 const WEAK_KEY = 'maths6e_ts_weak'
@@ -104,7 +104,7 @@ export default function TableStrike({ player, onBadgeCheck }) {
         }
         const allMissed = correct ? missedTables : [...missedTables, question.a]
         saveWeak(allMissed.length > 0 ? [...new Set(allMissed)] : [])
-        addHistory('6e', { module: 'TS', level: level.id, score: finalScore, total: QUESTIONS_PER_ROUND, maxStreak: finalStreak })
+        addHistory({ module: 'TS', level: level.id, score: finalScore, total: QUESTIONS_PER_ROUND, maxStreak: finalStreak })
         if (onBadgeCheck) onBadgeCheck(finalScore, updated, finalStreak)
         if (finalScore === QUESTIONS_PER_ROUND) {
           playConfetti()

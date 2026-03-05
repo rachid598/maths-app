@@ -7,7 +7,7 @@ import ProgressBar from '../../components/ProgressBar'
 import Stars, { getStars } from '../../components/Stars'
 import PageTransition from '../../components/PageTransition'
 import { useSound } from '../../hooks/useSound'
-import { addHistory } from '../../../../shared/hooks/useHistory'
+import { addHistory } from '../../hooks/useHistory'
 
 const SCORES_KEY = 'maths6e_dv_scores'
 
@@ -47,7 +47,7 @@ export default function Divisix({ player, onBadgeCheck }) {
         const finalScore = correct ? score + 1 : score
         const updated = { ...bestScores }
         if (!updated[level.id] || finalScore > updated[level.id]) { updated[level.id] = finalScore; setBestScores(updated); saveScores(updated) }
-        addHistory('6e', { module: 'DV', level: level.id, score: finalScore, total: QUESTIONS_PER_ROUND })
+        addHistory({ module: 'DV', level: level.id, score: finalScore, total: QUESTIONS_PER_ROUND })
         if (onBadgeCheck) onBadgeCheck(finalScore)
         if (finalScore === QUESTIONS_PER_ROUND) { playConfetti(); confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }) }
         setPhase('result')

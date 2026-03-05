@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom'
 import { Swords, Calculator, Grid3X3, LogOut, Zap, Scale, Box, Ruler } from 'lucide-react'
 
 const modules = [
@@ -60,9 +59,7 @@ const modules = [
   },
 ]
 
-export default function Hub({ player, onLogout }) {
-  const navigate = useNavigate()
-
+export default function Hub({ player, onNavigate, onLogout, onHome }) {
   return (
     <div className="min-h-screen p-4 pb-8">
       {/* Header */}
@@ -91,7 +88,7 @@ export default function Hub({ player, onLogout }) {
           return (
             <button
               key={mod.id}
-              onClick={() => mod.active && navigate(`/${mod.id}`)}
+              onClick={() => mod.active && onNavigate(mod.id)}
               disabled={!mod.active}
               className={`relative overflow-hidden rounded-2xl p-5 text-left transition-transform active:scale-[0.98] ${
                 mod.active
@@ -130,12 +127,14 @@ export default function Hub({ player, onLogout }) {
       </div>
 
       {/* Back to portal */}
-      <button
-        onClick={() => navigate('/')}
-        className="mx-auto mt-6 flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
-      >
-        ← Retour au portail
-      </button>
+      {onHome && (
+        <button
+          onClick={onHome}
+          className="mx-auto mt-6 flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
+        >
+          ← Changer de niveau
+        </button>
+      )}
 
       {/* RGPD notice */}
       <p className="text-xs text-slate-400 text-center mt-4">

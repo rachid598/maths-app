@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom'
 import { Scissors, Triangle, Brain, LogOut, Zap, TrendingUp, Swords } from 'lucide-react'
 
 const GAMES = [
@@ -52,9 +51,7 @@ const GAMES = [
   },
 ]
 
-export default function Hub({ player, onLogout }) {
-  const navigate = useNavigate()
-
+export default function Hub({ player, onSelectGame, onLogout, onHome }) {
   return (
     <div className="min-h-dvh px-4 pb-8 pt-6">
       {/* Header */}
@@ -86,7 +83,7 @@ export default function Hub({ player, onLogout }) {
           return (
             <button
               key={game.id}
-              onClick={() => navigate(`/${game.id}`)}
+              onClick={() => onSelectGame(game.id)}
               className="group relative flex items-center gap-4 rounded-2xl border border-slate-700 bg-surface p-4 text-left transition hover:border-accent hover:shadow-lg hover:shadow-accent/10"
             >
               <div
@@ -107,12 +104,14 @@ export default function Hub({ player, onLogout }) {
       </div>
 
       {/* Back to portal */}
-      <button
-        onClick={() => navigate('/')}
-        className="mx-auto mt-6 flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
-      >
-        ← Retour au portail
-      </button>
+      {onHome && (
+        <button
+          onClick={onHome}
+          className="mx-auto mt-6 flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
+        >
+          ← Changer de niveau
+        </button>
+      )}
 
       <p className="mt-4 text-center text-xs text-slate-400">
         Maths-3e v1.0 — Données stockées localement

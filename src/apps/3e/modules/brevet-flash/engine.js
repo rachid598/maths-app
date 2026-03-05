@@ -45,7 +45,41 @@ export function pickQuestions(n = NUM_QUESTIONS) {
 }
 
 function normalize(s) { return String(s).replace(/\s+/g, '').toLowerCase() }
-export function checkAnswer(userAnswer, correctAnswer) { return normalize(userAnswer) === normalize(correctAnswer) }
+
+function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { [a, b] = [b, a % b] } return a }
+
+function parseFraction(s) {
+  const str = normalize(s)
+  const match = str.match(/^(-?\d+)\/(\d+)$/)
+  if (!match) return null
+  const num = parseInt(match[1])
+  const den = parseInt(match[2])
+  if (den === 0) return null
+  const d = gcd(num, den)
+  return { num: num / d, den: den / d }
+}
+
+export function checkAnswer(userAnswer, correctAnswer) {
+  // Comparaison stricte d'abord
+  if (normalize(userAnswer) === normalize(correctAnswer)) return true
+  // Si les deux sont des fractions, comparer les formes simplifiées
+  const userFrac = parseFraction(userAnswer)
+  const correctFrac = parseFraction(correctAnswer)
+  if (userFrac && correctFrac) {
+    return userFrac.num === correctFrac.num && userFrac.den === correctFrac.den
+  }
+  // Si la réponse attendue est un entier, vérifier si la fraction de l'élève vaut cet entier
+  const correctNum = parseFloat(normalize(correctAnswer))
+  if (userFrac && !isNaN(correctNum)) {
+    return userFrac.num / userFrac.den === correctNum
+  }
+  // Si l'élève donne un décimal et la réponse est une fraction
+  const userNum = parseFloat(normalize(userAnswer))
+  if (correctFrac && !isNaN(userNum)) {
+    return Math.abs(userNum - correctFrac.num / correctFrac.den) < 0.0001
+  }
+  return false
+}
 
 export function computeGrade(correct, total) {
   const pct = correct / total

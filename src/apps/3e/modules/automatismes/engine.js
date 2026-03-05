@@ -1190,11 +1190,34 @@ export function checkAnswer(question, userAnswer) {
   if (question.acceptedAnswers) {
     return question.acceptedAnswers.some((a) => {
       const expected = a.replace(',', '.').replace(/\s/g, '').replace(/π/g, 'pi')
-      return clean === expected
+      return clean === expected || areFractionsEqual(clean, expected)
     })
   }
 
-  return clean === String(question.answer).replace(',', '.').replace(/π/g, 'pi')
+  const expected = String(question.answer).replace(',', '.').replace(/π/g, 'pi')
+  return clean === expected || areFractionsEqual(clean, expected)
+}
+
+function _gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { [a, b] = [b, a % b] } return a }
+
+function _parseFrac(s) {
+  const m = s.match(/^(-?\d+)\/(\d+)$/)
+  if (!m) return null
+  const n = parseInt(m[1]), d = parseInt(m[2])
+  if (d === 0) return null
+  const g = _gcd(n, d)
+  return { n: n / g, d: d / g }
+}
+
+function areFractionsEqual(a, b) {
+  const fa = _parseFrac(a), fb = _parseFrac(b)
+  if (fa && fb) return fa.n === fb.n && fa.d === fb.d
+  // fraction vs entier
+  const num = parseFloat(b)
+  if (fa && !isNaN(num)) return fa.n / fa.d === num
+  const num2 = parseFloat(a)
+  if (fb && !isNaN(num2)) return num2 === fb.n / fb.d
+  return false
 }
 
 /**

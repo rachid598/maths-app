@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { BADGE_DEFINITIONS } from '../hooks/useBadges'
+import { BADGE_DEFINITIONS } from '../../../shared/hooks/useBadges'
 
 export default function BadgesScreen({ earned }) {
   const navigate = useNavigate()

@@ -1,7 +1,8 @@
 import { getStars } from '../engine'
-import { getHistoryForModule } from '../../../hooks/useHistory'
+import { useHistory } from '../../../../../shared/hooks/useHistory'
 
 function MiniChart() {
+  const { getHistoryForModule } = useHistory('6e')
   const history = getHistoryForModule('CT', 10)
   if (history.length < 2) return null
   const maxScore = Math.max(...history.map(h => h.score), 1)

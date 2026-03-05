@@ -4,7 +4,7 @@ import confetti from 'canvas-confetti'
 import Keypad from '../../components/Keypad'
 import PageTransition from '../../components/PageTransition'
 import { useSound } from '../../hooks/useSound'
-import { addHistory } from '../../hooks/useHistory'
+import { useHistory } from '../../../../shared/hooks/useHistory'
 
 const DURATION = 60
 const ALL_TABLES = [2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -18,6 +18,7 @@ function genQuestion() {
 
 export default function ChronoTables({ player, onBadgeCheck }) {
   const navigate = useNavigate()
+  const { addHistory } = useHistory('6e')
   const { playSuccess, playError, playConfetti, playTick } = useSound()
   const [phase, setPhase] = useState('ready')
   const [question, setQuestion] = useState(genQuestion)

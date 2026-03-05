@@ -6,7 +6,7 @@ import ProgressBar from '../../components/ProgressBar'
 import Stars, { getStars } from '../../components/Stars'
 import PageTransition from '../../components/PageTransition'
 import { useSound } from '../../hooks/useSound'
-import { addHistory } from '../../hooks/useHistory'
+import { useHistory } from '../../../../shared/hooks/useHistory'
 import DateIcon from '../../components/DateIcon'
 
 const TOTAL = 10
@@ -53,6 +53,7 @@ function saveDaily(score) {
 }
 
 export default function DailyChallenge({ player, onBadgeCheck }) {
+  const { addHistory } = useHistory('6e')
   const navigate = useNavigate()
   const { playSuccess, playError, playConfetti } = useSound()
   const [phase, setPhase] = useState(() => loadDaily() ? 'done' : 'ready')

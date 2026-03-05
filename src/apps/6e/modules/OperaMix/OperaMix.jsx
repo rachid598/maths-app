@@ -6,7 +6,7 @@ import ProgressBar from '../../components/ProgressBar'
 import Stars, { getStars } from '../../components/Stars'
 import PageTransition from '../../components/PageTransition'
 import { useSound } from '../../hooks/useSound'
-import { addHistory } from '../../hooks/useHistory'
+import { useHistory } from '../../../../shared/hooks/useHistory'
 
 const TOTAL = 10
 const BEST_KEY = 'maths6e_om_best'
@@ -40,6 +40,7 @@ function generateRound() {
 }
 
 export default function OperaMix({ player, onBadgeCheck }) {
+  const { addHistory } = useHistory('6e')
   const navigate = useNavigate()
   const { playSuccess, playError, playConfetti } = useSound()
   const [phase, setPhase] = useState('ready')

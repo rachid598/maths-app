@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { exportResults } from '../hooks/useHistory'
+import { useHistory } from '../../../shared/hooks/useHistory'
 import DateIcon from './DateIcon'
 
 const GAMES = [
@@ -15,6 +15,7 @@ const GAMES = [
 
 export default function Hub({ player, onReset, darkMode, onToggleDark, badgeCount }) {
   const navigate = useNavigate()
+  const { exportResults } = useHistory('6e')
 
   return (
     <div className="flex flex-col min-h-screen bg-surface dark:bg-gray-900">

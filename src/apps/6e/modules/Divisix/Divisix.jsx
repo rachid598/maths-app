@@ -7,7 +7,7 @@ import ProgressBar from '../../components/ProgressBar'
 import Stars, { getStars } from '../../components/Stars'
 import PageTransition from '../../components/PageTransition'
 import { useSound } from '../../hooks/useSound'
-import { addHistory } from '../../hooks/useHistory'
+import { useHistory } from '../../../../shared/hooks/useHistory'
 
 const SCORES_KEY = 'maths6e_dv_scores'
 
@@ -17,6 +17,7 @@ function saveScores(s) { localStorage.setItem(SCORES_KEY, JSON.stringify(s)) }
 export default function Divisix({ player, onBadgeCheck }) {
   const navigate = useNavigate()
   const { playSuccess, playError, playConfetti } = useSound()
+  const { addHistory } = useHistory('6e')
   const [level, setLevel] = useState(null)
   const [questions, setQuestions] = useState([])
   const [qi, setQi] = useState(0)

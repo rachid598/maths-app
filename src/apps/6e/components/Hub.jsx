@@ -11,6 +11,7 @@ const GAMES = [
   { id: 'duel', title: 'Duel Local', description: '2 joueurs, 1 telephone !', emoji: '\uD83E\uDD4A', color: 'from-cyan-500 to-blue-500', path: '/6e/duel' },
   { id: 'fractions-visuelles', title: 'Fractions Visuelles', description: 'Pizza interactive et conversions', emoji: '🍕', color: 'from-orange-500 to-amber-500', path: '/6e/fractions-visuelles' },
   { id: 'geo-builder', title: 'Géo-Builder', description: 'Grille, points et périmètres', emoji: '📐', color: 'from-teal-500 to-green-500', path: '/6e/geo-builder' },
+  { id: 'euclide', title: 'Euclide', description: 'Division posée & vocabulaire', emoji: '➗', color: 'from-violet-500 to-fuchsia-500', path: '/6e/euclide' },
 ]
 
 export default function Hub({ player, onReset, darkMode, onToggleDark, badgeCount }) {

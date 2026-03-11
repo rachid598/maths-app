@@ -1,102 +1,90 @@
 /**
- * Division posée — format français classique
+ * Division posée — format français
  *
- *   9 1 4 │ 7
- *  −7     │──────
- *  ──     │ 1 3 0
- *   2↓1   │
- *  −2 1   │
- *  ────   │
- *     ↓4  │
- *    −0   │
- *     ─   │
- *     4   │  reste
- *
- * Grille : col 0 = espace pour le signe −, cols 1..n = chiffres du dividende
+ * Grille de N colonnes (= nb chiffres du dividende).
+ * Le signe − est positionné en absolu à gauche du premier chiffre du produit.
+ * Les flèches ↓ indiquent le chiffre qu'on descend.
  */
 export default function DivisionLayout({ division, currentStep, revealedSteps }) {
   const { a, b, r } = division
   const aDigits = String(a).split('').map(Number)
   const steps = division.steps
   const n = aDigits.length
-  const totalCols = n + 1 // col 0 = signe, cols 1..n = chiffres
 
-  // ─── Construction des lignes (gauche) ───
+  const CW = 30 // cell width px
+  const CH = 30 // cell height px
+
+  // ─── Construction des lignes ───
   const rows = []
 
-  // Ligne 0 : chiffres du dividende
-  {
-    const cells = new Array(totalCols).fill(null)
-    aDigits.forEach((d, i) => {
-      cells[i + 1] = { value: String(d), cls: 'text-gray-800 dark:text-gray-100 font-bold' }
-    })
-    rows.push({ type: 'digits', cells })
-  }
+  // Ligne dividende
+  const divCells = Array(n).fill(null)
+  aDigits.forEach((d, i) => {
+    divCells[i] = { value: String(d), cls: 'text-gray-800 dark:text-gray-100 font-bold' }
+  })
+  rows.push({ type: 'digits', cells: [...divCells] })
 
-  // Pour chaque étape révélée : soustraction, trait, (flèche), reste
   for (let si = 0; si < Math.min(revealedSteps, steps.length); si++) {
     const step = steps[si]
-    const col = step.digitIndex + 1 // colonne du chiffre courant (1-indexed)
+    const di = step.digitIndex // colonne du chiffre courant (0-indexed)
     const isLast = si === steps.length - 1
-
-    // ── Ligne de soustraction : −produit ──
     const prodStr = String(step.product)
-    const subCells = new Array(totalCols).fill(null)
-    // Le produit est aligné à droite sur la colonne `col`
-    const prodFirstCol = col - prodStr.length + 1
-    // Signe −, une colonne avant le premier chiffre du produit
-    const signCol = prodFirstCol - 1
-    if (signCol >= 0) {
-      subCells[signCol] = { value: '−', cls: 'text-red-500 dark:text-red-400 font-bold' }
-    }
+    const prodFirstCol = di - prodStr.length + 1
+
+    // ── Soustraction ──
+    const subCells = Array(n).fill(null)
     for (let pi = 0; pi < prodStr.length; pi++) {
-      const c = prodFirstCol + pi
-      if (c >= 0 && c < totalCols) {
-        subCells[c] = { value: prodStr[pi], cls: 'text-red-500 dark:text-red-400 font-bold' }
+      const col = prodFirstCol + pi
+      if (col >= 0 && col < n) {
+        subCells[col] = {
+          value: prodStr[pi],
+          cls: 'text-red-500 dark:text-red-400 font-bold',
+          minus: pi === 0, // afficher − avant ce chiffre
+        }
       }
     }
-    rows.push({ type: 'digits', cells: subCells, animate: true })
+    rows.push({ type: 'digits', cells: [...subCells], animate: true })
 
-    // ── Trait de séparation ──
-    const lineFrom = Math.max(0, signCol)
-    const lineTo = col
-    rows.push({ type: 'line', from: lineFrom, to: lineTo, animate: true })
+    // ── Trait ──
+    rows.push({
+      type: 'line',
+      from: Math.max(0, prodFirstCol),
+      to: di,
+      animate: true,
+    })
 
-    // ── Flèche ↓ pour le chiffre descendu ──
-    if (!isLast && step.bringDown !== null) {
-      const arrowCells = new Array(totalCols).fill(null)
-      arrowCells[col + 1] = {
-        value: '↓',
-        cls: 'text-blue-500 dark:text-blue-400 text-sm leading-none',
-      }
-      rows.push({ type: 'arrow', cells: arrowCells, animate: true })
-    }
-
-    // ── Reste (+ chiffre descendu) ──
-    const remCells = new Array(totalCols).fill(null)
+    // ── Reste + chiffre descendu ──
     const remStr = String(step.remainder)
-    // Reste aligné à droite sur la colonne `col`
+    const remCells = Array(n).fill(null)
+
+    // Chiffres du reste, alignés à droite sur la colonne di
     for (let ri = 0; ri < remStr.length; ri++) {
-      const c = col - remStr.length + 1 + ri
-      if (c >= 0 && c < totalCols) {
-        remCells[c] = {
+      const col = di - remStr.length + 1 + ri
+      if (col >= 0 && col < n) {
+        remCells[col] = {
           value: remStr[ri],
           cls: isLast
-            ? (step.remainder === 0
-                ? 'text-emerald-600 dark:text-emerald-400 font-bold'
-                : 'text-amber-600 dark:text-amber-400 font-bold')
+            ? step.remainder === 0
+              ? 'text-emerald-600 dark:text-emerald-400 font-bold'
+              : 'text-amber-600 dark:text-amber-400 font-bold'
             : 'text-emerald-600 dark:text-emerald-400 font-bold',
         }
       }
     }
-    // Chiffre descendu
+
+    // Chiffre descendu avec flèche
     if (!isLast && step.bringDown !== null) {
-      remCells[col + 1] = {
-        value: String(step.bringDown),
-        cls: 'text-blue-500 dark:text-blue-400 font-bold',
+      const bdCol = di + 1
+      if (bdCol < n) {
+        remCells[bdCol] = {
+          value: String(step.bringDown),
+          cls: 'text-blue-500 dark:text-blue-400 font-bold',
+          arrow: true,
+        }
       }
     }
-    rows.push({ type: 'digits', cells: remCells, animate: true })
+
+    rows.push({ type: 'digits', cells: [...remCells], animate: true })
   }
 
   // ─── Quotient ───
@@ -107,13 +95,9 @@ export default function DivisionLayout({ division, currentStep, revealedSteps })
   })
 
   // ─── Rendu ───
-  const CW = 28 // largeur cellule en px
-  const CH = 28 // hauteur cellule en px
-  const arrowH = 16 // hauteur réduite pour la ligne flèche
-
   return (
-    <div className="font-mono text-lg select-none flex justify-center">
-      {/* ── Côté gauche : dividende + calculs ── */}
+    <div className="font-mono text-lg select-none flex justify-center gap-0">
+      {/* ── Gauche : dividende + calculs ── */}
       <div className="flex flex-col">
         {rows.map((row, ri) => {
           if (row.type === 'line') {
@@ -123,7 +107,7 @@ export default function DivisionLayout({ division, currentStep, revealedSteps })
                 className={`flex ${row.animate ? 'animate-slide-up' : ''}`}
                 style={{ height: 6 }}
               >
-                {Array.from({ length: totalCols }).map((_, ci) => (
+                {Array.from({ length: n }).map((_, ci) => (
                   <div key={ci} style={{ width: CW }}>
                     {ci >= row.from && ci <= row.to && (
                       <div className="border-b-2 border-gray-400 dark:border-gray-500 w-full" />
@@ -133,20 +117,36 @@ export default function DivisionLayout({ division, currentStep, revealedSteps })
               </div>
             )
           }
-
-          const isArrow = row.type === 'arrow'
           return (
             <div
               key={ri}
               className={`flex ${row.animate ? 'animate-slide-up' : ''}`}
-              style={{ height: isArrow ? arrowH : CH }}
+              style={{ height: CH }}
             >
               {row.cells.map((cell, ci) => (
                 <div
                   key={ci}
-                  className="flex items-center justify-center"
-                  style={{ width: CW, height: isArrow ? arrowH : CH }}
+                  className="flex items-center justify-center relative"
+                  style={{ width: CW, height: CH }}
                 >
+                  {/* Signe − positionné à gauche */}
+                  {cell?.minus && (
+                    <span
+                      className="text-red-500 dark:text-red-400 font-bold absolute"
+                      style={{ right: '80%', top: '50%', transform: 'translateY(-50%)' }}
+                    >
+                      −
+                    </span>
+                  )}
+                  {/* Flèche ↓ au-dessus du chiffre descendu */}
+                  {cell?.arrow && (
+                    <span
+                      className="text-blue-500 dark:text-blue-400 absolute text-xs font-bold"
+                      style={{ top: -2, left: '50%', transform: 'translateX(-50%)' }}
+                    >
+                      ↓
+                    </span>
+                  )}
                   {cell && <span className={cell.cls}>{cell.value}</span>}
                 </div>
               ))}
@@ -156,7 +156,7 @@ export default function DivisionLayout({ division, currentStep, revealedSteps })
       </div>
 
       {/* ── Barre verticale ── */}
-      <div className="flex flex-col mx-0.5">
+      <div className="flex flex-col">
         <div
           className="border-l-2 border-gray-600 dark:border-gray-300 flex items-center pl-2"
           style={{ height: CH }}
@@ -166,8 +166,8 @@ export default function DivisionLayout({ division, currentStep, revealedSteps })
         <div className="border-l-2 border-gray-600 dark:border-gray-300 flex-1" />
       </div>
 
-      {/* ── Côté droit : quotient ── */}
-      <div className="flex flex-col">
+      {/* ── Droite : quotient ── */}
+      <div className="flex flex-col pl-1">
         {/* Trait sous le diviseur */}
         <div className="flex items-end" style={{ height: CH }}>
           <div className="border-b-2 border-gray-600 dark:border-gray-300 flex">
@@ -194,7 +194,7 @@ export default function DivisionLayout({ division, currentStep, revealedSteps })
             </div>
           ))}
         </div>
-        {/* Annotation reste final */}
+        {/* Reste final */}
         {revealedSteps === steps.length && r > 0 && (
           <p className="text-xs text-amber-600 dark:text-amber-400 mt-1 animate-pop-in whitespace-nowrap">
             reste {r}

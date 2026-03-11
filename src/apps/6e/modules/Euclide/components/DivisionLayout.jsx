@@ -1,135 +1,153 @@
 /**
- * Division posée format français :
+ * Division posée — format français classique
  *
- *   6 8 4 │ 5
- *  -5      │──────
- *  ───     │ 1 3 6
- *   1 8    │
- *  -1 5    │
- *  ─────   │
- *     3 4  │
- *    -3 0  │
- *    ────  │
- *       4  │  ← reste
+ *   9 1 4 │ 7
+ *  −7     │──────
+ *  ──     │ 1 3 0
+ *   2↓1   │
+ *  −2 1   │
+ *  ────   │
+ *     ↓4  │
+ *    −0   │
+ *     ─   │
+ *     4   │  reste
+ *
+ * Grille : col 0 = espace pour le signe −, cols 1..n = chiffres du dividende
  */
 export default function DivisionLayout({ division, currentStep, revealedSteps }) {
-  const { a, b, q, r } = division
-  const aDigits = String(a).split('')
+  const { a, b, r } = division
+  const aDigits = String(a).split('').map(Number)
   const steps = division.steps
-  const totalCols = aDigits.length + 1 // extra col for overflow
+  const n = aDigits.length
+  const totalCols = n + 1 // col 0 = signe, cols 1..n = chiffres
 
-  // Build rows for the left side (dividend + subtractions)
+  // ─── Construction des lignes (gauche) ───
   const rows = []
 
-  // Row 0: the dividend digits
-  const dividendRow = new Array(totalCols).fill(null)
-  aDigits.forEach((d, i) => { dividendRow[i + 1] = { value: d, className: 'text-gray-800 dark:text-gray-100 font-bold' } })
-  rows.push({ cells: dividendRow, type: 'dividend' })
-
-  // For each revealed step, add: subtraction line, separator, remainder
-  for (let si = 0; si < Math.min(revealedSteps, steps.length); si++) {
-    const step = steps[si]
-    const pos = step.digitIndex + 1 // position of the current digit (1-indexed in our grid)
-
-    // The partial number starts at some position
-    // Product line: -product aligned to the partial
-    const productStr = String(step.product)
-    const subRow = new Array(totalCols).fill(null)
-    // Place the minus sign and product digits
-    const productEnd = pos + 1 // product aligns to current digit position
-    const productStart = productEnd - productStr.length
-    subRow[Math.max(0, productStart - 1)] = { value: '−', className: 'text-danger font-bold' }
-    for (let pi = 0; pi < productStr.length; pi++) {
-      const col = productStart + pi
-      if (col >= 0 && col < totalCols) {
-        subRow[col] = { value: productStr[pi], className: 'text-danger font-bold' }
-      }
-    }
-    rows.push({ cells: subRow, type: 'subtraction' })
-
-    // Separator line
-    const sepStart = Math.max(0, productStart - 1)
-    const sepEnd = productEnd
-    rows.push({ type: 'separator', from: sepStart, to: sepEnd })
-
-    // Remainder + bring down
-    const remRow = new Array(totalCols).fill(null)
-    const isLast = si === steps.length - 1
-
-    if (isLast) {
-      // Final remainder
-      const remStr = String(step.remainder)
-      for (let ri = 0; ri < remStr.length; ri++) {
-        const col = pos - remStr.length + 1 + ri
-        if (col >= 0 && col < totalCols) {
-          remRow[col] = {
-            value: remStr[ri],
-            className: step.remainder === 0
-              ? 'text-emerald-600 dark:text-emerald-400 font-bold'
-              : 'text-amber-600 dark:text-amber-400 font-bold',
-          }
-        }
-      }
-    } else {
-      // Remainder + next digit brought down
-      const nextDigit = aDigits[step.digitIndex + 1]
-      const combined = String(step.remainder) + nextDigit
-      for (let ci = 0; ci < combined.length; ci++) {
-        const col = pos - combined.length + 2 + ci
-        if (col >= 0 && col < totalCols) {
-          const isBroughtDown = ci === combined.length - 1
-          remRow[col] = {
-            value: combined[ci],
-            className: isBroughtDown
-              ? 'text-blue-500 dark:text-blue-400 font-bold'
-              : 'text-emerald-600 dark:text-emerald-400 font-bold',
-          }
-        }
-      }
-    }
-    rows.push({ cells: remRow, type: 'remainder' })
+  // Ligne 0 : chiffres du dividende
+  {
+    const cells = new Array(totalCols).fill(null)
+    aDigits.forEach((d, i) => {
+      cells[i + 1] = { value: String(d), cls: 'text-gray-800 dark:text-gray-100 font-bold' }
+    })
+    rows.push({ type: 'digits', cells })
   }
 
-  // Build quotient display
+  // Pour chaque étape révélée : soustraction, trait, (flèche), reste
+  for (let si = 0; si < Math.min(revealedSteps, steps.length); si++) {
+    const step = steps[si]
+    const col = step.digitIndex + 1 // colonne du chiffre courant (1-indexed)
+    const isLast = si === steps.length - 1
+
+    // ── Ligne de soustraction : −produit ──
+    const prodStr = String(step.product)
+    const subCells = new Array(totalCols).fill(null)
+    // Le produit est aligné à droite sur la colonne `col`
+    const prodFirstCol = col - prodStr.length + 1
+    // Signe −, une colonne avant le premier chiffre du produit
+    const signCol = prodFirstCol - 1
+    if (signCol >= 0) {
+      subCells[signCol] = { value: '−', cls: 'text-red-500 dark:text-red-400 font-bold' }
+    }
+    for (let pi = 0; pi < prodStr.length; pi++) {
+      const c = prodFirstCol + pi
+      if (c >= 0 && c < totalCols) {
+        subCells[c] = { value: prodStr[pi], cls: 'text-red-500 dark:text-red-400 font-bold' }
+      }
+    }
+    rows.push({ type: 'digits', cells: subCells, animate: true })
+
+    // ── Trait de séparation ──
+    const lineFrom = Math.max(0, signCol)
+    const lineTo = col
+    rows.push({ type: 'line', from: lineFrom, to: lineTo, animate: true })
+
+    // ── Flèche ↓ pour le chiffre descendu ──
+    if (!isLast && step.bringDown !== null) {
+      const arrowCells = new Array(totalCols).fill(null)
+      arrowCells[col + 1] = {
+        value: '↓',
+        cls: 'text-blue-500 dark:text-blue-400 text-sm leading-none',
+      }
+      rows.push({ type: 'arrow', cells: arrowCells, animate: true })
+    }
+
+    // ── Reste (+ chiffre descendu) ──
+    const remCells = new Array(totalCols).fill(null)
+    const remStr = String(step.remainder)
+    // Reste aligné à droite sur la colonne `col`
+    for (let ri = 0; ri < remStr.length; ri++) {
+      const c = col - remStr.length + 1 + ri
+      if (c >= 0 && c < totalCols) {
+        remCells[c] = {
+          value: remStr[ri],
+          cls: isLast
+            ? (step.remainder === 0
+                ? 'text-emerald-600 dark:text-emerald-400 font-bold'
+                : 'text-amber-600 dark:text-amber-400 font-bold')
+            : 'text-emerald-600 dark:text-emerald-400 font-bold',
+        }
+      }
+    }
+    // Chiffre descendu
+    if (!isLast && step.bringDown !== null) {
+      remCells[col + 1] = {
+        value: String(step.bringDown),
+        cls: 'text-blue-500 dark:text-blue-400 font-bold',
+      }
+    }
+    rows.push({ type: 'digits', cells: remCells, animate: true })
+  }
+
+  // ─── Quotient ───
   const quotientDigits = steps.map((s, i) => {
     if (i < revealedSteps) return { value: String(s.quotientDigit), revealed: true }
     if (i === currentStep) return { value: '?', current: true }
     return { value: '·', hidden: true }
   })
 
-  const cellW = 'w-7 sm:w-8'
-  const cellH = 'h-7 sm:h-8'
-  const fontSize = 'text-lg sm:text-xl'
+  // ─── Rendu ───
+  const CW = 28 // largeur cellule en px
+  const CH = 28 // hauteur cellule en px
+  const arrowH = 16 // hauteur réduite pour la ligne flèche
 
   return (
-    <div className={`font-mono ${fontSize} select-none flex justify-center`}>
-      {/* Left side: dividend and work */}
-      <div className="flex flex-col items-start">
+    <div className="font-mono text-lg select-none flex justify-center">
+      {/* ── Côté gauche : dividende + calculs ── */}
+      <div className="flex flex-col">
         {rows.map((row, ri) => {
-          if (row.type === 'separator') {
+          if (row.type === 'line') {
             return (
-              <div key={ri} className="flex animate-slide-up">
+              <div
+                key={ri}
+                className={`flex ${row.animate ? 'animate-slide-up' : ''}`}
+                style={{ height: 6 }}
+              >
                 {Array.from({ length: totalCols }).map((_, ci) => (
-                  <div key={ci} className={cellW}>
+                  <div key={ci} style={{ width: CW }}>
                     {ci >= row.from && ci <= row.to && (
-                      <div className="border-b-2 border-gray-400 dark:border-gray-500 w-full mt-0.5" />
+                      <div className="border-b-2 border-gray-400 dark:border-gray-500 w-full" />
                     )}
                   </div>
                 ))}
               </div>
             )
           }
+
+          const isArrow = row.type === 'arrow'
           return (
             <div
               key={ri}
-              className={`flex ${ri > 0 ? 'animate-slide-up' : ''}`}
+              className={`flex ${row.animate ? 'animate-slide-up' : ''}`}
+              style={{ height: isArrow ? arrowH : CH }}
             >
               {row.cells.map((cell, ci) => (
                 <div
                   key={ci}
-                  className={`${cellW} ${cellH} flex items-center justify-center`}
+                  className="flex items-center justify-center"
+                  style={{ width: CW, height: isArrow ? arrowH : CH }}
                 >
-                  {cell && <span className={cell.className}>{cell.value}</span>}
+                  {cell && <span className={cell.cls}>{cell.value}</span>}
                 </div>
               ))}
             </div>
@@ -137,44 +155,48 @@ export default function DivisionLayout({ division, currentStep, revealedSteps })
         })}
       </div>
 
-      {/* Vertical bar */}
-      <div className="flex flex-col items-center mx-1">
-        <div className={`border-l-2 border-gray-600 dark:border-gray-300 ${cellH} flex items-center pl-2`}>
-          <span className="text-gray-800 dark:text-gray-100 font-bold">{b}</span>
+      {/* ── Barre verticale ── */}
+      <div className="flex flex-col mx-0.5">
+        <div
+          className="border-l-2 border-gray-600 dark:border-gray-300 flex items-center pl-2"
+          style={{ height: CH }}
+        >
+          <span className="text-gray-800 dark:text-gray-100 font-bold whitespace-nowrap">{b}</span>
         </div>
         <div className="border-l-2 border-gray-600 dark:border-gray-300 flex-1" />
       </div>
 
-      {/* Right side: quotient */}
-      <div className="flex flex-col items-start">
-        {/* Separator under divisor */}
-        <div className={`${cellH} flex items-end`}>
+      {/* ── Côté droit : quotient ── */}
+      <div className="flex flex-col">
+        {/* Trait sous le diviseur */}
+        <div className="flex items-end" style={{ height: CH }}>
           <div className="border-b-2 border-gray-600 dark:border-gray-300 flex">
             {quotientDigits.map((_, i) => (
-              <div key={i} className={cellW} />
+              <div key={i} style={{ width: CW }} />
             ))}
           </div>
         </div>
-        {/* Quotient digits */}
-        <div className="flex mt-1">
+        {/* Chiffres du quotient */}
+        <div className="flex" style={{ height: CH }}>
           {quotientDigits.map((d, i) => (
             <div
               key={i}
-              className={`${cellW} ${cellH} flex items-center justify-center font-bold ${
+              className={`flex items-center justify-center font-bold ${
                 d.revealed
                   ? 'text-primary-dark dark:text-primary-light'
                   : d.current
                     ? 'text-primary animate-pulse'
                     : 'text-gray-300 dark:text-gray-600'
               }`}
+              style={{ width: CW }}
             >
               {d.value}
             </div>
           ))}
         </div>
-        {/* Final result annotation */}
+        {/* Annotation reste final */}
         {revealedSteps === steps.length && r > 0 && (
-          <p className="text-xs text-amber-600 dark:text-amber-400 mt-2 animate-pop-in">
+          <p className="text-xs text-amber-600 dark:text-amber-400 mt-1 animate-pop-in whitespace-nowrap">
             reste {r}
           </p>
         )}

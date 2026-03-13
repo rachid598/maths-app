@@ -40,6 +40,24 @@ export default function VocabulaireQuiz({ level, onComplete, playSuccess, playEr
 
   if (!question) return null
   const { division, choices } = question
+  const asked = question.termKey
+  const revealed = selected !== null
+
+  const TERM_VALUES = {
+    dividende: division.a,
+    diviseur: division.b,
+    quotient: division.q,
+    reste: division.r,
+  }
+
+  const badge = (key) => {
+    const hidden = key === asked && !revealed
+    return (
+      <span className={`px-3 py-1 rounded-full text-white text-sm ${TERM_COLORS[key]} ${hidden ? 'animate-pulse' : ''}`}>
+        {hidden ? '?' : TERM_VALUES[key]}
+      </span>
+    )
+  }
 
   return (
     <div className="flex flex-col items-center gap-6 px-4">
@@ -49,21 +67,13 @@ export default function VocabulaireQuiz({ level, onComplete, playSuccess, playEr
       {/* Équation a = b × q + r avec badges */}
       <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-lg w-full max-w-sm">
         <div className="flex flex-wrap items-center justify-center gap-2 text-lg font-bold">
-          <span className={`px-3 py-1 rounded-full text-white text-sm ${TERM_COLORS.dividende}`}>
-            {division.a}
-          </span>
+          {badge('dividende')}
           <span className="text-gray-400">=</span>
-          <span className={`px-3 py-1 rounded-full text-white text-sm ${TERM_COLORS.diviseur}`}>
-            {division.b}
-          </span>
+          {badge('diviseur')}
           <span className="text-gray-400">×</span>
-          <span className={`px-3 py-1 rounded-full text-white text-sm ${TERM_COLORS.quotient}`}>
-            {division.q}
-          </span>
+          {badge('quotient')}
           <span className="text-gray-400">+</span>
-          <span className={`px-3 py-1 rounded-full text-white text-sm ${TERM_COLORS.reste}`}>
-            {division.r}
-          </span>
+          {badge('reste')}
         </div>
         <div className="flex flex-wrap justify-center gap-3 mt-3 text-xs">
           {Object.entries(TERM_COLORS).map(([key, color]) => (

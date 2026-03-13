@@ -34,6 +34,10 @@ export function getStorageKeys(grade) {
     },
     daily: `${prefix}_daily`,
     
+    vocaCercle: {
+      scores: `${prefix}_vc_scores`,
+    },
+
     // Helper pour obtenir n'importe quelle clé custom
     custom: (key) => `${prefix}_${key}`,
   }

@@ -15,6 +15,7 @@ import FractionsVisuelles from './modules/FractionsVisuelles/FractionsVisuelles'
 import GeoBuilder from './modules/GeoBuilder/GeoBuilder'
 import Euclide from './modules/Euclide/Euclide'
 import GeoNotation from './modules/GeoNotation/GeoNotation'
+import VocaCercle from './modules/VocaCercle/VocaCercle'
 
 function App6eContent() {
   const { player, resetPlayer, darkMode, toggleDark, badgeCount, makeBadgeCheck, newBadge, dismissBadge } = useGrade()
@@ -34,6 +35,7 @@ function App6eContent() {
         <Route path="/geo-builder" element={<GeoBuilder player={player} onBadgeCheck={makeBadgeCheck("GB")} />} />
         <Route path="/euclide" element={<Euclide player={player} onBadgeCheck={makeBadgeCheck("EU")} />} />
         <Route path="/geo-notation" element={<GeoNotation player={player} onBadgeCheck={makeBadgeCheck("GN")} />} />
+        <Route path="/voca-cercle" element={<VocaCercle player={player} onBadgeCheck={makeBadgeCheck("VC")} />} />
         <Route path="/badges" element={<BadgesScreen earned={useGrade().earned} />} />
         <Route path="/history" element={<HistoryChart />} />
       </Routes>

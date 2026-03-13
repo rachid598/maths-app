@@ -61,35 +61,18 @@ export function computeSteps(a, b) {
 
 /**
  * Génère une question de vocabulaire
+ * L'élève doit identifier le bon terme (dividende, diviseur, quotient, reste)
+ * en tapant sur le bon nombre dans la division affichée.
  */
-const VOCAB_TERMS = [
-  { key: 'dividende', label: 'le dividende', getAnswer: (d) => d.a },
-  { key: 'diviseur', label: 'le diviseur', getAnswer: (d) => d.b },
-  { key: 'quotient', label: 'le quotient', getAnswer: (d) => d.q },
-  { key: 'reste', label: 'le reste', getAnswer: (d) => d.r },
-]
+const VOCAB_TERMS = ['dividende', 'diviseur', 'quotient', 'reste']
 
 export function generateVocabQuestion(digitCount) {
   const div = generateDivision(digitCount)
-  const termIndex = Math.floor(Math.random() * VOCAB_TERMS.length)
-  const term = VOCAB_TERMS[termIndex]
-  const answer = term.getAnswer(div)
-
-  // Générer 3 distracteurs uniques
-  const choices = new Set([answer])
-  while (choices.size < 4) {
-    const offset = Math.floor(Math.random() * 20) - 10
-    const distractor = Math.abs(answer + offset)
-    if (distractor !== answer) choices.add(distractor)
-  }
-
-  const shuffled = [...choices].sort(() => Math.random() - 0.5)
+  const termKey = VOCAB_TERMS[Math.floor(Math.random() * VOCAB_TERMS.length)]
 
   return {
     division: div,
-    question: `Quel est ${term.label} ?`,
-    termKey: term.key,
-    answer,
-    choices: shuffled,
+    termKey,
+    question: `Touche le ${termKey}`,
   }
 }

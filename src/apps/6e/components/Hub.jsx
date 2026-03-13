@@ -4,7 +4,7 @@ import DateIcon from './DateIcon'
 
 const GAMES = [
   { id: 'table-strike', title: 'Table-Strike', description: 'Tables de multiplication', emoji: '\u26A1', color: 'from-indigo-500 to-purple-500', path: '/6e/table-strike' },
-  { id: 'divisix', title: 'Divisix', description: 'Division euclidienne', emoji: '\u2797', color: 'from-emerald-500 to-teal-500', path: '/6e/divisix' },
+  { id: 'divisix', title: 'Divisix', description: 'Calcul mental : divisions', emoji: '\u2797', color: 'from-emerald-500 to-teal-500', path: '/6e/divisix' },
   { id: 'chrono', title: 'Chrono-Tables', description: '60s, maximum de bonnes reponses', emoji: '\u23F1\uFE0F', color: 'from-red-500 to-orange-500', path: '/6e/chrono' },
   { id: 'opera', title: 'Opera-Mix', description: '+, -, x melanges !', emoji: '\uD83C\uDFB0', color: 'from-pink-500 to-rose-500', path: '/6e/opera-mix' },
   { id: 'daily', title: 'Defi du jour', description: 'Les memes questions pour toute la classe', emoji: '\uD83D\uDCC5', color: 'from-amber-500 to-yellow-500', path: '/6e/daily' },

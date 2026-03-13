@@ -69,10 +69,12 @@ const VOCAB_TERMS = ['dividende', 'diviseur', 'quotient', 'reste']
 export function generateVocabQuestion(digitCount) {
   const div = generateDivision(digitCount)
   const termKey = VOCAB_TERMS[Math.floor(Math.random() * VOCAB_TERMS.length)]
+  const mode = Math.random() < 0.5 ? 'posee' : 'ligne'
 
   return {
     division: div,
     termKey,
+    mode,
     question: `Touche le ${termKey}`,
   }
 }

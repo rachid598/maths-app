@@ -10,7 +10,7 @@ const TERMS = [
 
 export default function VocabulaireQuiz({ level, onComplete, playSuccess, playError }) {
   const [question, setQuestion] = useState(null)
-  const [tapped, setTapped] = useState(null) // key tappé par l'élève
+  const [tapped, setTapped] = useState(null)
   const [qi, setQi] = useState(0)
   const [score, setScore] = useState(0)
   const timerRef = useRef(null)
@@ -48,38 +48,64 @@ export default function VocabulaireQuiz({ level, onComplete, playSuccess, playEr
     return 'bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 opacity-40'
   }
 
+  const TapButton = ({ termKey, children }) => {
+    const term = TERMS.find(t => t.key === termKey)
+    return (
+      <button
+        onClick={() => handleTap(termKey)}
+        disabled={!!tapped}
+        className={`${getStyle(termKey)} rounded-xl px-4 py-2 min-w-[56px] flex flex-col items-center gap-1 shadow-sm transition-all disabled:cursor-default`}
+      >
+        <span className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+          {term.value(division)}
+        </span>
+        {tapped && termKey === question.termKey && (
+          <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 animate-pop-in">
+            {termKey}
+          </span>
+        )}
+      </button>
+    )
+  }
+
   return (
     <div className="flex flex-col items-center gap-6 px-4">
-      {/* Compteur */}
       <p className="text-sm text-gray-400">{qi + 1} / {QUESTIONS_PER_ROUND}</p>
 
-      {/* Division : a ÷ b = q reste r */}
-      <div className="flex flex-wrap items-end justify-center gap-3">
-        {TERMS.map((term, i) => (
-          <div key={term.key} className="flex items-end gap-3">
-            <button
-              onClick={() => handleTap(term.key)}
-              disabled={!!tapped}
-              className={`${getStyle(term.key)} rounded-xl px-5 py-3 min-w-[64px] flex flex-col items-center gap-1 shadow-sm transition-all disabled:cursor-default`}
-            >
-              <span className="text-2xl font-bold text-gray-800 dark:text-gray-100">
-                {term.value(division)}
-              </span>
-              {tapped && term.key === question.termKey && (
-                <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 animate-pop-in">
-                  {term.key}
-                </span>
-              )}
-            </button>
-            {/* Symboles entre les nombres */}
-            {i === 0 && <span className="text-2xl font-bold text-gray-400 pb-3">÷</span>}
-            {i === 1 && <span className="text-2xl font-bold text-gray-400 pb-3">=</span>}
-            {i === 2 && <span className="text-sm font-semibold text-gray-400 pb-4">reste</span>}
+      {question.mode === 'posee' ? (
+        /* ── Division posée (potence) ── */
+        <div className="flex gap-0 font-mono select-none">
+          {/* Gauche : dividende + reste */}
+          <div className="flex flex-col items-end gap-2 pr-1">
+            <TapButton termKey="dividende" />
+            <div className="h-2" />
+            <TapButton termKey="reste" />
           </div>
-        ))}
-      </div>
 
-      {/* Question */}
+          {/* Barre verticale */}
+          <div className="flex flex-col">
+            <div className="border-l-2 border-gray-400 dark:border-gray-500 pl-2 pb-1">
+              <TapButton termKey="diviseur" />
+            </div>
+            <div className="border-l-2 border-gray-400 dark:border-gray-500 border-t-2 pl-2 pt-1">
+              <TapButton termKey="quotient" />
+            </div>
+          </div>
+        </div>
+      ) : (
+        /* ── Division en ligne : a = b × q + r ── */
+        <div className="flex flex-wrap items-end justify-center gap-3">
+          {TERMS.map((term, i) => (
+            <div key={term.key} className="flex items-end gap-3">
+              <TapButton termKey={term.key} />
+              {i === 0 && <span className="text-2xl font-bold text-gray-400 pb-2">=</span>}
+              {i === 1 && <span className="text-2xl font-bold text-gray-400 pb-2">×</span>}
+              {i === 2 && <span className="text-2xl font-bold text-gray-400 pb-2">+</span>}
+            </div>
+          ))}
+        </div>
+      )}
+
       <p className="text-xl font-bold text-gray-800 dark:text-gray-100 text-center">
         {question.question}
       </p>

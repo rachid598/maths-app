@@ -2,17 +2,33 @@ import { useNavigate } from 'react-router-dom'
 import { useHistory } from '../../../shared/hooks/useHistory'
 import DateIcon from './DateIcon'
 
-const GAMES = [
-  { id: 'table-strike', title: 'Table-Strike', description: 'Tables de multiplication', emoji: '\u26A1', color: 'from-indigo-500 to-purple-500', path: '/6e/table-strike' },
-  { id: 'divisix', title: 'Divisix', description: 'Calcul mental : divisions', emoji: '\u2797', color: 'from-emerald-500 to-teal-500', path: '/6e/divisix' },
-  { id: 'chrono', title: 'Chrono-Tables', description: '60s, maximum de bonnes reponses', emoji: '\u23F1\uFE0F', color: 'from-red-500 to-orange-500', path: '/6e/chrono' },
-  { id: 'opera', title: 'Opera-Mix', description: '+, -, x melanges !', emoji: '\uD83C\uDFB0', color: 'from-pink-500 to-rose-500', path: '/6e/opera-mix' },
+const CATEGORIES = [
+  {
+    title: 'Numérique',
+    emoji: '\uD83D\uDD22',
+    games: [
+      { id: 'table-strike', title: 'Table-Strike', description: 'Tables de multiplication', emoji: '\u26A1', color: 'from-indigo-500 to-purple-500', path: '/6e/table-strike' },
+      { id: 'divisix', title: 'Divisix', description: 'Calcul mental : divisions', emoji: '\u2797', color: 'from-emerald-500 to-teal-500', path: '/6e/divisix' },
+      { id: 'chrono', title: 'Chrono-Tables', description: '60s, maximum de bonnes reponses', emoji: '\u23F1\uFE0F', color: 'from-red-500 to-orange-500', path: '/6e/chrono' },
+      { id: 'opera', title: 'Opera-Mix', description: '+, -, x melanges !', emoji: '\uD83C\uDFB0', color: 'from-pink-500 to-rose-500', path: '/6e/opera-mix' },
+      { id: 'fractions-visuelles', title: 'Fractions Visuelles', description: 'Pizza interactive et conversions', emoji: '\uD83C\uDF55', color: 'from-orange-500 to-amber-500', path: '/6e/fractions-visuelles' },
+      { id: 'euclide', title: 'Euclide', description: 'Division posée & vocabulaire', emoji: '\u2797', color: 'from-violet-500 to-fuchsia-500', path: '/6e/euclide' },
+    ],
+  },
+  {
+    title: 'Géométrie',
+    emoji: '\uD83D\uDCD0',
+    games: [
+      { id: 'geo-builder', title: 'Géo-Dessin', description: 'Grille, points et périmètres', emoji: '\uD83D\uDCD0', color: 'from-teal-500 to-green-500', path: '/6e/geo-builder' },
+      { id: 'geo-notation', title: 'Géo-Notation', description: 'Droite, segment, demi-droite...', emoji: '\u270F\uFE0F', color: 'from-sky-500 to-blue-500', path: '/6e/geo-notation' },
+      { id: 'voca-cercle', title: 'Vocab Cercle', description: 'Centre, rayon, diamètre...', emoji: '\u2B55', color: 'from-teal-500 to-cyan-500', path: '/6e/voca-cercle' },
+    ],
+  },
+]
+
+const MODES = [
   { id: 'daily', title: 'Defi du jour', description: 'Les memes questions pour toute la classe', emoji: '\uD83D\uDCC5', color: 'from-amber-500 to-yellow-500', path: '/6e/daily' },
   { id: 'duel', title: 'Duel Local', description: '2 joueurs, 1 telephone !', emoji: '\uD83E\uDD4A', color: 'from-cyan-500 to-blue-500', path: '/6e/duel' },
-  { id: 'fractions-visuelles', title: 'Fractions Visuelles', description: 'Pizza interactive et conversions', emoji: '🍕', color: 'from-orange-500 to-amber-500', path: '/6e/fractions-visuelles' },
-  { id: 'geo-builder', title: 'Géo-Dessin', description: 'Grille, points et périmètres', emoji: '📐', color: 'from-teal-500 to-green-500', path: '/6e/geo-builder' },
-  { id: 'euclide', title: 'Euclide', description: 'Division posée & vocabulaire', emoji: '➗', color: 'from-violet-500 to-fuchsia-500', path: '/6e/euclide' },
-  { id: 'geo-notation', title: 'Géo-Notation', description: 'Droite, segment, demi-droite...', emoji: '✏️', color: 'from-sky-500 to-blue-500', path: '/6e/geo-notation' },
 ]
 
 export default function Hub({ player, onReset, darkMode, onToggleDark, badgeCount }) {
@@ -44,26 +60,53 @@ export default function Hub({ player, onReset, darkMode, onToggleDark, badgeCoun
           <h1 className="text-2xl font-extrabold text-primary-dark dark:text-primary-light mb-1">{'\uD83C\uDFAF'} Mes Jeux</h1>
           <p className="text-gray-400 text-sm mb-5">Choisis un module et entraine-toi !</p>
 
-          <div className="space-y-3 mb-6">
-            {GAMES.map((game, i) => (
-              <button
-                key={game.id}
-                onClick={() => navigate(game.path)}
-                className={`animate-slide-up w-full text-left p-4 rounded-2xl shadow-md bg-gradient-to-r ${game.color} text-white active:scale-[0.98] transition-transform`}
-                style={{ animationDelay: `${i * 60}ms`, animationFillMode: 'both' }}
-              >
-                <div className="flex items-center gap-4">
-                  {game.id === 'daily'
-                    ? <DateIcon size="small" />
-                    : <span className="text-3xl">{game.emoji}</span>
-                  }
-                  <div>
-                    <h2 className="text-base font-bold">{game.title}</h2>
-                    <p className="text-xs opacity-80">{game.description}</p>
+          {(() => { let idx = 0; return CATEGORIES.map((cat) => (
+            <div key={cat.title} className="mb-6">
+              <h2 className="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">{cat.emoji} {cat.title}</h2>
+              <div className="space-y-3">
+                {cat.games.map((game) => {
+                  const i = idx++
+                  return (
+                    <button
+                      key={game.id}
+                      onClick={() => navigate(game.path)}
+                      className={`animate-slide-up w-full text-left p-4 rounded-2xl shadow-md bg-gradient-to-r ${game.color} text-white active:scale-[0.98] transition-transform`}
+                      style={{ animationDelay: `${i * 60}ms`, animationFillMode: 'both' }}
+                    >
+                      <div className="flex items-center gap-4">
+                        <span className="text-3xl">{game.emoji}</span>
+                        <div>
+                          <h2 className="text-base font-bold">{game.title}</h2>
+                          <p className="text-xs opacity-80">{game.description}</p>
+                        </div>
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )) })()}
+
+          <div className="mb-6">
+            <h2 className="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">{'\uD83C\uDFAE'} Modes de jeu</h2>
+            <div className="space-y-3">
+              {MODES.map((game, i) => (
+                <button
+                  key={game.id}
+                  onClick={() => navigate(game.path)}
+                  className={`animate-slide-up w-full text-left p-4 rounded-2xl shadow-md bg-gradient-to-r ${game.color} text-white active:scale-[0.98] transition-transform`}
+                  style={{ animationDelay: `${(CATEGORIES.reduce((s, c) => s + c.games.length, 0) + i) * 60}ms`, animationFillMode: 'both' }}
+                >
+                  <div className="flex items-center gap-4">
+                    {game.id === 'daily' ? <DateIcon size="small" /> : <span className="text-3xl">{game.emoji}</span>}
+                    <div>
+                      <h2 className="text-base font-bold">{game.title}</h2>
+                      <p className="text-xs opacity-80">{game.description}</p>
+                    </div>
                   </div>
-                </div>
-              </button>
-            ))}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="grid grid-cols-3 gap-3 mb-4">

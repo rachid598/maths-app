@@ -10,8 +10,9 @@ const GAMES = [
   { id: 'daily', title: 'Defi du jour', description: 'Les memes questions pour toute la classe', emoji: '\uD83D\uDCC5', color: 'from-amber-500 to-yellow-500', path: '/6e/daily' },
   { id: 'duel', title: 'Duel Local', description: '2 joueurs, 1 telephone !', emoji: '\uD83E\uDD4A', color: 'from-cyan-500 to-blue-500', path: '/6e/duel' },
   { id: 'fractions-visuelles', title: 'Fractions Visuelles', description: 'Pizza interactive et conversions', emoji: '🍕', color: 'from-orange-500 to-amber-500', path: '/6e/fractions-visuelles' },
-  { id: 'geo-builder', title: 'Géo-Builder', description: 'Grille, points et périmètres', emoji: '📐', color: 'from-teal-500 to-green-500', path: '/6e/geo-builder' },
+  { id: 'geo-builder', title: 'Géo-Dessin', description: 'Grille, points et périmètres', emoji: '📐', color: 'from-teal-500 to-green-500', path: '/6e/geo-builder' },
   { id: 'euclide', title: 'Euclide', description: 'Division posée & vocabulaire', emoji: '➗', color: 'from-violet-500 to-fuchsia-500', path: '/6e/euclide' },
+  { id: 'geo-notation', title: 'Géo-Notation', description: 'Droite, segment, demi-droite...', emoji: '✏️', color: 'from-sky-500 to-blue-500', path: '/6e/geo-notation' },
 ]
 
 export default function Hub({ player, onReset, darkMode, onToggleDark, badgeCount }) {

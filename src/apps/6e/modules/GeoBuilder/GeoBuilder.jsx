@@ -110,7 +110,7 @@ export default function GeoBuilder({ player, onBadgeCheck }) {
           <button onClick={() => navigate('/')} className="text-emerald-600 dark:text-emerald-400 font-medium">
             ← Retour
           </button>
-          <h1 className="text-lg font-extrabold dark:text-white">📐 GeoBuilder</h1>
+          <h1 className="text-lg font-extrabold dark:text-white">📐 Géo-Dessin</h1>
           <button onClick={clear} className="text-red-400 text-sm font-bold">Effacer</button>
         </div>
 

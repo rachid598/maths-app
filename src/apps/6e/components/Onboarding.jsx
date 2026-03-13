@@ -49,7 +49,7 @@ export default function Onboarding({ onSave }) {
                 type="text"
                 value={prenom}
                 onChange={(e) => setPrenom(e.target.value)}
-                placeholder="Ex : Amine"
+                placeholder="Ton prenom"
                 maxLength={20}
                 autoFocus
                 className="w-full px-4 py-3 rounded-xl border-2 border-primary-light

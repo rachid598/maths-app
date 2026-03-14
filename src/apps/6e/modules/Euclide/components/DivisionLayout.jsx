@@ -94,8 +94,11 @@ export default function DivisionLayout({ division, currentStep, revealedSteps })
     return { value: '·', hidden: true }
   })
 
+  const isComplete = revealedSteps === steps.length
+
   // ─── Rendu ───
   return (
+    <div className="flex flex-col items-center gap-3">
     <div className="font-mono text-lg select-none flex justify-center gap-0">
       {/* ── Gauche : dividende + calculs ── */}
       <div className="flex flex-col">
@@ -201,6 +204,27 @@ export default function DivisionLayout({ division, currentStep, revealedSteps })
           </p>
         )}
       </div>
+    </div>
+
+    {/* Égalité en ligne */}
+    {isComplete && (
+      <div className="animate-pop-in text-center mt-1">
+        <p className="text-sm font-bold text-gray-700 dark:text-gray-200">
+          <span className="text-primary-dark dark:text-primary-light">{a}</span>
+          {' = '}
+          <span className="text-primary-dark dark:text-primary-light">{b}</span>
+          {' × '}
+          <span className="text-primary-dark dark:text-primary-light">{division.q}</span>
+          {' + '}
+          <span className={r > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400'}>{r}</span>
+        </p>
+        {r > 0 && (
+          <p className="text-xs text-gray-400 mt-0.5">
+            {r} {'<'} {b} {'\u2714\uFE0F'}
+          </p>
+        )}
+      </div>
+    )}
     </div>
   )
 }

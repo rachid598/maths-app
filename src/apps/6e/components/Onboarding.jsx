@@ -64,7 +64,7 @@ export default function Onboarding({ onSave }) {
                 type="text"
                 value={classe}
                 onChange={(e) => setClasse(e.target.value)}
-                placeholder="Ex : 6eB"
+                placeholder="Ex : 6G1"
                 maxLength={10}
                 className="w-full px-4 py-3 rounded-xl border-2 border-primary-light
                   focus:border-primary focus:outline-none text-lg bg-white"

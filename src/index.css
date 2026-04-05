@@ -54,6 +54,15 @@ body {
   --color-surface-light: #334155;
 }
 
+/* ─── 4e theme: dark bg ─── */
+.theme-4e {
+  background-color: #0f172a;
+  color: #f8fafc;
+  -webkit-font-smoothing: antialiased;
+  --color-surface: #1e293b;
+  --color-surface-light: #334155;
+}
+
 /* ─── 3e theme: dark bg ─── */
 .theme-3e {
   background-color: #0f172a;

@@ -1,11 +1,13 @@
 /**
  * Triangle rectangle SVG avec sommets étiquetés.
  * L'angle droit est indiqué par un petit carré.
- * Les sommets sont placés de manière aléatoire mais lisible.
+ *
+ * Props:
+ * - vertices: ['I', 'J', 'K'] — les 3 sommets
+ * - rightAngle: 'I' — le sommet de l'angle droit
+ * - sides: { IJ: 4, IK: 3, JK: '?' } — longueurs (optionnel, pour les questions calcul)
  */
-export default function TriangleSVG({ vertices, rightAngle }) {
-  const [v0, v1, v2] = vertices
-  // On place l'angle droit en bas à gauche, les deux autres en haut à gauche et en bas à droite
+export default function TriangleSVG({ vertices, rightAngle, sides }) {
   const rightIdx = vertices.indexOf(rightAngle)
   const ordered = [vertices[rightIdx], ...vertices.filter(v => v !== rightAngle)]
 
@@ -14,19 +16,45 @@ export default function TriangleSVG({ vertices, rightAngle }) {
   const T = { x: 60, y: 40 }    // sommet haut (côté vertical)
   const B = { x: 240, y: 170 }  // sommet droit (côté horizontal)
 
-  const pts = { [ordered[0]]: R, [ordered[1]]: T, [ordered[2]]: B }
-  const pR = pts[ordered[0]]
-  const pT = pts[ordered[1]]
-  const pB = pts[ordered[2]]
-
   const sq = 16 // taille du carré angle droit
   const color = '#10b981' // emerald
+
+  // Noms des côtés
+  const sideRT = ordered[0] + ordered[1] // vertical (angle droit → haut)
+  const sideRB = ordered[0] + ordered[2] // horizontal (angle droit → droite)
+  const sideTB = ordered[1] + ordered[2] // hypoténuse (diagonal)
+
+  // Valeurs des côtés (si fournies)
+  const getVal = (sideName) => {
+    if (!sides) return null
+    // Chercher dans les deux sens (AB ou BA)
+    const reverse = sideName[1] + sideName[0]
+    if (sides[sideName] !== undefined) return sides[sideName]
+    if (sides[reverse] !== undefined) return sides[reverse]
+    return null
+  }
+
+  const valRT = getVal(sideRT)
+  const valRB = getVal(sideRB)
+  const valTB = getVal(sideTB)
+
+  const sideStyle = (val) => {
+    if (val === '?') return 'fill-amber-400 font-bold'
+    if (val !== null) return 'fill-slate-300'
+    return 'fill-slate-500'
+  }
+
+  const formatSide = (name, val) => {
+    if (val === '?') return `${name} = ?`
+    if (val !== null) return `${name} = ${val}`
+    return name
+  }
 
   return (
     <svg viewBox="0 0 300 210" className="mx-auto h-48 w-full max-w-xs">
       {/* Triangle rempli */}
       <polygon
-        points={`${pR.x},${pR.y} ${pT.x},${pT.y} ${pB.x},${pB.y}`}
+        points={`${R.x},${R.y} ${T.x},${T.y} ${B.x},${B.y}`}
         fill="rgba(16, 185, 129, 0.1)"
         stroke={color}
         strokeWidth="2.5"
@@ -35,49 +63,60 @@ export default function TriangleSVG({ vertices, rightAngle }) {
 
       {/* Carré angle droit */}
       <polyline
-        points={`${pR.x},${pR.y - sq} ${pR.x + sq},${pR.y - sq} ${pR.x + sq},${pR.y}`}
+        points={`${R.x},${R.y - sq} ${R.x + sq},${R.y - sq} ${R.x + sq},${R.y}`}
         fill="none"
         stroke={color}
         strokeWidth="1.5"
       />
 
-      {/* Labels des sommets */}
-      <text x={pR.x - 16} y={pR.y + 18} textAnchor="middle" className="fill-emerald-400 font-bold" fontSize="16">{ordered[0]}</text>
-      <text x={pT.x - 16} y={pT.y + 6} textAnchor="middle" className="fill-slate-300" fontSize="16">{ordered[1]}</text>
-      <text x={pB.x + 16} y={pB.y + 6} textAnchor="middle" className="fill-slate-300" fontSize="16">{ordered[2]}</text>
+      {/* Côté inconnu en pointillés */}
+      {valRT === '?' && (
+        <line x1={R.x} y1={R.y} x2={T.x} y2={T.y} stroke="#f59e0b" strokeWidth="3" strokeDasharray="6 4" className="animate-pulse" />
+      )}
+      {valRB === '?' && (
+        <line x1={R.x} y1={R.y} x2={B.x} y2={B.y} stroke="#f59e0b" strokeWidth="3" strokeDasharray="6 4" className="animate-pulse" />
+      )}
+      {valTB === '?' && (
+        <line x1={T.x} y1={T.y} x2={B.x} y2={B.y} stroke="#f59e0b" strokeWidth="3" strokeDasharray="6 4" className="animate-pulse" />
+      )}
 
-      {/* Labels des côtés */}
+      {/* Labels des sommets */}
+      <text x={R.x - 16} y={R.y + 18} textAnchor="middle" className="fill-emerald-400 font-bold" fontSize="16">{ordered[0]}</text>
+      <text x={T.x - 16} y={T.y + 6} textAnchor="middle" className="fill-slate-300" fontSize="16">{ordered[1]}</text>
+      <text x={B.x + 16} y={B.y + 6} textAnchor="middle" className="fill-slate-300" fontSize="16">{ordered[2]}</text>
+
+      {/* Labels des côtés avec valeurs */}
       {/* Côté vertical (R → T) */}
       <text
-        x={pR.x - 30}
-        y={(pR.y + pT.y) / 2}
+        x={R.x - 30}
+        y={(R.y + T.y) / 2}
         textAnchor="middle"
-        className="fill-slate-400"
-        fontSize="12"
+        className={sideStyle(valRT)}
+        fontSize="13"
       >
-        {ordered[0]}{ordered[1]}
+        {formatSide(sideRT, valRT)}
       </text>
 
       {/* Côté horizontal (R → B) */}
       <text
-        x={(pR.x + pB.x) / 2}
-        y={pR.y + 20}
+        x={(R.x + B.x) / 2}
+        y={R.y + 20}
         textAnchor="middle"
-        className="fill-slate-400"
-        fontSize="12"
+        className={sideStyle(valRB)}
+        fontSize="13"
       >
-        {ordered[0]}{ordered[2]}
+        {formatSide(sideRB, valRB)}
       </text>
 
       {/* Hypoténuse (T → B) */}
       <text
-        x={(pT.x + pB.x) / 2 + 18}
-        y={(pT.y + pB.y) / 2 - 8}
+        x={(T.x + B.x) / 2 + 18}
+        y={(T.y + B.y) / 2 - 8}
         textAnchor="middle"
-        className="fill-slate-400"
-        fontSize="12"
+        className={sideStyle(valTB)}
+        fontSize="13"
       >
-        {ordered[1]}{ordered[2]}
+        {formatSide(sideTB, valTB)}
       </text>
     </svg>
   )

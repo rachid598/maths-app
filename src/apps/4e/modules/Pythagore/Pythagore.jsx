@@ -1,9 +1,8 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, Star, RotateCcw, Trophy, ChevronRight } from 'lucide-react'
+import { ArrowLeft, Star, RotateCcw, Trophy, ChevronRight, Delete } from 'lucide-react'
 import { LEVELS, generateRound, QUESTIONS_PER_ROUND } from './engine'
 import TriangleSVG from './components/TriangleSVG'
-import { useGrade } from '../../../../shared/components/GradeLayout'
 import { useHistory } from '../../../../shared/hooks/useHistory'
 import { getStorageKeys } from '../../../../shared/utils/storageKeys'
 
@@ -23,22 +22,24 @@ export default function Pythagore() {
   const [selected, setSelected] = useState(null)
   const [phase, setPhase] = useState('pick')
   const [bestScores, setBestScores] = useState(loadScores)
+  const [userInput, setUserInput] = useState('')
+  const [feedback, setFeedback] = useState(null)
+  const [showHint, setShowHint] = useState(false)
   const feedbackTimer = useRef(null)
   const question = questions[qi]
 
   const startLevel = useCallback((lv) => {
     setLevel(lv)
     setQuestions(generateRound(lv.id))
-    setQi(0); setScore(0); setSelected(null); setPhase('play')
+    setQi(0); setScore(0); setSelected(null); setUserInput(''); setFeedback(null); setShowHint(false); setPhase('play')
   }, [])
 
-  const handleChoice = useCallback((choiceIndex) => {
-    if (selected !== null || !question) return
-    const correct = choiceIndex === question.correctIndex
-    setSelected(choiceIndex)
-
+  const advance = useCallback((correct) => {
     feedbackTimer.current = setTimeout(() => {
       setSelected(null)
+      setUserInput('')
+      setFeedback(null)
+      setShowHint(false)
       if (qi + 1 >= QUESTIONS_PER_ROUND) {
         const finalScore = correct ? score + 1 : score
         const updated = { ...bestScores }
@@ -54,10 +55,55 @@ export default function Pythagore() {
         if (correct) setScore(s => s + 1)
         setQi(q => q + 1)
       }
-    }, correct ? 600 : 1500)
+    }, correct ? 1200 : 2500)
+  }, [qi, score, bestScores, level, addHistory])
 
-    if (correct && qi + 1 < QUESTIONS_PER_ROUND) setScore(s => s + 1)
+  // QCM handler
+  const handleChoice = useCallback((choiceIndex) => {
+    if (selected !== null || !question) return
+    const correct = choiceIndex === question.correctIndex
+    setSelected(choiceIndex)
+    if (correct) setScore(s => s + 1)
+    feedbackTimer.current = setTimeout(() => {
+      setSelected(null)
+      if (qi + 1 >= QUESTIONS_PER_ROUND) {
+        const finalScore = correct ? score + 1 : score
+        const updated = { ...bestScores }
+        if (!updated[level.id] || finalScore > updated[level.id]) {
+          updated[level.id] = finalScore
+          setBestScores(updated)
+          saveScores(updated)
+        }
+        addHistory({ module: 'PY', level: level.id, score: finalScore, total: QUESTIONS_PER_ROUND })
+        setScore(correct ? score + 1 : score)
+        setPhase('result')
+      } else {
+        setQi(q => q + 1)
+      }
+    }, correct ? 600 : 1500)
   }, [question, selected, qi, score, bestScores, level, addHistory])
+
+  // Calcul handler
+  const handleValidate = useCallback(() => {
+    if (!question || feedback) return
+    const parsed = parseFloat(userInput.replace(',', '.'))
+    const correct = !isNaN(parsed) && Math.abs(parsed - question.answer) < 0.01
+    setFeedback(correct ? 'correct' : 'wrong')
+    setShowHint(true)
+    if (correct) setScore(s => s + 1)
+    advance(correct)
+  }, [question, userInput, feedback, advance])
+
+  const handleKeyInput = useCallback((value) => {
+    if (feedback) return
+    if (value === 'backspace') {
+      setUserInput(v => v.slice(0, -1))
+    } else if (value === ',') {
+      if (!userInput.includes(',')) setUserInput(v => v + ',')
+    } else {
+      setUserInput(v => v.length < 6 ? v + value : v)
+    }
+  }, [feedback, userInput])
 
   useEffect(() => () => { if (feedbackTimer.current) clearTimeout(feedbackTimer.current) }, [])
 
@@ -134,6 +180,8 @@ export default function Pythagore() {
   }
 
   // ─── Play ─────────────────────────────────────
+  const isCalc = question?.type === 'calcul'
+
   return (
     <div className="min-h-dvh px-4 pb-6 pt-4">
       {/* Top bar */}
@@ -162,7 +210,11 @@ export default function Pythagore() {
         <div className="mx-auto max-w-lg">
           {/* Figure */}
           <div className="mb-4">
-            <TriangleSVG vertices={question.vertices} rightAngle={question.rightAngle} />
+            <TriangleSVG
+              vertices={question.vertices}
+              rightAngle={question.rightAngle}
+              sides={question.sides}
+            />
           </div>
 
           {/* Prompt */}
@@ -172,26 +224,103 @@ export default function Pythagore() {
             </p>
           </div>
 
-          {/* Choices */}
-          <div className="space-y-2 max-w-sm mx-auto">
-            {question.choices.map((choice, i) => {
-              let cls = 'bg-surface-light text-slate-200 border-slate-700 hover:border-emerald-400'
-              if (selected !== null) {
-                if (i === question.correctIndex) cls = 'bg-emerald-500/20 text-emerald-400 border-emerald-500'
-                else if (i === selected) cls = 'bg-red-500/20 text-red-400 border-red-500 animate-shake'
-              }
-              return (
-                <button
-                  key={i}
-                  onClick={() => handleChoice(i)}
-                  disabled={selected !== null}
-                  className={`w-full text-left px-5 py-3 rounded-xl border-2 font-mono font-semibold text-base transition-all active:scale-[0.97] ${cls}`}
-                >
-                  {choice}
+          {/* QCM choices */}
+          {!isCalc && question.choices && (
+            <div className="space-y-2 max-w-sm mx-auto">
+              {question.choices.map((choice, i) => {
+                let cls = 'bg-surface-light text-slate-200 border-slate-700 hover:border-emerald-400'
+                if (selected !== null) {
+                  if (i === question.correctIndex) cls = 'bg-emerald-500/20 text-emerald-400 border-emerald-500'
+                  else if (i === selected) cls = 'bg-red-500/20 text-red-400 border-red-500 animate-shake'
+                }
+                return (
+                  <button
+                    key={i}
+                    onClick={() => handleChoice(i)}
+                    disabled={selected !== null}
+                    className={`w-full text-left px-5 py-3 rounded-xl border-2 font-mono font-semibold text-base transition-all active:scale-[0.97] ${cls}`}
+                  >
+                    {choice}
+                  </button>
+                )
+              })}
+            </div>
+          )}
+
+          {/* Calcul : saisie numérique */}
+          {isCalc && (
+            <div>
+              {/* Affichage de la réponse */}
+              <div className="mx-auto mb-3 flex max-w-xs items-center justify-center gap-2 rounded-xl bg-surface p-3">
+                <span className={`min-w-[4rem] text-right text-2xl font-bold ${
+                  feedback === 'correct' ? 'text-emerald-400' :
+                  feedback === 'wrong' ? 'text-red-400' :
+                  'text-white'
+                }`}>
+                  {userInput || <span className="text-slate-400">...</span>}
+                </span>
+                <span className="text-lg text-slate-300">cm</span>
+              </div>
+
+              {/* Pavé numérique */}
+              <div className="mx-auto grid w-full max-w-xs grid-cols-4 gap-2">
+                {['7', '8', '9'].map(d => (
+                  <button key={d} onClick={() => handleKeyInput(d)} disabled={!!feedback}
+                    className="flex h-12 items-center justify-center rounded-xl bg-surface-light font-bold text-white transition hover:bg-slate-600 active:scale-95 disabled:opacity-30">
+                    {d}
+                  </button>
+                ))}
+                <button onClick={() => handleKeyInput('backspace')} disabled={!!feedback}
+                  className="flex h-12 items-center justify-center rounded-xl bg-surface-light text-slate-300 transition hover:bg-slate-600 active:scale-95 disabled:opacity-30">
+                  <Delete className="h-5 w-5" />
                 </button>
-              )
-            })}
-          </div>
+                {['4', '5', '6', ','].map(d => (
+                  <button key={d} onClick={() => handleKeyInput(d)} disabled={!!feedback}
+                    className="flex h-12 items-center justify-center rounded-xl bg-surface-light font-bold text-white transition hover:bg-slate-600 active:scale-95 disabled:opacity-30">
+                    {d}
+                  </button>
+                ))}
+                {['1', '2', '3', '0'].map(d => (
+                  <button key={d} onClick={() => handleKeyInput(d)} disabled={!!feedback}
+                    className="flex h-12 items-center justify-center rounded-xl bg-surface-light font-bold text-white transition hover:bg-slate-600 active:scale-95 disabled:opacity-30">
+                    {d}
+                  </button>
+                ))}
+              </div>
+
+              {/* Bouton valider */}
+              <div className="mx-auto mt-4 max-w-xs">
+                {!feedback && (
+                  <button
+                    onClick={handleValidate}
+                    disabled={!userInput}
+                    className="w-full rounded-xl bg-emerald-500 py-3 font-bold text-white transition hover:bg-emerald-400 active:scale-95 disabled:opacity-40"
+                  >
+                    Valider
+                  </button>
+                )}
+              </div>
+
+              {/* Hint (méthode) */}
+              {showHint && question.hint && (
+                <div className="mt-4 rounded-xl bg-indigo-500/10 p-3 text-center text-sm text-indigo-300">
+                  <p className="mb-1 text-xs font-medium uppercase tracking-wider text-indigo-400">Méthode</p>
+                  <p className="whitespace-pre-line font-mono">{question.hint}</p>
+                </div>
+              )}
+
+              {/* Feedback */}
+              {feedback && (
+                <div className={`mt-4 rounded-xl p-3 text-center font-medium ${
+                  feedback === 'correct'
+                    ? 'bg-emerald-500/20 text-emerald-400'
+                    : 'bg-red-500/20 text-red-400'
+                }`}>
+                  {feedback === 'correct' ? 'Bravo !' : `La réponse était : ${question.answer} cm`}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>

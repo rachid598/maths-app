@@ -20,6 +20,15 @@ const LEVELS = [
     path: '/5e',
   },
   {
+    id: '4e',
+    title: '4ème',
+    subtitle: 'Théorème de Pythagore',
+    description: "Égalité de Pythagore, hypoténuse, angle droit",
+    emoji: '📐',
+    gradient: 'from-emerald-500 to-teal-600',
+    path: '/4e',
+  },
+  {
     id: '3e',
     title: '3ème',
     subtitle: 'Préparation Brevet',

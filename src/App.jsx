@@ -5,6 +5,7 @@ const Portal = lazy(() => import('./portal/Portal.jsx'))
 const App6e = lazy(() => import('./apps/6e/App6e.jsx'))
 const App5e = lazy(() => import('./apps/5e/App5e.jsx'))
 const App3e = lazy(() => import('./apps/3e/App3e.jsx'))
+const App4e = lazy(() => import('./apps/4e/App4e.jsx'))
 
 function Loading() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
         <Route path="/6e/*" element={<App6e />} />
         <Route path="/5e/*" element={<App5e />} />
         <Route path="/3e/*" element={<App3e />} />
+        <Route path="/4e/*" element={<App4e />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>

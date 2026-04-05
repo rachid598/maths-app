@@ -51,6 +51,8 @@ export const KEYS_6E = getStorageKeys('6e')
 /**
  * Clés pour 5e
  */
+export const KEYS_4E = getStorageKeys('4e')
+
 export const KEYS_5E = getStorageKeys('5e')
 
 /**
@@ -64,5 +66,6 @@ export const KEYS_3E = getStorageKeys('3e')
 export const ALL_KEYS = {
   '6e': KEYS_6E,
   '5e': KEYS_5E,
+  '4e': KEYS_4E,
   '3e': KEYS_3E,
 }

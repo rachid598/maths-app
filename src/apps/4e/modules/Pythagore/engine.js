@@ -174,7 +174,7 @@ function getPythagoreanTriplet() {
   return base.map(v => v * scale)
 }
 
-// ─── Type 4 : Calculer un côté (saisie numérique) ──────
+// ─── Type 4 : Calculer un côté — résolution guidée ligne par ligne ──
 
 function generateCalculQuestion(vertices) {
   const shuffledVertices = shuffle([...vertices])
@@ -183,47 +183,96 @@ function generateCalculQuestion(vertices) {
   const [s1, s2] = sidesAdjacent(shuffledVertices, rightAngle)
   const [a, b, c] = getPythagoreanTriplet() // a, b = cathètes, c = hypoténuse
 
-  const variant = Math.random()
+  const findHyp = Math.random() < 0.5
 
-  if (variant < 0.5) {
-    // Trouver l'hypoténuse
+  if (findHyp) {
+    // Trouver l'hypoténuse : hyp² = s1² + s2²
+    const equality = makeEquality(hyp, s1, s2)
+    const wrongEqs = generateDistractors(shuffledVertices, rightAngle, equality)
+    const eqChoices = [equality, ...shuffle(wrongEqs).slice(0, 3)]
+    while (eqChoices.length < 4) eqChoices.push(makeEquality(s1, s2, hyp))
+    const eqShuffled = shuffle(eqChoices)
+
     return {
       type: 'calcul',
       vertices: shuffledVertices,
       rightAngle,
       sides: { [s1]: a, [s2]: b, [hyp]: '?' },
-      answer: c,
       prompt: `Le triangle ${shuffledVertices.join('')} est rectangle en ${rightAngle}.\n${s1} = ${a} cm et ${s2} = ${b} cm.\nCalcule ${hyp}.`,
-      hint: `${hyp}² = ${s1}² + ${s2}² = ${a}² + ${b}² = ${a * a} + ${b * b} = ${c * c}\n${hyp} = √${c * c} = ${c} cm`,
-      choices: null,
-      correctIndex: null,
+      steps: [
+        {
+          label: "Pose l'égalité de Pythagore",
+          type: 'qcm',
+          choices: eqShuffled,
+          answer: equality,
+          correctIndex: eqShuffled.indexOf(equality),
+          completedLine: equality,
+        },
+        {
+          label: 'Remplace par les valeurs',
+          type: 'display',
+          completedLine: `${hyp}² = ${a}² + ${b}²`,
+        },
+        {
+          label: `Calcule ${a}² + ${b}²`,
+          type: 'input',
+          answer: a * a + b * b,
+          completedLine: `${hyp}² = ${a * a} + ${b * b} = ${a * a + b * b}`,
+        },
+        {
+          label: `Conclus : ${hyp} = ?`,
+          type: 'input',
+          answer: c,
+          completedLine: `${hyp} = √${c * c} = ${c} cm`,
+        },
+      ],
     }
   } else {
-    // Trouver un cathète
-    const findFirst = Math.random() < 0.5
-    if (findFirst) {
-      return {
-        type: 'calcul',
-        vertices: shuffledVertices,
-        rightAngle,
-        sides: { [s1]: '?', [s2]: b, [hyp]: c },
-        answer: a,
-        prompt: `Le triangle ${shuffledVertices.join('')} est rectangle en ${rightAngle}.\n${hyp} = ${c} cm et ${s2} = ${b} cm.\nCalcule ${s1}.`,
-        hint: `${s1}² = ${hyp}² − ${s2}² = ${c}² − ${b}² = ${c * c} − ${b * b} = ${a * a}\n${s1} = √${a * a} = ${a} cm`,
-        choices: null,
-        correctIndex: null,
-      }
-    }
+    // Trouver un cathète : s1² = hyp² − s2²
+    const equality = makeEquality(hyp, s1, s2)
+    const wrongEqs = generateDistractors(shuffledVertices, rightAngle, equality)
+    const eqChoices = [equality, ...shuffle(wrongEqs).slice(0, 3)]
+    while (eqChoices.length < 4) eqChoices.push(makeEquality(s1, s2, hyp))
+    const eqShuffled = shuffle(eqChoices)
+
     return {
       type: 'calcul',
       vertices: shuffledVertices,
       rightAngle,
-      sides: { [s1]: a, [s2]: '?', [hyp]: c },
-      answer: b,
-      prompt: `Le triangle ${shuffledVertices.join('')} est rectangle en ${rightAngle}.\n${hyp} = ${c} cm et ${s1} = ${a} cm.\nCalcule ${s2}.`,
-      hint: `${s2}² = ${hyp}² − ${s1}² = ${c}² − ${a}² = ${c * c} − ${a * a} = ${b * b}\n${s2} = √${b * b} = ${b} cm`,
-      choices: null,
-      correctIndex: null,
+      sides: { [s1]: '?', [s2]: b, [hyp]: c },
+      prompt: `Le triangle ${shuffledVertices.join('')} est rectangle en ${rightAngle}.\n${hyp} = ${c} cm et ${s2} = ${b} cm.\nCalcule ${s1}.`,
+      steps: [
+        {
+          label: "Pose l'égalité de Pythagore",
+          type: 'qcm',
+          choices: eqShuffled,
+          answer: equality,
+          correctIndex: eqShuffled.indexOf(equality),
+          completedLine: equality,
+        },
+        {
+          label: `Isole ${s1}²`,
+          type: 'display',
+          completedLine: `${s1}² = ${hyp}² − ${s2}²`,
+        },
+        {
+          label: 'Remplace par les valeurs',
+          type: 'display',
+          completedLine: `${s1}² = ${c}² − ${b}²`,
+        },
+        {
+          label: `Calcule ${c}² − ${b}²`,
+          type: 'input',
+          answer: c * c - b * b,
+          completedLine: `${s1}² = ${c * c} − ${b * b} = ${a * a}`,
+        },
+        {
+          label: `Conclus : ${s1} = ?`,
+          type: 'input',
+          answer: a,
+          completedLine: `${s1} = √${a * a} = ${a} cm`,
+        },
+      ],
     }
   }
 }
@@ -237,7 +286,11 @@ export const LEVELS = [
   { id: 4, label: 'N4', title: 'Mix complet', color: 'from-blue-500 to-indigo-500', desc: 'Tout mélangé !' },
 ]
 
-export const QUESTIONS_PER_ROUND = 10
+export const QUESTIONS_PER_ROUND = { default: 10, 3: 5 }
+
+export function questionsForLevel(levelId) {
+  return QUESTIONS_PER_ROUND[levelId] || QUESTIONS_PER_ROUND.default
+}
 
 const GENERATORS = {
   1: [generateHypotenuseQuestion],
@@ -252,7 +305,7 @@ export function generateQuestion(levelId) {
   return gen(vertices)
 }
 
-export function generateRound(levelId, count = QUESTIONS_PER_ROUND) {
+export function generateRound(levelId, count = questionsForLevel(levelId)) {
   const questions = []
   let lastKey = ''
   for (let i = 0; i < count; i++) {

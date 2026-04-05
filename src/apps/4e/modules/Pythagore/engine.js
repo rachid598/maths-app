@@ -153,12 +153,88 @@ function generateRightAngleQuestion(vertices) {
   }
 }
 
+// ─── Triplets pythagoriciens (pour le calcul) ──────────
+
+const BASE_TRIPLETS = [
+  [3, 4, 5],
+  [5, 12, 13],
+  [8, 15, 17],
+  [6, 8, 10],
+  [9, 12, 15],
+  [12, 16, 20],
+  [15, 20, 25],
+  [7, 24, 25],
+  [9, 40, 41],
+  [20, 21, 29],
+]
+
+function getPythagoreanTriplet() {
+  const base = pick(BASE_TRIPLETS)
+  const scale = pick([1, 2])
+  return base.map(v => v * scale)
+}
+
+// ─── Type 4 : Calculer un côté (saisie numérique) ──────
+
+function generateCalculQuestion(vertices) {
+  const shuffledVertices = shuffle([...vertices])
+  const rightAngle = pick(shuffledVertices)
+  const hyp = sideOpposite(shuffledVertices, rightAngle)
+  const [s1, s2] = sidesAdjacent(shuffledVertices, rightAngle)
+  const [a, b, c] = getPythagoreanTriplet() // a, b = cathètes, c = hypoténuse
+
+  const variant = Math.random()
+
+  if (variant < 0.5) {
+    // Trouver l'hypoténuse
+    return {
+      type: 'calcul',
+      vertices: shuffledVertices,
+      rightAngle,
+      sides: { [s1]: a, [s2]: b, [hyp]: '?' },
+      answer: c,
+      prompt: `Le triangle ${shuffledVertices.join('')} est rectangle en ${rightAngle}.\n${s1} = ${a} cm et ${s2} = ${b} cm.\nCalcule ${hyp}.`,
+      hint: `${hyp}² = ${s1}² + ${s2}² = ${a}² + ${b}² = ${a * a} + ${b * b} = ${c * c}\n${hyp} = √${c * c} = ${c} cm`,
+      choices: null,
+      correctIndex: null,
+    }
+  } else {
+    // Trouver un cathète
+    const findFirst = Math.random() < 0.5
+    if (findFirst) {
+      return {
+        type: 'calcul',
+        vertices: shuffledVertices,
+        rightAngle,
+        sides: { [s1]: '?', [s2]: b, [hyp]: c },
+        answer: a,
+        prompt: `Le triangle ${shuffledVertices.join('')} est rectangle en ${rightAngle}.\n${hyp} = ${c} cm et ${s2} = ${b} cm.\nCalcule ${s1}.`,
+        hint: `${s1}² = ${hyp}² − ${s2}² = ${c}² − ${b}² = ${c * c} − ${b * b} = ${a * a}\n${s1} = √${a * a} = ${a} cm`,
+        choices: null,
+        correctIndex: null,
+      }
+    }
+    return {
+      type: 'calcul',
+      vertices: shuffledVertices,
+      rightAngle,
+      sides: { [s1]: a, [s2]: '?', [hyp]: c },
+      answer: b,
+      prompt: `Le triangle ${shuffledVertices.join('')} est rectangle en ${rightAngle}.\n${hyp} = ${c} cm et ${s1} = ${a} cm.\nCalcule ${s2}.`,
+      hint: `${s2}² = ${hyp}² − ${s1}² = ${c}² − ${a}² = ${c * c} − ${a * a} = ${b * b}\n${s2} = √${b * b} = ${b} cm`,
+      choices: null,
+      correctIndex: null,
+    }
+  }
+}
+
 // ─── Niveaux ────────────────────────────────────────────
 
 export const LEVELS = [
   { id: 1, label: 'N1', title: "L'hypoténuse", color: 'from-emerald-400 to-teal-500', desc: 'Identifier le côté le plus long' },
   { id: 2, label: 'N2', title: "L'égalité", color: 'from-teal-400 to-cyan-500', desc: "Écrire l'égalité de Pythagore" },
-  { id: 3, label: 'N3', title: 'Mix complet', color: 'from-cyan-500 to-blue-500', desc: 'Hypoténuse, égalité et angle droit' },
+  { id: 3, label: 'N3', title: 'Calculer un côté', color: 'from-cyan-400 to-blue-500', desc: 'Appliquer Pythagore avec des valeurs' },
+  { id: 4, label: 'N4', title: 'Mix complet', color: 'from-blue-500 to-indigo-500', desc: 'Tout mélangé !' },
 ]
 
 export const QUESTIONS_PER_ROUND = 10
@@ -166,7 +242,8 @@ export const QUESTIONS_PER_ROUND = 10
 const GENERATORS = {
   1: [generateHypotenuseQuestion],
   2: [generateEqualityQuestion],
-  3: [generateHypotenuseQuestion, generateEqualityQuestion, generateRightAngleQuestion],
+  3: [generateCalculQuestion],
+  4: [generateHypotenuseQuestion, generateEqualityQuestion, generateRightAngleQuestion, generateCalculQuestion],
 }
 
 export function generateQuestion(levelId) {
